@@ -17,6 +17,7 @@ export default function LoginPage() {
     }
 
     function signUp() {
+        //TODO: add loading
         createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
             .then((userCredential) => {
                 const user = userCredential.user;
@@ -27,11 +28,13 @@ export default function LoginPage() {
                 console.log("Error #" + errorCode + ": " + errorMessage);
             });
         if (auth.currentUser) {
+            //TODO: remove loading
             router.push('/home');
         }
     }
 
     function logIn() {
+        //TODO: add loading
         signInWithEmailAndPassword(auth, logInEmail, logInPassword)
             .then((userCredential) => {
                 const user = userCredential.user;
@@ -42,12 +45,13 @@ export default function LoginPage() {
                 console.log("Error #" + errorCode + ": " + errorMessage);
             });
         if (auth.currentUser) {
+            //TODO: remove loading
             router.push('/home');
         }
     }
 
     return (
-        <div className="bg-slate-100 place-content-center p-32">
+        <div className="bg-slate-100 place-content-center px-40 py-32 h-screen w-screen">
             <div className="object-center shadow-2xl rounded-lg flex place-content-around p-4 grow">
                 <div className="flex flex-col w-full items-center m-5">
                     <p className="text-5xl font-bold object-center m-5"> Sign up </p>
@@ -59,7 +63,7 @@ export default function LoginPage() {
                     <FormControl className="mt-5">
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
-                            value={signUpPassword} onChange={(event) => handleInputChange(event, setSignUpPassword)}/>
+                            value={signUpPassword} onChange={(event) => handleInputChange(event, setSignUpPassword)} onSubmit={signUp}/>
                     </FormControl>
                     <Button colorScheme="blue" size="lg" className="mt-5 w-full" onClick={signUp}>Sign up</Button>
                 </div>
@@ -78,7 +82,7 @@ export default function LoginPage() {
                     <FormControl className="mt-5">
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
-                            value={logInPassword} onChange={(event) => handleInputChange(event, setLogInPassword)}/>
+                            value={logInPassword} onChange={(event) => handleInputChange(event, setLogInPassword)} onSubmit={logIn}/>
                     </FormControl>
                     <Button colorScheme="blue" size="lg" className="mt-5 w-full" onClick={logIn}>Log in</Button>
                 </div>
