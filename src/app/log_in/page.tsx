@@ -1,9 +1,8 @@
 'use client';
-import { use, useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { Button, Center, FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { auth } from "../lib/firebase/firebase";
+import { signUp, logIn } from "../lib/firebase/auth";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -16,38 +15,14 @@ export default function LoginPage() {
         stateSetter(event.target.value);
     }
 
-    function signUp() {
-        //TODO: add loading
-        createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
-            .then((userCredential) => {
-                const user = userCredential.user;
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log("Error #" + errorCode + ": " + errorMessage);
-            });
-        if (auth.currentUser) {
-            //TODO: remove loading
-            router.push('/home');
-        }
+    function handleSignUp() {
+        const success = signUp(signUpEmail, signUpPassword);
+        if(success) router.push("/home");
     }
 
-    function logIn() {
-        //TODO: add loading
-        signInWithEmailAndPassword(auth, logInEmail, logInPassword)
-            .then((userCredential) => {
-                const user = userCredential.user;
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log("Error #" + errorCode + ": " + errorMessage);
-            });
-        if (auth.currentUser) {
-            //TODO: remove loading
-            router.push('/home');
-        }
+    function handleLogIn() {
+        const success = logIn(logInEmail, logInPassword);
+        if(success) router.push("/home");
     }
 
     return (
@@ -63,9 +38,11 @@ export default function LoginPage() {
                     <FormControl className="mt-5">
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
-                            value={signUpPassword} onChange={(event) => handleInputChange(event, setSignUpPassword)} onSubmit={signUp}/>
+                            value={signUpPassword} onChange={(event) => handleInputChange(event, setSignUpPassword)} 
+                            onSubmit={handleSignUp}/>
                     </FormControl>
-                    <Button colorScheme="blue" size="lg" className="mt-5 w-full" onClick={signUp}>Sign up</Button>
+                    <Button colorScheme="blue" size="lg" className="mt-5 w-full" 
+                    onClick={handleSignUp}>Sign up</Button>
                 </div>
                 <Center className="flex flex-col items-stretch"> 
                     <div className="grow h-max w-px bg-black"/>
@@ -82,9 +59,11 @@ export default function LoginPage() {
                     <FormControl className="mt-5">
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
-                            value={logInPassword} onChange={(event) => handleInputChange(event, setLogInPassword)} onSubmit={logIn}/>
+                            value={logInPassword} onChange={(event) => handleInputChange(event, setLogInPassword)} 
+                            onSubmit={handleLogIn}/>
                     </FormControl>
-                    <Button colorScheme="blue" size="lg" className="mt-5 w-full" onClick={logIn}>Log in</Button>
+                    <Button colorScheme="blue" size="lg" className="mt-5 w-full" 
+                    onClick={handleLogIn}>Log in</Button>
                 </div>
             </div>
         </div>

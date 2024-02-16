@@ -1,5 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import fetchStudySets from "../lib/firebase/firebase";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { auth } from "../lib/firebase/auth";
+import { fetchStudySets } from "../lib/firebase/firestore";
 import { StudySet } from "../lib/classes/study_set";
 
 export const StudySetList = () => {
@@ -11,18 +13,26 @@ export const StudySetList = () => {
             setSetList(sets);
         }
         getStudySets();
-    }, []);
+    }, [setList, setSetList]);
 
-    console.log(setList[0]?.last_studied.toString());
+    //TODO: add loading state
 
     return (
-        <div className="flex flex-row m-5">
+        <div className="flex flex-row">
             {setList.map((set, index) => {
-                return <div key={index} className="flex flex-col ml-10 p-5 shadow-2xl rounded-sm"> 
-                    <p>{set.name}</p>
-                    <p>{set.terms.length + " terms"}</p>
-                    <p>{"Last Studied: " + set.getFormattedLastStudied()}</p>
-                </div>;
+                return <Link key={index} href={{
+                    pathname: "/study",
+                    query: { 
+                        uid: auth.currentUser!.uid,
+                        setName: set.name,
+                    }
+                }}>
+                    <div className="flex flex-col ml-10 p-5 shadow-2xl rounded-sm"> 
+                        <p className="text-2xl font-bold">{set.name}</p>
+                        <p className="">{set.terms.length + " terms"}</p>
+                        <p className="">{"Last studied " + set.getFormattedLastStudied()}</p>
+                    </div>;
+                </Link>
             })}
         </div>
     );
