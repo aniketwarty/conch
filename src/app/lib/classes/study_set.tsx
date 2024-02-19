@@ -3,12 +3,14 @@ export class StudySet{
     terms: string[];
     definitions: string[];
     last_studied: Date;
+    uid: string;
 
-    constructor(name: string, terms: string[], definitions: string[], last_studied: Date){
+    constructor(name: string, terms: string[], definitions: string[], last_studied: Date, uid: string){
         this.name = name;
         this.terms = terms;
         this.definitions = definitions;
         this.last_studied = last_studied;
+        this.uid = uid;
     }
 
     add(term: string, definition: string){
@@ -45,8 +47,8 @@ export class StudySet{
         }
     }
 
-    static fromFirestore(name: string, data: any){
-        return new StudySet(name, data.terms, data.definitions, data.last_studied.toDate());
+    static fromFirestore(uid: string, name: string, data: any){
+        return new StudySet(name, data.terms, data.definitions, data.last_studied.toDate(), uid);
     }
 
     toFirestore(){

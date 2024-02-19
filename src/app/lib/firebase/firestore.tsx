@@ -11,7 +11,7 @@ export async function fetchStudySets() {
     try {
         const setsSnapshot = await getDocs(setsRef);
         setsSnapshot.forEach((doc) => {
-            const set = StudySet.fromFirestore(doc.id, doc.data());
+            const set = StudySet.fromFirestore(auth.currentUser!.uid, doc.id, doc.data());
             setList.push(set);
         });
     } catch (e) {
@@ -29,12 +29,14 @@ export async function fetchStudySet(uid: string, setName: string) {
     try {
         const setRef = doc(db, `users/${uid}/study_sets/${setName}`);
         const setSnapshot = await getDoc(setRef);
-        if (setSnapshot.exists()) {
-            set = StudySet.fromFirestore(setSnapshot.id, setSnapshot.data());
-        }
+        set = StudySet.fromFirestore(uid, setSnapshot.id, setSnapshot.data());
     } catch (e) {
         console.log(e);
     }
     
     return set;
 };
+
+export async function getOptions(studyMode: string) {
+    
+}

@@ -4,7 +4,7 @@ import { CircularProgress } from '@chakra-ui/react';
 import { redirect } from 'next/navigation'
 
 export default function Main() {
-  const logged_in = false; //TODO: replace with actual logged in state
+  const logged_in = true; //TODO: replace with actual logged in state
   useEffect(() => {
     if (logged_in) {
       redirect('/home');

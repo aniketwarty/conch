@@ -9,11 +9,9 @@ export default function HomePage() {
     const router = useRouter();
     useEffect(() => {
         if(!auth.currentUser) {
-            // router.push('/log_in');
-            //TODO: uncomment
-            logIn("aniket.warty06@gmail.com", "password");
+            router.push('/log_in');
         }
-    }, [router])
+    })
     
     return (
         <div className="bg-slate-100 h-screen w-screen flex flex-col">

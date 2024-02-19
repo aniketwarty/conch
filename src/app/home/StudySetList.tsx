@@ -3,27 +3,25 @@ import Link from "next/link";
 import { auth } from "../lib/firebase/auth";
 import { fetchStudySets } from "../lib/firebase/firestore";
 import { StudySet } from "../lib/classes/study_set";
+import { Spinner } from "@chakra-ui/react";
 
 export const StudySetList = () => {
     const [setList, setSetList] = useState<StudySet[]>([]);
 
     useEffect(() => {
         async function getStudySets() {
-            const sets = await fetchStudySets();
-            setSetList(sets);
+            const sets = fetchStudySets().then((sets) => setSetList(sets));
         }
         getStudySets();
-    }, [setList, setSetList]);
-
-    //TODO: add loading state
+    });
 
     return (
         <div className="flex flex-row">
-            {setList.map((set, index) => {
-                return <Link key={index} href={{
+            {setList.length==0 ? <Spinner className="ml-12 p-5"/> : setList.map((set, index) => (
+                <Link key={index} href={{
                     pathname: "/study",
                     query: { 
-                        uid: auth.currentUser!.uid,
+                        setUid: auth.currentUser?.uid ?? "unknown",
                         setName: set.name,
                     }
                 }}>
@@ -31,9 +29,9 @@ export const StudySetList = () => {
                         <p className="text-2xl font-bold">{set.name}</p>
                         <p className="">{set.terms.length + " terms"}</p>
                         <p className="">{"Last studied " + set.getFormattedLastStudied()}</p>
-                    </div>;
+                    </div>
                 </Link>
-            })}
+            ))}
         </div>
     );
 }
