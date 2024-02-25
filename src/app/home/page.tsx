@@ -11,7 +11,7 @@ export default function HomePage() {
         if(!auth.currentUser) {
             router.push('/log_in');
         }
-    })
+    }, [router])
     
     return (
         <div className="bg-slate-100 h-screen w-screen flex flex-col">

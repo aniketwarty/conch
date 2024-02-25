@@ -11,7 +11,7 @@ export default function Main() {
     } else {
       redirect('/log_in');
     }
-  });
+  }, [logged_in]);
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <CircularProgress isIndeterminate color='black.300' />

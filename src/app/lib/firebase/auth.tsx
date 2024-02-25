@@ -1,10 +1,20 @@
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseApp } from "./firebase";
 
 export const auth = getAuth(firebaseApp);
 
-//TODO: add on auth state changed
+// const AuthStateChanged = () => {
+//     const router = useRouter();
+
+//     auth.onAuthStateChanged((user) => {
+//         if (!user) {
+//             router.push("/login");
+//         }
+//     });
+// };
+
+// AuthStateChanged();
 
 export function signUp(signUpEmail: string, signUpPassword: string) {
     //TODO: add loading

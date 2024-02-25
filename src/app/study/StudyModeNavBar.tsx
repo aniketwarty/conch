@@ -1,8 +1,8 @@
 import Link from "next/link";
+import { auth } from "../lib/firebase/auth";
 import { Button, Divider, IconButton } from "@chakra-ui/react";
 import { IoMdArrowRoundBack, IoMdClose } from "react-icons/io";
 import { OptionsButton } from "./OptionsButton";
-
 
 interface StudyModeNavBarProps {
     studyMode: string;
@@ -25,7 +25,7 @@ export const StudyModeNavBar = ({ studyMode, setUid, setName }: StudyModeNavBarP
                     className="mr-3 outline-4"/>
                 </Link>
                 <p>{studyMode}</p>
-                <OptionsButton/>
+                <OptionsButton uid={auth.currentUser!.uid} studyMode={studyMode}/>
                 <Link href="/home">
                     <IconButton variant="outline" aria-label="back" icon={<IoMdClose/>}
                     className="ml-3 outline-4"/>

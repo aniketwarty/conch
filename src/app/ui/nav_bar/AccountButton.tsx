@@ -1,12 +1,13 @@
 'use client';
 import React from 'react';
-import { redirect } from 'next/navigation';
 import { RiAccountCircleFill } from "react-icons/ri";
+import { useRouter } from 'next/navigation';
 
 export const AccountButton = () => {
+    const router = useRouter();
     const onClick = () => {
         //TODO: implement account menu
-        redirect('/log_in');
+        router.push('/log_in');
     };
 
     return (

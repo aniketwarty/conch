@@ -10,6 +10,7 @@ import { FaGamepad } from "react-icons/fa";
 import { MdOutlineQuiz } from "react-icons/md";
 import { IoChatboxSharp } from "react-icons/io5";
 import { Spinner } from "@chakra-ui/react";
+import { auth } from "../lib/firebase/auth";
 
 export default function StudyPage() {
     const [studySet, setStudySet] = useState<StudySet>();
@@ -21,13 +22,13 @@ export default function StudyPage() {
         const setName = searchParams.get("setName");
         if(!setUid || !setName) router.push("/home");
         fetchStudySet(setUid!, setName!).then((set) => {
-            if(set) {
+            if(set) { //TODO: add check if user has access to study set/is user logged in
                 setStudySet(set);
             } else {
                 router.push("/home");
             }
         });
-    });
+    }, [router, searchParams]);
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen">

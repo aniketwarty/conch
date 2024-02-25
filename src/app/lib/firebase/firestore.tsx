@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, getFirestore } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { firebaseApp } from "./firebase";
 import { auth } from "./auth";
 import { StudySet } from "../classes/study_set";
@@ -37,6 +37,51 @@ export async function fetchStudySet(uid: string, setName: string) {
     return set;
 };
 
-export async function getOptions(studyMode: string) {
-    
+export async function updateLastStudied(uid: string, studySet: StudySet) {
+    try {
+        const setRef = doc(db, `users/${uid}/study_sets/${studySet.name}`);
+        await setDoc(setRef, {terms: studySet.terms, definitions: studySet.definitions, last_studied: new Date()});
+    } catch (e) {
+        console.log(e);
+    }
+
+}
+
+export async function getOptions(uid: string, studyMode: string) {
+    let options: any = [];
+
+    try {
+        const optionsRef = doc(db, `users/${uid}/study_mode_options/${studyMode}`);
+        const optionsSnapshot = await getDoc(optionsRef);
+        options = optionsSnapshot.data();
+    } catch (e) {
+        console.log(e);
+    }
+
+    if(options) {
+        return options;
+    } else {
+        switch(studyMode) {
+            case "flashcards":
+                return {
+                    "flip_animation": true,
+                };
+            case "quiz":
+                return {
+                    "true_false": true,
+                    "mcq": true,
+                    "frq": false,
+                    "num_questions": -1,
+                }
+        }
+    }
+}
+
+export async function saveOptions(options: any, uid: string, studyMode: string) {
+    try {
+        const optionsRef = doc(db, `users/${uid}/study_mode_options/${studyMode}`);
+        await setDoc(optionsRef, options);
+    } catch (e) {
+        console.log(e);
+    }
 }
