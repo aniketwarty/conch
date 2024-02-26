@@ -1,49 +1,58 @@
 import React, { useEffect } from "react";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
-    AlertDialogOverlay, Button, Checkbox, Input, Spinner, useDisclosure } from "@chakra-ui/react"
+    AlertDialogOverlay, Button, Checkbox, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Spinner, useDisclosure } from "@chakra-ui/react"
 import { getOptions, saveOptions } from "../lib/firebase/firestore";
 
 interface OptionsButtonProps {
-    uid: string;
     studyMode: string;
+    options: any;
+    setOptions: React.Dispatch<React.SetStateAction<any>>
 }
 
-export const OptionsButton = ({ uid, studyMode }: OptionsButtonProps) => {
-    const [options, setOptions] = React.useState<any>();
+export const OptionsButton = ({ options, setOptions, studyMode }: OptionsButtonProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<HTMLButtonElement | null>(null)
 
     useEffect(() => {
-        getOptions(uid!, studyMode!).then((options) => {
+        getOptions(studyMode).then((options) => {
             setOptions(options);
         });
-    }, [uid, studyMode, isOpen]);
+    }, [isOpen, setOptions, studyMode]);
 
     function handleOption(key: string, value: any, optionKey: number) {
         switch (typeof value) {
             case "boolean":
                 return(
-                    <div key={optionKey} className="flex flex-row">
+                    <div key={optionKey} className="flex flex-row items-center">
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <Checkbox
-                            defaultChecked={value} size="lg" className="mr-3"
+                            defaultChecked={value} className="mr-3 w-fit"
                             onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
                         >
                         </Checkbox>
                     </div>
                 )
             case "number":
-                <div key={optionKey} className="flex flex-row">
-                    <p className="ml-3 mr-auto text-lg">{key}</p>
-                    <Input
-                        variant={"outline"} size="lg" className="mr-3" 
-                        value={value}
-                        onChange={(e) => setOptions({ ...options, [key]: e.target.value })}
-                    >
-                    </Input>
-                </div>
+                return(
+                    <div key={optionKey} className="flex flex-row items-center">
+                        <p className="ml-3 mr-auto text-lg">{key}</p>
+                        <NumberInput
+                            variant={"outline"} className="mr-3" width={"80px"} 
+                            defaultValue={value} min={-1}
+                            onChange={(e) => {
+                                setOptions({ ...options, [key]: Number(e) })
+                            }}
+                        >
+                            <NumberInputField />
+                            <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberInputStepper>
+                        </NumberInput>
+                    </div>
+                )
             default:
-                return <p>Invalid option type</p>
+                return <p>{typeof value}</p>
         }
     }
 
@@ -56,12 +65,16 @@ export const OptionsButton = ({ uid, studyMode }: OptionsButtonProps) => {
                         <AlertDialogHeader fontSize='3xl' fontWeight='bold'>Options</AlertDialogHeader>
 
                         <AlertDialogBody>
-                            {!options ? <Spinner/> : Object.entries(options).map(([key, value], optionKey) => handleOption(key, value, optionKey))}
+                            {
+                                !options ? <Spinner/> : Object.entries(options)
+                                    .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+                                    .map(([key, value], optionKey) => handleOption(key, value, optionKey))
+                            }
                         </AlertDialogBody>
 
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={() => {
-                                saveOptions(options, uid, studyMode)
+                                saveOptions(options, studyMode)
                                 onClose()
                             }}>
                                 Update

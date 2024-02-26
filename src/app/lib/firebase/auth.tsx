@@ -1,41 +1,56 @@
-import { useRouter } from "next/navigation";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseApp } from "./firebase";
+import { getUserTokenCookie ,setUserTokenCookie, removeUserTokenCookie,  } from "../cookies";
 
 export const auth = getAuth(firebaseApp);
 
-// const AuthStateChanged = () => {
-//     const router = useRouter();
-
-//     auth.onAuthStateChanged((user) => {
-//         if (!user) {
-//             router.push("/login");
-//         }
-//     });
-// };
-
-// AuthStateChanged();
-
-export function signUp(signUpEmail: string, signUpPassword: string) {
-    //TODO: add loading
-    createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
+export async function signUp(signUpEmail: string, signUpPassword: string) {
+    await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
+        .then((userCredential) => {
+            if (userCredential.user) {
+                userCredential.user.getIdToken().then((idToken) => {
+                    setUserTokenCookie(idToken);
+                });
+            }
+        })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log("Error #" + errorCode + ": " + errorMessage);
         });
-    if (auth.currentUser) return true;
-    return false;
+        return auth.currentUser !== null;
 }
 
-export function logIn(logInEmail: string, logInPassword: string) {
-    //TODO: add loading
-    signInWithEmailAndPassword(auth, logInEmail, logInPassword)
+export async function logIn(logInEmail: string, logInPassword: string) {
+    await signInWithEmailAndPassword(auth, logInEmail, logInPassword)
+        .then((userCredential) => {
+            if (userCredential.user) {
+                userCredential.user.getIdToken().then((idToken) => {
+                    setUserTokenCookie(idToken);
+                });
+            }
+        })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log("Error #" + errorCode + ": " + errorMessage);
         });
-    if (auth.currentUser) return true;
-    return false;
+    return auth.currentUser !== null;
+}
+
+export async function signInWithIdToken(idToken: string) {
+    // TODO: add loading
+    await signInWithCustomToken(auth, idToken)
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log("Error #" + errorCode + ": " + errorMessage);
+        })
+    return auth.currentUser !== null;
+}
+
+export async function logOut() {
+    await auth.signOut().then(() => {
+        removeUserTokenCookie();
+    });
 }

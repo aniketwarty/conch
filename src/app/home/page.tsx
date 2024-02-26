@@ -6,12 +6,12 @@ import { NavBar } from '../ui/nav_bar/NavBar';
 import { StudySetList } from './StudySetList';
 
 export default function HomePage() {
-    const router = useRouter();
-    useEffect(() => {
-        if(!auth.currentUser) {
-            router.push('/log_in');
-        }
-    }, [router])
+    // const router = useRouter();
+    // useEffect(() => {
+    //     if(!auth.currentUser) {
+    //         router.push('/log_in');
+    //     }
+    // }, [router])
     
     return (
         <div className="bg-slate-100 h-screen w-screen flex flex-col">

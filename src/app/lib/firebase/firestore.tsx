@@ -2,6 +2,7 @@ import { collection, getDocs, doc, getDoc, getFirestore, setDoc } from "firebase
 import { firebaseApp } from "./firebase";
 import { auth } from "./auth";
 import { StudySet } from "../classes/study_set";
+import { defaultFlashcardOptions } from "../../study/default_options";
 
 export const db = getFirestore(firebaseApp);
 
@@ -47,11 +48,11 @@ export async function updateLastStudied(uid: string, studySet: StudySet) {
 
 }
 
-export async function getOptions(uid: string, studyMode: string) {
+export async function getOptions(studyMode: string) {
     let options: any = [];
 
     try {
-        const optionsRef = doc(db, `users/${uid}/study_mode_options/${studyMode}`);
+        const optionsRef = doc(db, `users/${auth.currentUser?.uid}/study_mode_options/${studyMode}`);
         const optionsSnapshot = await getDoc(optionsRef);
         options = optionsSnapshot.data();
     } catch (e) {
@@ -63,23 +64,16 @@ export async function getOptions(uid: string, studyMode: string) {
     } else {
         switch(studyMode) {
             case "flashcards":
-                return {
-                    "flip_animation": true,
-                };
+                return defaultFlashcardOptions;
             case "quiz":
-                return {
-                    "true_false": true,
-                    "mcq": true,
-                    "frq": false,
-                    "num_questions": -1,
-                }
+                
         }
     }
 }
 
-export async function saveOptions(options: any, uid: string, studyMode: string) {
+export async function saveOptions(options: any, studyMode: string) {
     try {
-        const optionsRef = doc(db, `users/${uid}/study_mode_options/${studyMode}`);
+        const optionsRef = doc(db, `users/${auth.currentUser?.uid}/study_mode_options/${studyMode}`);
         await setDoc(optionsRef, options);
     } catch (e) {
         console.log(e);

@@ -1,11 +1,13 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { Button, Center, FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { signUp, logIn } from "../lib/firebase/auth";
+import { signUp, logIn, auth } from "../lib/firebase/auth";
+import { setUserTokenCookie } from "../lib/cookies";
+import { Button, Center, FormControl, FormLabel, Input, Spinner } from "@chakra-ui/react";
 
 export default function LoginPage() {
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const [signUpEmail, setSignUpEmail] = useState("");
     const [signUpPassword, setSignUpPassword] = useState("");
     const [logInEmail, setLogInEmail] = useState("");
@@ -16,19 +18,33 @@ export default function LoginPage() {
     }
 
     function handleSignUp() {
-        const success = signUp(signUpEmail, signUpPassword);
-        if(success) router.push("/home");
+        setLoading(true);
+        signUp(signUpEmail, signUpPassword).then((success) => {
+            if(success) router.push("/home");
+            setLoading(false);
+        })
+        setLoading(false);
     }
 
     function handleLogIn() {
-        const success = logIn(logInEmail, logInPassword);
-        if(success) router.push("/home");
+        setLoading(true);
+        logIn(logInEmail, logInPassword).then((success) => {
+            if (success) {
+                router.push("/home");
+            }
+            setLoading(false);
+        });
     }
 
     return (
-        <div className="bg-slate-100 place-content-center px-40 py-32 h-screen w-screen">
-            <div className="object-center shadow-2xl rounded-lg flex place-content-around p-4 grow">
-                <div className="flex flex-col w-full items-center m-5">
+        <div className="bg-slate-100 h-screen w-screen top-0 flex items-center">
+            {loading && (
+                <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
+                    <Spinner className="p-5 m-auto"/>
+                </div>
+            )}
+            <div className="shadow-2xl rounded-lg flex flex-row m-auto p-4 w-3/5 h-1/2">
+                <div className="flex flex-col w-full items-center m-5 justify-between">
                     <p className="text-5xl font-bold object-center m-5"> Sign up </p>
                     <FormControl>
                         <FormLabel>Email</FormLabel>
@@ -39,7 +55,7 @@ export default function LoginPage() {
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
                             value={signUpPassword} onChange={(event) => handleInputChange(event, setSignUpPassword)} 
-                            onSubmit={handleSignUp}/>
+                            onKeyDown={(event) => {if (event.key === "Enter") {handleLogIn()}}}/>
                     </FormControl>
                     <Button colorScheme="blue" size="lg" className="mt-5 w-full" 
                     onClick={handleSignUp}>Sign up</Button>
@@ -49,7 +65,7 @@ export default function LoginPage() {
                     <p> OR </p>
                     <div className="grow h-max w-px bg-black"/>
                 </Center>
-                <div className="flex flex-col w-full items-center m-5">
+                <div className="flex flex-col w-full items-center m-5 justify-between">
                     <p className="text-5xl font-bold object-center m-5"> Log in </p>
                     <FormControl>
                         <FormLabel>Email</FormLabel>
@@ -60,7 +76,7 @@ export default function LoginPage() {
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
                             value={logInPassword} onChange={(event) => handleInputChange(event, setLogInPassword)} 
-                            onSubmit={handleLogIn}/>
+                            onKeyDown={(event) => {if (event.key === "Enter") {handleLogIn()}}}/>
                     </FormControl>
                     <Button colorScheme="blue" size="lg" className="mt-5 w-full" 
                     onClick={handleLogIn}>Log in</Button>

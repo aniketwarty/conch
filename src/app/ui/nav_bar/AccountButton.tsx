@@ -2,11 +2,12 @@
 import React from 'react';
 import { RiAccountCircleFill } from "react-icons/ri";
 import { useRouter } from 'next/navigation';
+import { logOut } from '../../lib/firebase/auth';
 
 export const AccountButton = () => {
     const router = useRouter();
     const onClick = () => {
-        //TODO: implement account menu
+        logOut();
         router.push('/log_in');
     };
 

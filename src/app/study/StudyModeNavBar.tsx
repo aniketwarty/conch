@@ -8,9 +8,11 @@ interface StudyModeNavBarProps {
     studyMode: string;
     setUid: string;
     setName: string;
+    options: any;
+    setOptions: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export const StudyModeNavBar = ({ studyMode, setUid, setName }: StudyModeNavBarProps) => {
+export const StudyModeNavBar = ({ studyMode, setUid, setName, options, setOptions }: StudyModeNavBarProps) => {
     return (
         <div>
             <div className="h-20 p-5 items-center w-full top-0 flex flex-row">
@@ -25,7 +27,7 @@ export const StudyModeNavBar = ({ studyMode, setUid, setName }: StudyModeNavBarP
                     className="mr-3 outline-4"/>
                 </Link>
                 <p>{studyMode}</p>
-                <OptionsButton uid={auth.currentUser!.uid} studyMode={studyMode}/>
+                <OptionsButton options={options} setOptions={setOptions} studyMode={studyMode}/>
                 <Link href="/home">
                     <IconButton variant="outline" aria-label="back" icon={<IoMdClose/>}
                     className="ml-3 outline-4"/>
