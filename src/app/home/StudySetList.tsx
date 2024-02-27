@@ -5,7 +5,11 @@ import { fetchStudySets } from "../lib/firebase/firestore";
 import { StudySet } from "../lib/classes/study_set";
 import { Spinner } from "@chakra-ui/react";
 
-export const StudySetList = () => {
+interface StudySetListProps {
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export const StudySetList = ({ setLoading }: StudySetListProps) => {
     const [setList, setSetList] = useState<StudySet[]>([]);
 
     async function getStudySets() {
@@ -28,6 +32,7 @@ export const StudySetList = () => {
                                 setName: set.name,
                             },
                         }}
+                        onClick={() => setLoading(true)}
                     >
                         <div className="flex flex-col ml-10 p-5 shadow-2xl rounded-sm">
                             <p className="text-2xl font-bold">{set.name}</p>

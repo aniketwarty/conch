@@ -7,8 +7,9 @@ import { logOut } from '../../lib/firebase/auth';
 export const AccountButton = () => {
     const router = useRouter();
     const onClick = () => {
-        logOut();
-        router.push('/log_in');
+        logOut().then(() => {
+            router.push('/log_in');
+        })
     };
 
     return (

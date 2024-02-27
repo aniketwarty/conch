@@ -50,7 +50,6 @@ export async function signInWithIdToken(idToken: string) {
 }
 
 export async function logOut() {
-    await auth.signOut().then(() => {
-        removeUserTokenCookie();
-    });
+    removeUserTokenCookie();
+    await auth.signOut();
 }

@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { signUp, logIn, auth } from "../lib/firebase/auth";
-import { setUserTokenCookie } from "../lib/cookies";
+import { signUp, logIn } from "../lib/firebase/auth";
 import { Button, Center, FormControl, FormLabel, Input, Spinner } from "@chakra-ui/react";
 
 export default function LoginPage() {
@@ -21,18 +20,13 @@ export default function LoginPage() {
         setLoading(true);
         signUp(signUpEmail, signUpPassword).then((success) => {
             if(success) router.push("/home");
-            setLoading(false);
         })
-        setLoading(false);
     }
 
     function handleLogIn() {
         setLoading(true);
         logIn(logInEmail, logInPassword).then((success) => {
-            if (success) {
-                router.push("/home");
-            }
-            setLoading(false);
+            if (success) router.push("/home");
         });
     }
 

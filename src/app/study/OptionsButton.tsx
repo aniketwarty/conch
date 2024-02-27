@@ -23,10 +23,10 @@ export const OptionsButton = ({ options, setOptions, studyMode }: OptionsButtonP
         switch (typeof value) {
             case "boolean":
                 return(
-                    <div key={optionKey} className="flex flex-row items-center">
+                    <div key={optionKey} className="flex flex-row items-center my-2">
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <Checkbox
-                            defaultChecked={value} className="mr-3 w-fit"
+                            defaultChecked={value} className="mr-3" size={"lg"}
                             onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
                         >
                         </Checkbox>
@@ -34,7 +34,7 @@ export const OptionsButton = ({ options, setOptions, studyMode }: OptionsButtonP
                 )
             case "number":
                 return(
-                    <div key={optionKey} className="flex flex-row items-center">
+                    <div key={optionKey} className="flex flex-row items-center my-2">
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <NumberInput
                             variant={"outline"} className="mr-3" width={"80px"} 
@@ -64,9 +64,9 @@ export const OptionsButton = ({ options, setOptions, studyMode }: OptionsButtonP
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize='3xl' fontWeight='bold'>Options</AlertDialogHeader>
 
-                        <AlertDialogBody>
+                        <AlertDialogBody justifyContent={"space-between"}>
                             {
-                                !options ? <Spinner/> : Object.entries(options)
+                                !options ? <Spinner className="m-auto"/> : Object.entries(options)
                                     .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
                                     .map(([key, value], optionKey) => handleOption(key, value, optionKey))
                             }
