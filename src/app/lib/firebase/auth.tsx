@@ -1,9 +1,8 @@
 import { createUserWithEmailAndPassword, getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "firebase/auth";
 import { firebaseApp } from "./firebase";
-import { getUserTokenCookie ,setUserTokenCookie, removeUserTokenCookie,  } from "../cookies";
+import { getUserTokenCookie, setUserTokenCookie, removeUserTokenCookie,  } from "../cookies";
 
 export const auth = getAuth(firebaseApp);
-
 export async function signUp(signUpEmail: string, signUpPassword: string) {
     await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword)
         .then((userCredential) => {

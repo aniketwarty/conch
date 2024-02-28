@@ -5,8 +5,10 @@ import { fetchStudySet, getOptions, updateLastStudied } from "../../lib/firebase
 import { StudySet } from "../../lib/classes/study_set";
 import { Checkbox, Spinner } from "@chakra-ui/react";
 import { StudyModeNavBar } from "../StudyModeNavBar";
+import { useAuth } from "../../lib/firebase/auth_provider";
 
 export default function QuizPage() {
+    const { authLoading } = useAuth();
     const [studySet, setStudySet] = useState<StudySet>();
     const [options, setOptions] = useState<any>({});
     const searchParams = useSearchParams();
@@ -30,6 +32,14 @@ export default function QuizPage() {
             setOptions(options);
         });
     }, [router, searchParams]);
+
+    if(authLoading) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-between p-24">
+                <Spinner className="p-5 m-auto"/>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden">

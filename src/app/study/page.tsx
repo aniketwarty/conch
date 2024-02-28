@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fetchStudySet } from "../lib/firebase/firestore";
 import { StudySet } from "../lib/classes/study_set";
+import { useAuth } from "../lib/firebase/auth_provider";
 import { NavBar } from "../ui/nav_bar/NavBar";
 import { StudyModeButton } from "./StudyModeButton";
 import { BsCardText } from "react-icons/bs";
@@ -13,6 +14,7 @@ import { Spinner } from "@chakra-ui/react";
 import { RiShareForwardLine } from "react-icons/ri";
 
 export default function StudyPage() {
+    const { authLoading } = useAuth();
     const [studySet, setStudySet] = useState<StudySet>();
     const [loading, setLoading] = useState(false);
     const searchParams = useSearchParams();
@@ -30,6 +32,14 @@ export default function StudyPage() {
             }
         });
     }, [router, searchParams]);
+
+    if(authLoading) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-between p-24">
+                <Spinner className="p-5 m-auto"/>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen">
@@ -50,12 +60,11 @@ export default function StudyPage() {
                 
                 <div className="flex flex-row h-5/6 w-full mb-5">
                     <div className="flex flex-col m-5 w-1/4 justify-between">
-                        {/* study modes - add not scrolling*/}
-                        <StudyModeButton text="Flashcards" icon={BsCardText} modePath="flashcards" setName={studySet.name} setLoading={setLoading}/>
-                        <StudyModeButton text="Quiz" icon={MdOutlineQuiz} modePath="quiz" setName={studySet.name} setLoading={setLoading}/>
-                        <StudyModeButton text="Game 1" icon={FaGamepad} modePath="game1" setName={studySet.name} setLoading={setLoading}/>
-                        <StudyModeButton text="Game 2" icon={FaGamepad} modePath="game2" setName={studySet.name} setLoading={setLoading}/>
-                        <StudyModeButton text="Chat" icon={IoChatboxSharp} modePath="chat" setName={studySet.name} setLoading={setLoading}/>
+                        <StudyModeButton text="Flashcards" icon={BsCardText} modePath="flashcards" setUid={searchParams.get("setUid") ?? "unknown"} setName={studySet.name} setLoading={setLoading}/>
+                        <StudyModeButton text="Quiz" icon={MdOutlineQuiz} modePath="quiz" setUid={searchParams.get("setUid") ?? "unknown"} setName={studySet.name} setLoading={setLoading}/>
+                        <StudyModeButton text="Game 1" icon={FaGamepad} modePath="game1" setUid={searchParams.get("setUid") ?? "unknown"} setName={studySet.name} setLoading={setLoading}/>
+                        <StudyModeButton text="Game 2" icon={FaGamepad} modePath="game2" setUid={searchParams.get("setUid") ?? "unknown"} setName={studySet.name} setLoading={setLoading}/>
+                        <StudyModeButton text="Chat" icon={IoChatboxSharp} modePath="chat" setUid={searchParams.get("setUid") ?? "unknown"} setName={studySet.name} setLoading={setLoading}/>
                     </div>
                     <div className="ml-5 mb-5 w-px bg-black"/>
                     <div className="flex flex-col h-full w-3/4 px-8 pb-14 overflow-y-auto">

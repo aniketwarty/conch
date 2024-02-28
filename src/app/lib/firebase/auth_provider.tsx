@@ -1,19 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth, signInWithIdToken } from './auth';
 import { getUserTokenCookie } from '../cookies';
 import { usePathname } from 'next/navigation';
-import { browserSessionPersistence, setPersistence } from 'firebase/auth';
-import firebase from 'firebase/app'; // Add this line
+import { User, inMemoryPersistence, setPersistence } from 'firebase/auth';
+import firebase from 'firebase/auth';
+
+interface AuthContextValue {
+    user: firebase.User | null;
+    authLoading: boolean;
+}
+
+export const AuthContext = createContext<AuthContextValue>({user: null, authLoading: true});
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
+    const [user, setUser] = useState<firebase.User | null>(null);
+    const [authLoading, setAuthLoading] = useState(true);
+    //TODO: add loading
     const router = useRouter();
     const pathname = usePathname();
 
-    useEffect(() => {
-        setPersistence(auth, browserSessionPersistence)
+    useEffect(() => {   
+        setPersistence(auth, inMemoryPersistence)
         const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
-            if (!user) {
+            console.log("auth state changed - user is: ", user);
+            setUser(user);
+            if(user) {
+                if(pathname === "/log_in" || pathname === "/") {
+                    router.push('/home');
+                }
+            } else {
                 getUserTokenCookie().then((user_token) => {
                     if ((user_token ?? "") !== "") {
                         signInWithIdToken(user_token!).then((success) => {
@@ -29,15 +45,20 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
                         router.push('/log_in');
                     }
                 });
-            } else {
-                if(pathname === "/log_in" || pathname === "/") {
-                    router.push('/home');
-                }
             }
+            setAuthLoading(false);
         })
 
         return () => unregisterAuthObserver();
-  }, []);
+  }, [pathname, router]);
 
-  return <>{children}</>;
+    return (
+        <AuthContext.Provider value={{user, authLoading}}>
+            {children}
+        </AuthContext.Provider>
+    );
+}
+
+export function useAuth() {
+    return useContext(AuthContext);
 }

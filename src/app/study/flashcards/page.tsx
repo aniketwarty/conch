@@ -7,8 +7,10 @@ import { StudyModeNavBar } from "../StudyModeNavBar";
 import { Button, IconButton, Spinner } from "@chakra-ui/react";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
+import { useAuth } from "../../lib/firebase/auth_provider";
 
 export default function FlashcardsPage() {
+    const { authLoading } = useAuth();
     const [studySet, setStudySet] = useState<StudySet>();
     const [options, setOptions] = useState<any>({});
     const [index, setIndex] = useState(0);
@@ -35,6 +37,14 @@ export default function FlashcardsPage() {
             setOptions(options);
         });
     }, [router, searchParams]);
+
+    if(authLoading) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-between p-24">
+                <Spinner className="p-5 m-auto"/>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden">

@@ -12,3 +12,5 @@ export async function setUserTokenCookie(token: string) {
 export async function removeUserTokenCookie() {
     cookies().delete('user_token');
 }
+
+//TODO: encrypt the token
