@@ -1,16 +1,18 @@
 'use server';
 import { cookies } from 'next/headers'
 
+const cookieStore = cookies();
+
 export async function getUserTokenCookie() {
-    return cookies().get('user_token')?.value;
+    return cookieStore.get('user_token')?.value;
 }
 
 export async function setUserTokenCookie(token: string) {
-    cookies().set('user_token', token, { secure: true });
+    await cookieStore.set('user_token', token);
 }
 
 export async function removeUserTokenCookie() {
-    cookies().delete('user_token');
+    cookieStore.delete('user_token');
 }
 
 //TODO: encrypt the token

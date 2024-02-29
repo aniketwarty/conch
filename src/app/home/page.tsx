@@ -9,6 +9,8 @@ export default function HomePage() {
     const { authLoading } = useAuth();
     const [loading, setLoading] = useState(false);
 
+    console.log("authLoading: ", authLoading)
+
     if(authLoading) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-between p-24">

@@ -5,6 +5,7 @@ import { getUserTokenCookie } from '../cookies';
 import { usePathname } from 'next/navigation';
 import { User, inMemoryPersistence, setPersistence } from 'firebase/auth';
 import firebase from 'firebase/auth';
+import { set } from 'firebase/database';
 
 interface AuthContextValue {
     user: firebase.User | null;
@@ -23,21 +24,20 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     useEffect(() => {   
         setPersistence(auth, inMemoryPersistence)
         const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
-            console.log("auth state changed - user is: ", user);
+            console.log("auth state changed")
             setUser(user);
+            
             if(user) {
+                console.log("successful login")
                 if(pathname === "/log_in" || pathname === "/") {
                     router.push('/home');
                 }
+                setAuthLoading(false);
             } else {
                 getUserTokenCookie().then((user_token) => {
                     if ((user_token ?? "") !== "") {
                         signInWithIdToken(user_token!).then((success) => {
-                            if(success) {
-                                if(pathname === "/log_in" || pathname === "/") {
-                                    router.push('/home');
-                                }
-                            } else {
+                            if(!success) {
                                 router.push('/log_in');
                             }
                         })
@@ -46,7 +46,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
                     }
                 });
             }
-            setAuthLoading(false);
         })
 
         return () => unregisterAuthObserver();
