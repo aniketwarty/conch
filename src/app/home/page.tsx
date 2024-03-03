@@ -1,23 +1,23 @@
 'use client';
-import { SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import firebase from 'firebase/auth';
+import { getAuthProps } from '../lib/firebase/auth';
+import { useRouter } from 'next/navigation';
 import { NavBar } from '../ui/nav_bar/NavBar';
 import { StudySetList } from './StudySetList';
 import { Spinner } from '@chakra-ui/react';
-import { useAuth } from '../lib/firebase/auth_provider';
+import { AuthLoading, useAuth } from '../lib/firebase/auth_provider';
 
-export default function HomePage() {
+export default function HomePage({ user }:{ user: firebase.User }) {
     const { authLoading } = useAuth();
     const [loading, setLoading] = useState(false);
+    
+    const router = useRouter();
 
-    console.log("authLoading: ", authLoading)
-
-    if(authLoading) {
-        return (
-            <div className="flex min-h-screen flex-col items-center justify-between p-24">
-                <Spinner className="p-5 m-auto"/>
-            </div>
-        );
-    }
+    useEffect(() => {
+        if(!user) router.push("/log_in")
+    }, [router, user])
+    if(authLoading) return <AuthLoading/>;
 
     return (
         <div className="bg-slate-100 h-screen w-screen flex flex-col">
@@ -32,3 +32,5 @@ export default function HomePage() {
         </div>
     );
 }
+
+export { getAuthProps }

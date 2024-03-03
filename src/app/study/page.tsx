@@ -1,45 +1,32 @@
 'use client';
 import { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
 import { useRouter, useSearchParams } from "next/navigation";
+import firebase from "firebase/auth";
+import { getAuthProps } from "../lib/firebase/auth";
 import { fetchStudySet } from "../lib/firebase/firestore";
 import { StudySet } from "../lib/classes/study_set";
-import { useAuth } from "../lib/firebase/auth_provider";
+import { AuthLoading, useAuth } from "../lib/firebase/auth_provider";
 import { NavBar } from "../ui/nav_bar/NavBar";
 import { StudyModeButton } from "./StudyModeButton";
+import { Spinner } from "@chakra-ui/react";
 import { BsCardText } from "react-icons/bs";
 import { FaGamepad } from "react-icons/fa";
 import { MdOutlineQuiz } from "react-icons/md";
 import { IoChatboxSharp } from "react-icons/io5";
-import { Spinner } from "@chakra-ui/react";
 import { RiShareForwardLine } from "react-icons/ri";
 
-export default function StudyPage() {
+export default function StudyPage({ user, studySet }:{ user: firebase.User, studySet: StudySet }) {
     const { authLoading } = useAuth();
-    const [studySet, setStudySet] = useState<StudySet>();
     const [loading, setLoading] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    useEffect(() => {
-        const setUid = searchParams.get("setUid");
-        const setName = searchParams.get("setName");
-        if(!setUid || !setName) router.push("/home");
-        fetchStudySet(setUid!, setName!).then((set) => {
-            if(set) { //TODO: add check if user has access to study set/is user logged in
-                setStudySet(set);
-            } else {
-                router.push("/home");
-            }
-        });
-    }, [router, searchParams]);
 
-    if(authLoading) {
-        return (
-            <div className="flex min-h-screen flex-col items-center justify-between p-24">
-                <Spinner className="p-5 m-auto"/>
-            </div>
-        );
-    }
+    useEffect(() => {
+        if(!user) router.push("/log_in")
+    }, [router, user])
+    if(authLoading) return <AuthLoading/>;
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen">
@@ -83,4 +70,17 @@ export default function StudyPage() {
         </div>
         
     );
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const set = await fetchStudySet(context.query.setUid as string, context.query.setName as string);
+    //TODO: verify user has access to study set
+    return {
+        ...await getAuthProps(context),
+        ...{
+            props: {
+                studySet: set,
+            }
+        }
+    };
 }

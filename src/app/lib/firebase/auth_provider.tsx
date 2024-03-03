@@ -1,11 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { auth, signInWithIdToken } from './auth';
-import { getUserTokenCookie } from '../cookies';
-import { usePathname } from 'next/navigation';
-import { User, inMemoryPersistence, setPersistence } from 'firebase/auth';
+import { auth } from './auth';
+import { inMemoryPersistence, setPersistence } from 'firebase/auth';
 import firebase from 'firebase/auth';
-import { set } from 'firebase/database';
+import { Spinner } from '@chakra-ui/react';
 
 interface AuthContextValue {
     user: firebase.User | null;
@@ -17,39 +14,21 @@ export const AuthContext = createContext<AuthContextValue>({user: null, authLoad
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<firebase.User | null>(null);
     const [authLoading, setAuthLoading] = useState(true);
-    //TODO: add loading
-    const router = useRouter();
-    const pathname = usePathname();
 
     useEffect(() => {   
         setPersistence(auth, inMemoryPersistence)
-        const unregisterAuthObserver = auth.onAuthStateChanged((user) => {
-            console.log("auth state changed")
-            setUser(user);
-            
+        const unregisterAuthObserver = auth.onAuthStateChanged(async (user) => {
             if(user) {
-                console.log("successful login")
-                if(pathname === "/log_in" || pathname === "/") {
-                    router.push('/home');
-                }
-                setAuthLoading(false);
+                setUser(user);
             } else {
-                getUserTokenCookie().then((user_token) => {
-                    if ((user_token ?? "") !== "") {
-                        signInWithIdToken(user_token!).then((success) => {
-                            if(!success) {
-                                router.push('/log_in');
-                            }
-                        })
-                    } else {
-                        router.push('/log_in');
-                    }
-                });
+                setUser(null);
             }
+
+            setAuthLoading(false);
         })
 
         return () => unregisterAuthObserver();
-  }, [pathname, router]);
+  }, []);
 
     return (
         <AuthContext.Provider value={{user, authLoading}}>
@@ -60,4 +39,13 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
 export function useAuth() {
     return useContext(AuthContext);
+}
+
+export const AuthLoading = () => {
+    return (
+        <div className="flex min-h-screen flex-col items-center justify-between p-24">
+            <Spinner className="p-5 m-auto"/>
+            <p className="text-2xl">Logging in...</p>
+        </div>
+    )
 }

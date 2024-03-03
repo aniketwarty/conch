@@ -1,5 +1,4 @@
 'use client'
-
 import { ChakraProvider } from '@chakra-ui/react'
 import AuthProvider from './lib/firebase/auth_provider'
 

@@ -1,18 +1,20 @@
 'use client';
 import { useState, useEffect } from "react";
+import { GetServerSideProps } from "next";
 import { useSearchParams, useRouter } from "next/navigation";
+import firebase from "firebase/auth";
+import { getAuthProps } from "../../lib/firebase/auth";
+import { AuthLoading, useAuth } from "../../lib/firebase/auth_provider";
 import { fetchStudySet, getOptions, updateLastStudied } from "../../lib/firebase/firestore";
 import { StudySet } from "../../lib/classes/study_set";
 import { StudyModeNavBar } from "../StudyModeNavBar";
 import { Button, IconButton, Spinner } from "@chakra-ui/react";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import { BiArrowToLeft, BiArrowToRight } from "react-icons/bi";
-import { useAuth } from "../../lib/firebase/auth_provider";
 
-export default function FlashcardsPage() {
+export default function FlashcardsPage({ user, studySet, initialOptions }:{ user: firebase.User, studySet: StudySet, initialOptions: any }) {
     const { authLoading } = useAuth();
-    const [studySet, setStudySet] = useState<StudySet>();
-    const [options, setOptions] = useState<any>({});
+    const [options, setOptions] = useState(initialOptions);
     const [index, setIndex] = useState(0);
     const [flipped, setFlipped] = useState(false);
 
@@ -20,31 +22,9 @@ export default function FlashcardsPage() {
     const router = useRouter();
 
     useEffect(() => {
-        const setUid = searchParams.get("setUid");
-        const setName = searchParams.get("setName");
-        if(!setUid || !setName) router.push("/home");
-        fetchStudySet(setUid!, setName!).then((set) => {
-            if(set) { //TODO: add check if user has access to study set/is user logged in
-                set.updateLaststudied();
-                setStudySet(set);
-                updateLastStudied(setUid!, set)
-            } else {
-                router.push("/home");
-            }
-        });
-
-        getOptions('flashcards').then((options: any) => {
-            setOptions(options);
-        });
-    }, [router, searchParams]);
-
-    if(authLoading) {
-        return (
-            <div className="flex min-h-screen flex-col items-center justify-between p-24">
-                <Spinner className="p-5 m-auto"/>
-            </div>
-        );
-    }
+        if(!user) router.push("/log_in")
+    }, [router, user])
+    if(authLoading) return <AuthLoading/>;
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden">
@@ -86,4 +66,19 @@ export default function FlashcardsPage() {
             </>}
         </div>
     );
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const set = await fetchStudySet(context.query.setUid as string, context.query.setName as string);
+    const options = await getOptions('flashcards');
+    //TODO: verify user has access to study set
+    return {
+        ...await getAuthProps(context),
+        ...{
+            props: {
+                studySet: set,
+                initialOptions: options
+            }
+        }
+    };
 }
