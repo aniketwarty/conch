@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { signUp, logIn } from "../lib/firebase/auth";
+import { signUp, logIn, auth } from "../lib/firebase/auth";
 import { Button, Center, FormControl, FormLabel, Input, Spinner } from "@chakra-ui/react";
 
 export default function LoginPage() {
@@ -16,18 +16,20 @@ export default function LoginPage() {
         stateSetter(event.target.value);
     }
 
-    function handleSignUp() {
+    async function handleSignUp() {
+        console.log(auth.currentUser)
         setLoading(true);
-        signUp(signUpEmail, signUpPassword).then((success) => {
-            if(success) router.push("/home");
-        })
+        const success = await signUp(signUpEmail, signUpPassword);
+        if(success) router.push("/home");
+        setLoading(false);
     }
 
-    function handleLogIn() {
+    async function handleLogIn() {
         setLoading(true);
-        logIn(logInEmail, logInPassword).then((success) => {
-            if (success) router.push("/home");
-        });
+        const success = await logIn(logInEmail, logInPassword);
+        console.log(success);
+        if (success) router.push("/home");
+        setLoading(false);
     }
 
     return (

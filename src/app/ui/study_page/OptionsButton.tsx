@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
     AlertDialogOverlay, Button, Checkbox, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Spinner, useDisclosure } from "@chakra-ui/react"
-import { getOptions, saveOptions } from "../lib/firebase/firestore";
+import { getOptions, saveOptions } from "../../lib/firebase/firestore";
 
 interface OptionsButtonProps {
     studyMode: string;

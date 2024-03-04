@@ -1,24 +1,23 @@
 import React from 'react';
 import Link from 'next/link';
 import { IconType } from 'react-icons';
-import { useAuth } from '../lib/firebase/auth_provider';
+import { StudySet } from '../../lib/classes/study_set';
 
 interface StudyModeButtonProps {
     text: string;
     icon: IconType;
     modePath: string;
-    setUid: string;
-    setName: string;
+    studySetString: string;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const StudyModeButton = ({ text, icon, modePath, setUid, setName, setLoading }: StudyModeButtonProps) => {
-    const user = useAuth();
+export const StudyModeButton = ({ text, icon, modePath, studySetString, setLoading }: StudyModeButtonProps) => {
+    const studySet = StudySet.fromString(studySetString);
 
     return (
         <Link href={{
             pathname: `/study/${modePath}`,
-            query: { setUid: setUid, setName: setName}
+            query: { setUid: studySet.uid, setName: studySet.name}
         }}
         onClick={() => setLoading(true)}>  
             <button className="border-2 border-black rounded-lg p-3 m-3 items-center flex flex-row w-full">

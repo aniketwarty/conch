@@ -59,4 +59,19 @@ export class StudySet{
             last_studied: this.last_studied
         }
     }
+
+    static fromString(str: string){
+        const data = JSON.parse(str);
+        return new StudySet(data.name, data.terms, data.definitions, new Date(data.last_studied), data.uid);
+    }
+
+    toString(){
+        return JSON.stringify({
+            name: this.name,
+            terms: this.terms,
+            definitions: this.definitions,
+            last_studied: this.last_studied,
+            uid: this.uid,
+        });
+    }
 }
