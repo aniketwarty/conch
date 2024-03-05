@@ -8,7 +8,7 @@ export const AccountButton = () => {
     const router = useRouter();
     const onClick = () => {
         logOut().then(() => {
-            router.push('/log_in');
+            router.push('/login');
         })
     };
 

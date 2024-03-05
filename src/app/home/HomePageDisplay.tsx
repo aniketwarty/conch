@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { StudySet } from "../lib/classes/study_set";
-import { setStudySetCookie } from "../lib/cookies";
 import { NavBar } from '../ui/nav_bar/NavBar';
 import { Spinner } from '@chakra-ui/react';
 
@@ -12,11 +11,6 @@ interface HomePageProps {
 
 export const HomePageDisplay = ({ setList } : HomePageProps) => {
     const [loading, setLoading] = useState(false);
-
-    function onLinkClick(set: string) {
-        setLoading(true);
-        setStudySetCookie(set);
-    }
 
     return (
         <div className="bg-slate-100 h-screen w-screen flex flex-col">
@@ -38,7 +32,7 @@ export const HomePageDisplay = ({ setList } : HomePageProps) => {
                             setName: StudySet.fromString(set).name,
                         },
                     }}
-                    onClick={() => onLinkClick(set)}
+                    onClick={() => setLoading(true)}
                 >
                     <div className="flex flex-col ml-10 p-5 shadow-2xl rounded-sm">
                         <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>

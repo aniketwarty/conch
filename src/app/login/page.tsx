@@ -1,7 +1,7 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { signUp, logIn, auth } from "../lib/firebase/auth";
+import { signUp, logIn } from "../lib/firebase/auth";
 import { Button, Center, FormControl, FormLabel, Input, Spinner } from "@chakra-ui/react";
 
 export default function LoginPage() {
@@ -17,18 +17,18 @@ export default function LoginPage() {
     }
 
     async function handleSignUp() {
-        console.log(auth.currentUser)
         setLoading(true);
-        const success = await signUp(signUpEmail, signUpPassword);
-        if(success) router.push("/home");
+        const response = await signUp(signUpEmail, signUpPassword);
+        if(response.status === 200) router.push("/home");
+        else console.log("Error logging in: ", response);
         setLoading(false);
     }
 
     async function handleLogIn() {
         setLoading(true);
-        const success = await logIn(logInEmail, logInPassword);
-        console.log(success);
-        if (success) router.push("/home");
+        const response = await logIn(logInEmail, logInPassword);
+        if(response.status === 200) router.push("/home");
+        else console.log("Error logging in: ", response);
         setLoading(false);
     }
 

@@ -2,16 +2,19 @@
 import { redirect } from 'next/navigation';
 import { fetchStudySets } from '../lib/firebase/firestore';
 import { HomePageDisplay } from './HomePageDisplay';
-import { getAuthCookies } from '../lib/cookies';
+import { cookies } from 'next/headers';
 
 export default async function Home() {
-    const {user, token} = await getAuthCookies();
-    if(!token) redirect("/log_in");
+    const session = cookies().get("session");
+    const uid = cookies().get("uid")?.value;
 
-    const setList = await fetchStudySets(user!.uid);
-
-    return (
-        <HomePageDisplay setList={setList}/>
-    );
+    if(uid) {
+        const setList = await fetchStudySets(uid);
+        return (
+            <HomePageDisplay setList={setList}/>
+        );
+    } else {
+        redirect("/login");
+    }
 }
 

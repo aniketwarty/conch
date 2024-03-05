@@ -38,4 +38,5 @@ next-env.d.ts
 
 #firebase config
 /src/app/lib/firebase/config.tsx
+/src/app/lib/firebase/admin-config.tsx
 ```

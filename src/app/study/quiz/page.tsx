@@ -1,28 +1,16 @@
 'use server';
-import { redirect, useSearchParams } from "next/navigation";
-import { cookies } from "next/headers";
-import { fetchStudySet, getOptions } from "../../lib/firebase/firestore";
+import { handleAuthRedirect, getUserCookie } from "../../lib/firebase/auth";
+import { getOptions } from "../../lib/firebase/firestore";
+import { getSetString } from "../../lib/util/study";
 import { QuizPageDisplay } from "./QuizPageDisplay";
 
-export default async function FlashcardsPage() {
-    const cookieStore = cookies()
-    const token = cookieStore.get('user_token')?.value
-    if(!token) redirect("/log_in");
+export default async function QuizPage({searchParams}: {searchParams: any}) {
+    await handleAuthRedirect();
 
-    let setString = cookieStore.get("study_set")?.value ?? null;
-    const searchParams = useSearchParams();
-    const setUid = searchParams.get("setUid") as string;
-    const setName = searchParams.get("setName") as string;
+    const setString = await getSetString(searchParams);
 
-    if(!setString && (!setUid || !setName)) redirect("/home");
-    else if (!setString) {
-        setString = await fetchStudySet(setUid, setName);
-        if(setString) cookieStore.set("study_set", setString);
-        else redirect("/home");
-    }
-
-    const user = JSON.parse((cookieStore.get("user")?.value) ?? "{}" as string);
-    const initialOptions = await getOptions(user!.uid, "quiz");
+    const user = await getUserCookie();
+    const initialOptions = await getOptions(user!.uid, "flashcards");
     
     return (
         <QuizPageDisplay studySetString={setString} initialOptions={initialOptions}/>
