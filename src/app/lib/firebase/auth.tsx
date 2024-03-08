@@ -66,7 +66,3 @@ export async function logOut() {
     destroyCookie(null, "user");
     await auth.signOut();
 }
-
-export async function getUserCookie() {
-    return JSON.parse(parseCookies()?.user ?? "{}");
-}

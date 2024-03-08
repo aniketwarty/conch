@@ -1,12 +1,12 @@
 export const defaultFlashcardOptions = {
-    "flip_animation": true,
-    "randomize": true,
+    "Flip Animation": true,
+    "Randomize": true,
 };
 
 export const defaultQuizOptions = {
-    "frq": true,
-    "mcq": true,
-    "num_questions": -1,
-    "true_false": true,
-    "time_limit": -1,
+    "Free Response Questions": true,
+    "Multiple Choice Questions": true,
+    "Number of Questinos": -1,
+    "True/False Questions": true,
+    "Time Limit (seconds)": -1,
 }

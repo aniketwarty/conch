@@ -1,23 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
     AlertDialogOverlay, Button, Checkbox, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Spinner, useDisclosure } from "@chakra-ui/react"
 import { getOptions, saveOptions } from "../../lib/firebase/firestore";
 
 interface OptionsButtonProps {
+    uid: string;
     studyMode: string;
     options: any;
     setOptions: React.Dispatch<React.SetStateAction<any>>
 }
 
-export const OptionsButton = ({ options, setOptions, studyMode }: OptionsButtonProps) => {
+export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsButtonProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<HTMLButtonElement | null>(null)
 
     useEffect(() => {
-        getOptions(studyMode).then((options) => {
+        getOptions(uid, studyMode).then((options) => {
             setOptions(options);
         });
-    }, [isOpen, setOptions, studyMode]);
+    }, [isOpen, setOptions, studyMode, uid]);
 
     function handleOption(key: string, value: any, optionKey: number) {
         switch (typeof value) {
@@ -26,7 +27,12 @@ export const OptionsButton = ({ options, setOptions, studyMode }: OptionsButtonP
                     <div key={optionKey} className="flex flex-row items-center my-2">
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <Checkbox
-                            defaultChecked={value} className="mr-3" size={"lg"}
+                            defaultChecked={value} checked={value} className="mr-3" size={"lg"} 
+                            disabled={
+                                (key === "True/False Questions" && options["True/False Questions"] && !options["Multiple Choice Questions"] && !options["Free Response Questions"]) ||
+                                (key === "Multiple Choice Questions" && !options["True/False Questions"] && options["Multiple Choice Questions"] && !options["Free Response Questions"]) ||
+                                (key === "Free Response Questions" && !options["True/False Questions"] && !options["Multiple Choice Questions"] && options["Free Response Questions"])
+                            }
                             onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
                         >
                         </Checkbox>
@@ -74,7 +80,7 @@ export const OptionsButton = ({ options, setOptions, studyMode }: OptionsButtonP
 
                         <AlertDialogFooter>
                             <Button ref={cancelRef} onClick={() => {
-                                saveOptions(options, studyMode)
+                                saveOptions(uid, options, studyMode)
                                 onClose()
                             }}>
                                 Update

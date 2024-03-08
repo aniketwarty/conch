@@ -12,8 +12,7 @@ export async function getSetString(searchParams: any) {
     else if (!setString) {
         setString = await fetchStudySet(setUid, setName);
         if(setString) {
-            setCookie(null, "study_set", setString); //why isn't this running
-            console.log("setString", setString);
+            setCookie(null, "study_set", setString); //TODO: fix this (not running)
         }
         else redirect("/home");
     }

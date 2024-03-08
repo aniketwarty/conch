@@ -1,18 +1,18 @@
 import Link from "next/link";
-import { auth } from "../../lib/firebase/auth";
-import { Button, Divider, IconButton } from "@chakra-ui/react";
+import { Divider, IconButton } from "@chakra-ui/react";
 import { IoMdArrowRoundBack, IoMdClose } from "react-icons/io";
 import { OptionsButton } from "./OptionsButton";
 import { StudySet } from "../../lib/classes/study_set";
 
 interface StudyModeNavBarProps {
+    uid: string;
     studyMode: string;
     studySetString: string;
     options: any;
     setOptions: React.Dispatch<React.SetStateAction<any>>;
 }
 
-export const StudyModeNavBar = ({ studyMode, studySetString, options, setOptions }: StudyModeNavBarProps) => {
+export const StudyModeNavBar = ({ uid, studyMode, studySetString, options, setOptions }: StudyModeNavBarProps) => {
     const studySet = StudySet.fromString(studySetString);
 
     return (
@@ -29,7 +29,7 @@ export const StudyModeNavBar = ({ studyMode, studySetString, options, setOptions
                     className="mr-3 outline-4"/>
                 </Link>
                 <p>{studyMode}</p>
-                <OptionsButton options={options} setOptions={setOptions} studyMode={studyMode}/>
+                <OptionsButton uid={uid} options={options} setOptions={setOptions} studyMode={studyMode}/>
                 <Link href="/home">
                     <IconButton variant="outline" aria-label="back" icon={<IoMdClose/>}
                     className="ml-3 outline-4"/>

@@ -1,5 +1,6 @@
 'use server';
-import { getUserCookie } from "../../lib/firebase/auth";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { getOptions } from "../../lib/firebase/firestore";
 import { FlashcardPageDisplay } from "./FlashcardPageDisplay";
 import { getSetString } from "@/app/lib/util/study";
@@ -7,11 +8,12 @@ import { getSetString } from "@/app/lib/util/study";
 export default async function FlashcardsPage({searchParams}: {searchParams: any}) {
     const setString = await getSetString(searchParams);
 
-    const user = await getUserCookie();
-    const initialOptions = await getOptions(user!.uid, "flashcards");
-    //TODO: store options in cookie
+    const uid = cookies().get("uid")?.value;
+    if(!uid) redirect("/login")
+
+    const initialOptions = await getOptions(uid, "flashcards");
 
     return (
-        <FlashcardPageDisplay studySetString={setString} initialOptions={initialOptions}/>
+        <FlashcardPageDisplay uid={uid} studySetString={setString} initialOptions={initialOptions}/>
     );
 }

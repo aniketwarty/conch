@@ -5,7 +5,6 @@ import { HomePageDisplay } from './HomePageDisplay';
 import { cookies } from 'next/headers';
 
 export default async function Home() {
-    const session = cookies().get("session");
     const uid = cookies().get("uid")?.value;
 
     if(uid) {

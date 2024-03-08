@@ -71,9 +71,9 @@ export async function getOptions(uid: string, studyMode: string) {
     }
 }
 
-export async function saveOptions(user: firebase.User, options: any, studyMode: string) {
+export async function saveOptions(uid: string, options: any, studyMode: string) {
     try {
-        const optionsRef = doc(db, `users/${user.uid}/study_mode_options/${studyMode}`);
+        const optionsRef = doc(db, `users/${uid}/study_mode_options/${studyMode}`);
         await setDoc(optionsRef, options);
     } catch (e) {
         console.log(e);
