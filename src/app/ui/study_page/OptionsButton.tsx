@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
     AlertDialogOverlay, Button, Checkbox, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Spinner, useDisclosure } from "@chakra-ui/react"
 import { getOptions, saveOptions } from "../../lib/firebase/firestore";
@@ -13,12 +13,20 @@ interface OptionsButtonProps {
 export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsButtonProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<HTMLButtonElement | null>(null)
+    const [oldOptions, setOldOptions] = useState(options)
 
     useEffect(() => {
-        getOptions(uid, studyMode).then((options) => {
-            setOptions(options);
-        });
+        if(isOpen) {
+            getOptions(uid, studyMode).then((result) => {
+                setOptions(result);
+                setOldOptions(result);
+            });
+        }
     }, [isOpen, setOptions, studyMode, uid]);
+
+    useEffect(() => {
+        if(!isOpen) saveOptions(uid, options, "quiz");
+    }, [isOpen, options, uid])
 
     function handleOption(key: string, value: any, optionKey: number) {
         switch (typeof value) {
@@ -44,7 +52,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <NumberInput
                             variant={"outline"} className="mr-3" width={"80px"} 
-                            defaultValue={value} min={-1}
+                            defaultValue={value} min={-1} max={key === "Number of Questions" ? 30 : 999}
                             onChange={(e) => {
                                 setOptions({ ...options, [key]: Number(e) })
                             }}
@@ -85,7 +93,10 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                             }}>
                                 Update
                             </Button>
-                            <Button colorScheme='red' onClick={onClose} ml={3}>
+                            <Button colorScheme='red' ml={3} onClick={() => {
+                                setOptions(oldOptions)
+                                onClose()
+                            }}>
                                 Cancel
                             </Button>
                         </AlertDialogFooter>

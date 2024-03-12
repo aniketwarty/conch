@@ -1,4 +1,4 @@
-export class StudySet{
+export class StudySet {
     name: string;
     terms: string[];
     definitions: string[];
