@@ -6,11 +6,18 @@ export class Question {
     constructor(answer: string){
         this.answer = answer;
     }
+}
 
-    static createTrueFalse(set: StudySet, index: number, useTerm: boolean) {
-        const answer = Math.random() < 0.5 ? "True":"False";
-        if(answer === "True") {
-            return new TrueFalseQuestion(set.terms[index], set.definitions[index], answer)
+export class TrueFalseQuestion extends Question {
+    term: string;
+    definition: string;
+
+    constructor(set: StudySet, index: number, useTerm: boolean){ //TODO: handle case where set is of length 1
+        const ans = Math.random() < 0.5 ? "True":"False";
+        super(ans);
+        if(ans === "True") {
+            this.term = set.terms[index]
+            this.definition = set.definitions[index]
         } else {
             let term = useTerm ? set.terms[index]:set.terms[Math.floor(Math.random() * set.terms.length)];
             let definition = useTerm ? set.definitions[Math.floor(Math.random() * set.definitions.length)]:set.definitions[index];
@@ -18,18 +25,26 @@ export class Question {
                 term = useTerm ? set.terms[index]:set.terms[Math.floor(Math.random() * set.terms.length)];
                 definition = useTerm ? set.definitions[Math.floor(Math.random() * set.definitions.length)]:set.definitions[index];
             }
-            return new TrueFalseQuestion(term, definition, answer)
+            this.term = term;
+            this.definition = definition;
         }
     }
 }
 
-export class TrueFalseQuestion extends Question {
-    term: string;
-    definition: string;
+export class MultipleChoiceQuestion extends Question {
+    question: string;
+    choices: string[];
 
-    constructor(term: string, definition: string, answer: string){
-        super(answer);
-        this.term = term;
-        this.definition = definition;
+    constructor(set: StudySet, index: number){
+        const useTerm = set.terms[index].length <= set.definitions[index].length;
+        const ans = useTerm ? set.terms[index] : set.definitions[index];
+        super(ans);
+        this.question = useTerm ? set.definitions[index] : set.terms[index];
+        this.choices = [ans];
+        while(this.choices.length < Math.min(set.terms.length, 4)) {
+            const choice = useTerm ? set.terms[Math.floor(Math.random() * set.terms.length)] : set.definitions[Math.floor(Math.random() * set.definitions.length)];
+            if(!this.choices.includes(choice)) this.choices.push(choice);
+            console.log(this.choices)
+        }
     }
 }
