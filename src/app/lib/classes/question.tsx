@@ -44,7 +44,7 @@ export class MultipleChoiceQuestion extends Question {
         while(this.choices.length < Math.min(set.terms.length, 4)) {
             const choice = useTerm ? set.terms[Math.floor(Math.random() * set.terms.length)] : set.definitions[Math.floor(Math.random() * set.definitions.length)];
             if(!this.choices.includes(choice)) this.choices.push(choice);
-            console.log(this.choices)
         }
+        this.choices.sort(() => Math.random() - 0.5);
     }
 }

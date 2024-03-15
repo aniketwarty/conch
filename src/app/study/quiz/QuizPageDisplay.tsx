@@ -4,7 +4,6 @@ import { StudySet } from "../../lib/classes/study_set";
 import { QuizGenerator } from "./QuizGenerator";
 import { StudyModeNavBar } from "../../ui/study_page/StudyModeNavBar";
 import { Button, Checkbox } from "@chakra-ui/react";
-import { saveOptions } from "@/app/lib/firebase/firestore";
 
 interface QuizPageDisplayProps {
     uid: string;
