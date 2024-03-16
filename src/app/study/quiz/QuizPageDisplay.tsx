@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { StudySet } from "../../lib/classes/study_set";
 import { QuizGenerator } from "./QuizGenerator";
 import { StudyModeNavBar } from "../../ui/study_page/StudyModeNavBar";
-import { Button, Checkbox } from "@chakra-ui/react";
+import { Button, Checkbox, Icon, Tooltip } from "@chakra-ui/react";
 
 interface QuizPageDisplayProps {
     uid: string;
@@ -63,7 +63,18 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                         />
                     </div>
                     <div className="flex flex-row my-2">
-                        <p className="ml-3 mr-3 text-2xl">Free Response Questions</p>
+                        <p className="ml-3 text-2xl">Free Response Questions</p>
+                        <Tooltip label={
+                            <>
+                                Free response questions are generated and graded using AI based on the set as a whole.
+                                <br/>
+                                Note: Generating many free response questions may increase loading time.
+                            </>
+                        } aria-label="info-icon">
+                            <span className="mr-3">
+                                <Icon boxSize={4} color="gray.500" _hover={{ color: "gray.700" }} />
+                            </span>
+                        </Tooltip>
                         <Checkbox
                             defaultChecked={options["Free Response Questions"]} checked={options["Free Response Questions"]} key={options["Free Response Questions"]} className="mr-3" size={"lg"}
                             disabled={options["Free Response Questions"] === true && options["True/False Questions"] === false && options["Multiple Choice Questions"] === false && options["Short Answer Questions"] === false}

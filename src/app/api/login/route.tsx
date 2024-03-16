@@ -14,7 +14,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         if (decodedToken) {
             //Generate session cookie
             const cookieStore = cookies();
-            const expiresIn = 60 * 60 * 24 * 5 * 1000;
+            const expiresIn = 60 * 60 * 24 * 30;
             const sessionCookie = await auth().createSessionCookie(idToken, {
                 expiresIn,
             });
@@ -43,12 +43,10 @@ export async function GET(request: NextRequest) {
     const session = cookieStore.get("session")?.value || "";
     const uid = cookieStore.get("uid")?.value || "";
 
-    //Validate if the cookie exist in the request
     if (!session) {
         return NextResponse.json({ uid: "" }, { status: 401 });
     }
   
-    //Use Firebase Admin to validate the session cookie
     const decodedClaims = await auth().verifySessionCookie(session, true);
   
     if (!decodedClaims) {

@@ -61,7 +61,7 @@ export class ShortAnswerQuestion extends Question {
 }
 
 export class FreeResponseQuestion extends Question {
-    constructor(set: StudySet){
-        super("", "")
+    constructor(question: string){
+        super(question, "")
     }
 }

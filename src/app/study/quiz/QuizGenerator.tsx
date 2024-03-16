@@ -4,6 +4,7 @@ import { Button, Center, Input, Spinner } from "@chakra-ui/react";
 import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
 import { QuizChoiceButton } from "./QuizChoiceButton";
 import { IoIosArrowDropright } from "react-icons/io";
+import { generateFRQ } from "@/app/lib/gemini/gemini";
 
 interface QuizGeneratorProps {
     studySetString: string;
@@ -12,7 +13,7 @@ interface QuizGeneratorProps {
 
 export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => {
     const studySet = StudySet.fromString(studySetString);
-    const [generatedQuiz, setGeneratedQuiz] = useState(false);
+    const [questionsGenerated, setQuestionsGenerated] = useState(0);
     const [questionList, setQuestionList] = useState<Question[]>([]);
     const [answers, setAnswers] = useState<string[]>(Array(options["Number of Questions"]).fill(""));
 
@@ -21,8 +22,16 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
         const enabledQuestionTypes = allQuestionTypes.filter(type => options[type]);
         let setIndex = 0;
 
+        const getFRQs = async (set: StudySet, numQuestions: number) => {
+            for(let i = 0; i < numQuestions; i++) {
+                const question = await generateFRQ(set);
+                questionList.push(question);
+                setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
+            }
+        }
+
         if(questionList.length === 0) {
-            const numQuestionsPerType = options["Number of Questions"] / enabledQuestionTypes.length;
+            const numQuestionsPerType = Math.floor(options["Number of Questions"] / enabledQuestionTypes.length);
             const remainder = options["Number of Questions"] % enabledQuestionTypes.length;
             //TODO: shuffle around the questions so you dont just see the order of the terms repeat every time
             for (const questionType of enabledQuestionTypes) {
@@ -30,25 +39,24 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("True/False Questions") < remainder?1:0)); i++) {
                         questionList.push(new TrueFalseQuestion(studySet, setIndex, true));
                         setIndex = (setIndex + 1) % studySet.terms.length;
-                    }
+                        setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);                    }
                 } else if (questionType === "Multiple Choice Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Multiple Choice Questions") < remainder?1:0)); i++) {
                         questionList.push(new MultipleChoiceQuestion(studySet, setIndex));
                         setIndex = (setIndex + 1) % studySet.terms.length;
-                    }
+                        setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);                    }
                 } else if (questionType === "Short Answer Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Short Answer Questions") < remainder?1:0)); i++) {
                         questionList.push(new ShortAnswerQuestion(studySet, setIndex));
                         setIndex = (setIndex + 1) % studySet.terms.length;
-                    }
-                }
-                else if (questionType === "Free Response Questions") {
-                    for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Free Response Questions") < remainder?1:0)); i++) {
-                        questionList.push(new FreeResponseQuestion(studySet));
+                        setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
+                        console.log(questionsGenerated)
                     }
                 }
             }
-            setGeneratedQuiz(true);
+            if(enabledQuestionTypes.includes("Free Response Questions")) {
+                getFRQs(studySet, options["Number of Questions"]/enabledQuestionTypes.length);
+            }
         }
     }, [])
 
@@ -101,20 +109,31 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
                         <div className="flex my-2 justify-items-stretch">
                             <Input className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} placeholder="Answer..."
                             value={answers[index]} onChange={(e) => {setAnswers({...answers, [index]: e.target.value})}}/>
-                        </div>
+                        </div> 
                     </div>
                 </div>
             );   
         } else if (question instanceof FreeResponseQuestion) {
             return(
-                <div></div>
+                <div className="flex flex-row mt-2 p-5 bg-white rounded-lg mb-10 shadow-lg" key={index}>
+                    <p className="text-xl">{index+1}.</p>
+                    <div className="flex flex-col w-full mx-5">
+                        <div className="flex flex-row w-full p-2 items-center shadow-2xl rounded-lg min-h-20">
+                            <p className="m-auto text-lg font-bold">{question.question}</p>
+                        </div>
+                        <div className="flex my-2 justify-items-stretch">
+                            <Input className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} placeholder="Answer..."
+                            value={answers[index]} onChange={(e) => {setAnswers({...answers, [index]: e.target.value})}}/>
+                        </div>
+                    </div>
+                </div>
             )
         }
     }
 
     return (
         <div className="flex flex-col h-5/6 w-1/2 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto">
-            {generatedQuiz ? <div className="h-full w-full">
+            {questionList.length===options["Number of Questions"] ? <div className="h-full w-full">
                 <p className="text-5xl font-bold mx-auto my-5 text-center">Quiz</p>  
                 {questionList.map((question, index) => createQuestion(question, index))}
                 <Center>
@@ -127,7 +146,8 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
             </div>:
             <div className="flex flex-col items-center m-auto"> 
                 <Spinner className="p-10"/>
-                <p className="text-2xl m-8 font-bold">Generating Quiz...</p>
+                <p className="text-2xl mt-8 font-bold">Generating Quiz...</p>
+                <p className="text-2xl font-bold">{Math.round(questionsGenerated/options["Number of Questions"]*100)}%</p>
             </div>}
         </div>
     )

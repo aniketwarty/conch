@@ -40,6 +40,6 @@ next-env.d.ts
 /src/app/lib/firebase/config.tsx
 /src/app/lib/firebase/admin-config.tsx
 
-# openai config
-/src/app/lib/openai/config.tsx
+# gemini config
+/src/app/lib/gemini/config.tsx
 ```
