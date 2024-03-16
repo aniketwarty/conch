@@ -36,7 +36,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-#firebase config
+# firebase config
 /src/app/lib/firebase/config.tsx
 /src/app/lib/firebase/admin-config.tsx
+
+# openai config
+/src/app/lib/openai/config.tsx
 ```

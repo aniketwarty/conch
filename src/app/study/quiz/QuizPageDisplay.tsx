@@ -33,30 +33,40 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                         {options["Time Limit"]===-1 ? "No time limit" : `${Math.floor(options["Time Limit"] / 60)}:${(options["Time Limit"] % 60).toString().padStart(2, '0')} time limit`}
                     </p>
                     <div className="flex flex-row my-2">
-                        <p className="ml-3 mr-3 text-2xl">True/False</p>
+                        <p className="ml-3 mr-3 text-2xl">True/False Questions</p>
                         <Checkbox
                             defaultChecked={options["True/False Questions"]} checked={options["True/False Questions"]} key={options["True/False Questions"]} className="mr-3" size={"lg"}
-                            disabled={options["True/False Questions"] === true && options["Multiple Choice Questions"] === false && options["Free Response Questions"] === false}
+                            disabled={options["True/False Questions"] === true && options["Multiple Choice Questions"] === false && options["Free Response Questions"] === false && options["Short Answer Questions"] === false}
                             onChange={(e) => {
                                 setOptions({ ...options, ["True/False Questions"]: e.target.checked });
                             }}
                         />
                     </div>
                     <div className="flex flex-row my-2">
-                        <p className="ml-3 mr-3 text-2xl">Multiple Choice</p>
+                        <p className="ml-3 mr-3 text-2xl">Multiple Choice Questions</p>
                         <Checkbox
                             defaultChecked={options["Multiple Choice Questions"]} checked={options["Multiple Choice Questions"]} key={options["Multiple Choice Questions"]} className="mr-3" size={"lg"}
-                            disabled={options["Multiple Choice Questions"] === true && options["True/False Questions"] === false && options["Free Response Questions"] === false}
+                            disabled={options["Multiple Choice Questions"] === true && options["True/False Questions"] === false && options["Free Response Questions"] === false && options["Short Answer Questions"] === false}
                             onChange={(e) => {
                                 setOptions({ ...options, ["Multiple Choice Questions"]: e.target.checked });
                             }}
                         />
                     </div>
                     <div className="flex flex-row my-2">
-                        <p className="ml-3 mr-3 text-2xl">Free Response</p>
+                        <p className="ml-3 mr-3 text-2xl">Short Answer Questions</p>
+                        <Checkbox
+                            defaultChecked={options["Short Answer Questions"]} checked={options["Short Answer Questions"]} key={options["Multiple Choice Questions"]} className="mr-3" size={"lg"}
+                            disabled={options["Short Answer Questions"] === true && options["True/False Questions"] === false && options["Free Response Questions"] === false && options["Multiple Choice Questions"] === false}
+                            onChange={(e) => {
+                                setOptions({ ...options, ["Short Answer Questions"]: e.target.checked });
+                            }}
+                        />
+                    </div>
+                    <div className="flex flex-row my-2">
+                        <p className="ml-3 mr-3 text-2xl">Free Response Questions</p>
                         <Checkbox
                             defaultChecked={options["Free Response Questions"]} checked={options["Free Response Questions"]} key={options["Free Response Questions"]} className="mr-3" size={"lg"}
-                            disabled={options["Free Response Questions"] === true && options["True/False Questions"] === false && options["Multiple Choice Questions"] === false}
+                            disabled={options["Free Response Questions"] === true && options["True/False Questions"] === false && options["Multiple Choice Questions"] === false && options["Short Answer Questions"] === false}
                             onChange={(e) => {
                                 setOptions({ ...options, ["Free Response Questions"]: e.target.checked })
                             }}

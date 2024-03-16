@@ -16,7 +16,7 @@ export class TrueFalseQuestion extends Question {
 
     constructor(set: StudySet, index: number, useTerm: boolean){ //TODO: handle case where set is of length 1
         const answer = Math.random() < 0.5 ? "True":"False";
-        super(answer);
+        super("", answer);
         if(answer === "True") {
             this.term = set.terms[index]
             this.definition = set.definitions[index]
@@ -61,5 +61,7 @@ export class ShortAnswerQuestion extends Question {
 }
 
 export class FreeResponseQuestion extends Question {
-
+    constructor(set: StudySet){
+        super("", "")
+    }
 }

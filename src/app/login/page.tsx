@@ -28,8 +28,10 @@ export default function LoginPage() {
         setLoading(true);
         const response = await logIn(logInEmail, logInPassword);
         if(response.status === 200) router.push("/home");
-        else console.log("Error logging in: ", response);
-        setLoading(false);
+        else {
+            console.log("Error logging in: ", response);
+            setLoading(false);
+        }
     }
 
     return (

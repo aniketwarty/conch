@@ -37,9 +37,11 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                         <Checkbox
                             defaultChecked={value} checked={value} className="mr-3" size={"lg"} 
                             disabled={
-                                (key === "True/False Questions" && options["True/False Questions"] && !options["Multiple Choice Questions"] && !options["Free Response Questions"]) ||
-                                (key === "Multiple Choice Questions" && !options["True/False Questions"] && options["Multiple Choice Questions"] && !options["Free Response Questions"]) ||
-                                (key === "Free Response Questions" && !options["True/False Questions"] && !options["Multiple Choice Questions"] && options["Free Response Questions"])
+                                (key === "True/False Questions" && options["True/False Questions"] && !options["Multiple Choice Questions"] && !options["Short Answer Questions"] && !options["Free Response Questions"]) ||
+                                (key === "Multiple Choice Questions" && !options["True/False Questions"] && options["Multiple Choice Questions"] && !options["Short Answer Questions"] && !options["Free Response Questions"]) ||
+                                (key === "Short Answer Questions" && !options["True/False Questions"] && !options["Multiple Choice Questions"] && options["Short Answer Questions"] && !options["Free Response Questions"]) ||
+                                (key === "Free Response Questions" && !options["True/False Questions"] && !options["Multiple Choice Questions"] && !options["Short Answer Questions"] && options["Free Response Questions"])
+                                
                             }
                             onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
                         >

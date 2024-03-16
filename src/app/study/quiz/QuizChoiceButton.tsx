@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 
-interface QuizOptionButtonProps {
+interface QuizChoiceButtonProps {
     option: string;
     answers: string[];
     setAnswers: React.Dispatch<React.SetStateAction<string[]>>;
@@ -9,7 +9,7 @@ interface QuizOptionButtonProps {
     stretch?: boolean;
 }
 
-export const QuizOptionButton = ({option, answers, setAnswers, index, prefix, stretch}: QuizOptionButtonProps) => {
+export const QuizChoiceButton = ({option, answers, setAnswers, index, prefix, stretch}: QuizChoiceButtonProps) => {
     return (
         <Button className={`m-2 shadow-xl ${stretch ? ' w-full' : ''}`} style={{backgroundColor: answers[index]===option?"lightgray":""}}
         onClick={() => {
