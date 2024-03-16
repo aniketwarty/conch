@@ -32,7 +32,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
         switch (typeof value) {
             case "boolean":
                 return(
-                    <div key={optionKey} className="flex flex-row items-center my-2">
+                    <div key={optionKey} className="flex flex-row items-center mb-2">
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <Checkbox
                             defaultChecked={value} checked={value} className="mr-3" size={"lg"} 
@@ -48,7 +48,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                 )
             case "number":
                 return(
-                    <div key={optionKey} className="flex flex-row items-center my-2">
+                    <div key={optionKey} className="flex flex-row items-center mb-2">
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <NumberInput
                             variant={"outline"} className="mr-3" width={"80px"} 
@@ -57,10 +57,10 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                                 setOptions({ ...options, [key]: Number(e) })
                             }}
                         >
-                            <NumberInputField />
+                            <NumberInputField/>
                             <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
+                                <NumberIncrementStepper/>
+                                <NumberDecrementStepper/>
                             </NumberInputStepper>
                         </NumberInput>
                     </div>
@@ -76,7 +76,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
             <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
-                        <AlertDialogHeader fontSize='3xl' fontWeight='bold'>Options</AlertDialogHeader>
+                        <AlertDialogHeader className="-mb-2" fontSize='3xl' fontWeight='bold'>Options</AlertDialogHeader>
 
                         <AlertDialogBody justifyContent={"space-between"}>
                             {

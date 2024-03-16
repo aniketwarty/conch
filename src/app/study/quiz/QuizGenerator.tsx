@@ -1,7 +1,7 @@
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StudySet } from "../../lib/classes/study_set";
 import { Button, Center, Spinner, Stack } from "@chakra-ui/react";
-import { MultipleChoiceQuestion, Question, TrueFalseQuestion } from "../../lib/classes/question";
+import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
 import { QuizOptionButton } from "./QuizOptionButton";
 import { IoIosArrowDropright } from "react-icons/io";
 
@@ -17,24 +17,34 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
     const [answers, setAnswers] = useState<string[]>(Array(options["Number of Questions"]).fill(""));
 
     useEffect(() => {
-        const allQuestionTypes = ["True/False Questions", "Multiple Choice Questions", "Free Response Questions"];
+        const allQuestionTypes = ["True/False Questions", "Multiple Choice Questions", "Short Answer Questions", "Free Response Questions"];
         const enabledQuestionTypes = allQuestionTypes.filter(type => options[type]);
         let setIndex = 0;    
 
         if(questionList.length === 0) {
+            const numQuestionsPerType = options["Number of Questions"] / enabledQuestionTypes.length;
+            const remainder = options["Number of Questions"] % enabledQuestionTypes.length;
             //TODO: shuffle around the questions so you dont just see the order of the terms repeat every time
             for (const questionType of enabledQuestionTypes) {
                 if (questionType === "True/False Questions") {
-                    for (let i = 0; i < options["Number of Questions"]/enabledQuestionTypes.length + options["Number of Questions"]%enabledQuestionTypes.length; i++) {
+                    for (let i = 0; i < (numQuestionsPerType + enabledQuestionTypes.indexOf("True/False Questions") < remainder?1:0); i++) {
                         questionList.push(new TrueFalseQuestion(studySet, setIndex, true));
                         setIndex = (setIndex + 1) % studySet.terms.length;
                     }
                 } else if (questionType === "Multiple Choice Questions") {
-                    for (let i = 0; i < options["Number of Questions"]/enabledQuestionTypes.length; i++) {
+                    for (let i = 0; i < (numQuestionsPerType + enabledQuestionTypes.indexOf("Multiple Choice Questions") < remainder?1:0); i++) {
                         questionList.push(new MultipleChoiceQuestion(studySet, setIndex));
                         setIndex = (setIndex + 1) % studySet.terms.length;
                     }
-                } else if (questionType === "Free Response Questions") {
+                } else if (questionType === "Short Answer Questions") {
+                    for (let i = 0; i < (numQuestionsPerType + enabledQuestionTypes.indexOf("Short Answer Questions") < remainder?1:0); i++) {
+                        questionList.push(new ShortAnswerQuestion(studySet, setIndex));
+                    }
+                }
+                else if (questionType === "Free Response Questions") {
+                    for (let i = 0; i < (numQuestionsPerType + enabledQuestionTypes.indexOf("Free Response Questions") < remainder?1:0); i++) {
+
+                    }
                 }
             }
             setGeneratedQuiz(true);
@@ -79,11 +89,15 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
                     </div>
                 </div>
             )
-        } //else if (question instanceof FreeResponseQuestion) {
-        //     return(
-                
-        //     )
-        // }
+        } else if (question instanceof ShortAnswerQuestion) {
+            return (
+                <div></div>
+            );   
+        } else if (question instanceof FreeResponseQuestion) {
+            return(
+                <div></div>
+            )
+        }
     }
 
     return (
@@ -91,6 +105,13 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
             {generatedQuiz ? <div className="h-full w-full">
                 <p className="text-5xl font-bold mx-auto my-5 text-center">Quiz</p>  
                 {questionList.map((question, index) => createQuestion(question, index))}
+                <Center>
+                    <Button className="mx-8 grow mb-8" colorScheme="blue" size="lg" onClick={() => {
+                        console.log(answers);
+                    }}>
+                        Submit
+                    </Button>
+                </Center>
             </div>:
             <div className="flex flex-col items-center m-auto"> 
                 <Spinner className="p-10"/>
