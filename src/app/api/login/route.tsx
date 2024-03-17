@@ -12,7 +12,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
         const decodedToken = await auth().verifyIdToken(idToken);
 
         if (decodedToken) {
-            //Generate session cookie
             const cookieStore = cookies();
             const expiresIn = 60 * 60 * 24 * 30;
             const sessionCookie = await auth().createSessionCookie(idToken, {
@@ -26,32 +25,22 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 // secure: true,
             });
 
-            const uid = decodedToken.uid
-            cookieStore.set({
-                name: "uid",
-                value: uid,
-                maxAge: expiresIn,
-            });
+            return NextResponse.json({}, { status: 200 });
         }
+        return NextResponse.json({}, { status: 401 });
     }
 
-    return NextResponse.json({}, { status: 200 });
+    
 }
 
 export async function GET(request: NextRequest) {
-    const cookieStore = cookies();
-    const session = cookieStore.get("session")?.value || "";
-    const uid = cookieStore.get("uid")?.value || "";
-
-    if (!session) {
-        return NextResponse.json({ uid: "" }, { status: 401 });
+    let response = NextResponse.json({}, { status: 401 });
+    try {
+        const session = cookies().get("session")?.value || "";
+        const uid = (await auth().verifySessionCookie(session)).uid;
+        response = NextResponse.json({ uid: uid }, { status: 200 });
+    } catch (error) {
+        console.error("Error getting uid: ", error);
     }
-  
-    const decodedClaims = await auth().verifySessionCookie(session, true);
-  
-    if (!decodedClaims) {
-        return NextResponse.json({ uid: "" }, { status: 401 });
-    }
-
-    return NextResponse.json({ uid: uid }, { status: 200 });
-  }
+    return response;
+}

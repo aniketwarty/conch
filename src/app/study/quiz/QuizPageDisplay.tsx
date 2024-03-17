@@ -66,13 +66,13 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                         <p className="ml-3 text-2xl">Free Response Questions</p>
                         <Tooltip label={
                             <>
-                                Free response questions are generated and graded using AI based on the set as a whole.
+                                Free response questions are generated and graded by AI using the entire study set.
                                 <br/>
                                 Note: Generating many free response questions may increase loading time.
                             </>
                         } aria-label="info-icon">
                             <span className="mr-3">
-                                <Icon boxSize={4} color="gray.500" _hover={{ color: "gray.700" }} />
+                                <Icon boxSize={3} color="gray.500" _hover={{ color: "gray.700" }} />
                             </span>
                         </Tooltip>
                         <Checkbox

@@ -3,21 +3,24 @@ import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest, response: NextResponse) {
     const session = request.cookies.get("session");
-
-    //Return to /login if don't have a session
     if (!session) {
+        console.log("No session cookie found")
         return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    //Call the authentication endpoint
-    const responseAPI = await fetch(new URL("/api/login", request.url), {
-        headers: {
-            Cookie: `session=${session?.value}`,
-        },
-    });
+    try {
+        const responseAPI = await fetch(new URL("/api/login", request.url), {
+            method: "GET",
+            headers: {
+                Cookie: `session=${session?.value}`,
+            },
+        });
 
-    //Return to /login if token is not authorized
-    if (responseAPI.status !== 200) {
+        if (responseAPI.status !== 200) {
+            return NextResponse.redirect(new URL("/login", request.url));
+        }
+    } catch (error) {
+        console.error('Error validating session:', error);
         return NextResponse.redirect(new URL("/login", request.url));
     }
 

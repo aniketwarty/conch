@@ -5,15 +5,23 @@ import { HomePageDisplay } from './HomePageDisplay';
 import { cookies } from 'next/headers';
 
 export default async function Home() {
-    const uid = cookies().get("uid")?.value;
+    const response = await fetch("http://localhost:3000/api/login", {//TODO: change to production URL
+        method: "GET",
+        headers: {
+            Cookie: `session=${cookies().get("session")?.value}`,
+        },
+    })
 
-    if(uid) {
-        const setList = await fetchStudySets(uid);
-        return (
-            <HomePageDisplay setList={setList}/>
-        );
-    } else {
+    if (response.status !== 200) {
+        console.log("Error getting uid")
         redirect("/login");
     }
+
+    const uid = (await response.json()).uid;
+    const setList = await fetchStudySets(uid);
+
+    return (
+        <HomePageDisplay setList={setList}/>
+    );
 }
 

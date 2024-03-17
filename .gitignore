@@ -38,7 +38,7 @@ next-env.d.ts
 
 # firebase config
 /src/app/lib/firebase/config.tsx
-/src/app/lib/firebase/admin-config.tsx
+/src/app/lib/firebase/admin_config.tsx
 
 # gemini config
 /src/app/lib/gemini/config.tsx

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StudySet } from "../../lib/classes/study_set";
 import { Button, Center, Input, Spinner } from "@chakra-ui/react";
 import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
 import { QuizChoiceButton } from "./QuizChoiceButton";
 import { IoIosArrowDropright } from "react-icons/io";
-import { generateFRQ } from "@/app/lib/gemini/gemini";
+import { generateFRQ } from "../../lib/gemini/gemini";
 
 interface QuizGeneratorProps {
     studySetString: string;
@@ -13,6 +13,7 @@ interface QuizGeneratorProps {
 
 export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => {
     const studySet = StudySet.fromString(studySetString);
+    const startedQuizGeneration = useRef(false)
     const [questionsGenerated, setQuestionsGenerated] = useState(0);
     const [questionList, setQuestionList] = useState<Question[]>([]);
     const [answers, setAnswers] = useState<string[]>(Array(options["Number of Questions"]).fill(""));
@@ -21,16 +22,19 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
         const allQuestionTypes = ["True/False Questions", "Multiple Choice Questions", "Short Answer Questions", "Free Response Questions"];
         const enabledQuestionTypes = allQuestionTypes.filter(type => options[type]);
         let setIndex = 0;
-
+        
         const getFRQs = async (set: StudySet, numQuestions: number) => {
-            for(let i = 0; i < numQuestions; i++) {
-                const question = await generateFRQ(set);
-                questionList.push(question);
-                setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
+            if(questionList.length + numQuestions === options["Number of Questions"]){
+                for(let i = 0; i < numQuestions; i++) {
+                    const question = await generateFRQ(set);
+                    questionList.push(question);
+                    setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
+                }
             }
         }
 
-        if(questionList.length === 0) {
+        if(!startedQuizGeneration.current) {
+            startedQuizGeneration.current = true;
             const numQuestionsPerType = Math.floor(options["Number of Questions"] / enabledQuestionTypes.length);
             const remainder = options["Number of Questions"] % enabledQuestionTypes.length;
             //TODO: shuffle around the questions so you dont just see the order of the terms repeat every time
@@ -55,7 +59,8 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
                 }
             }
             if(enabledQuestionTypes.includes("Free Response Questions")) {
-                getFRQs(studySet, options["Number of Questions"]/enabledQuestionTypes.length);
+                getFRQs(studySet, numQuestionsPerType);
+                setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
             }
         }
     }, [])
@@ -133,11 +138,11 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
 
     return (
         <div className="flex flex-col h-5/6 w-1/2 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto">
-            {questionList.length===options["Number of Questions"] ? <div className="h-full w-full">
+            {questionList.length>=options["Number of Questions"] ? <div className="h-full w-full">
                 <p className="text-5xl font-bold mx-auto my-5 text-center">Quiz</p>  
                 {questionList.map((question, index) => createQuestion(question, index))}
                 <Center>
-                    <Button className="mx-8 grow mb-8" colorScheme="blue" size="lg" onClick={() => {
+                    <Button className="w-full mb-8" colorScheme="blue" size="lg" onClick={() => {
                         console.log(answers);
                     }}>
                         Submit

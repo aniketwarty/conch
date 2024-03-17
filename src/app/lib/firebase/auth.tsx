@@ -1,8 +1,6 @@
 import { firebaseApp } from "./firebase";
 import { createUserWithEmailAndPassword, getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "firebase/auth";
-import { redirect } from "next/navigation";
-import { NextRequest, NextResponse } from "next/server";
-import { parseCookies, setCookie, destroyCookie } from "nookies";
+import { destroyCookie } from "nookies";
 
 export const auth = getAuth(firebaseApp);
 
@@ -50,19 +48,7 @@ export async function logIn(logInEmail: string, logInPassword: string) {
     return response;
 }
 
-export async function signInWithIdToken(idToken: string) {
-    await signInWithCustomToken(auth, idToken)
-        .catch((error) => {
-            console.log("Error signing in with token: ", idToken);
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log("Error #" + errorCode + ": " + errorMessage);
-        })
-    return auth.currentUser !== null;
-}
-
 export async function logOut() {
-    destroyCookie(null, "user_token");
-    destroyCookie(null, "user");
+    destroyCookie(null, "session");
     await auth.signOut();
 }

@@ -38,9 +38,9 @@ export async function fetchStudySet(uid: string, setName: string) {
     return set;
 };
 
-export async function updateLastStudied(uid: string, studySet: StudySet) {
+export async function updateLastStudied(studySet: StudySet) {
     try {
-        const setRef = doc(db, `users/${uid}/study_sets/${studySet.name}`);
+        const setRef = doc(db, `users/${studySet.uid}/study_sets/${studySet.name}`);
         await setDoc(setRef, {terms: studySet.terms, definitions: studySet.definitions, last_studied: new Date()});
     } catch (e) {
         console.log(e);
