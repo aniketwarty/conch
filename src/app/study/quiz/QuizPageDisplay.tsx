@@ -55,7 +55,7 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                     <div className="flex flex-row my-2">
                         <p className="ml-3 mr-3 text-2xl">Short Answer Questions</p>
                         <Checkbox
-                            defaultChecked={options["Short Answer Questions"]} checked={options["Short Answer Questions"]} key={options["Multiple Choice Questions"]} className="mr-3" size={"lg"}
+                            defaultChecked={options["Short Answer Questions"]} checked={options["Short Answer Questions"]} key={options["Short Answer Questions"]} className="mr-3" size={"lg"}
                             disabled={options["Short Answer Questions"] === true && options["True/False Questions"] === false && options["Free Response Questions"] === false && options["Multiple Choice Questions"] === false}
                             onChange={(e) => {
                                 setOptions({ ...options, ["Short Answer Questions"]: e.target.checked });

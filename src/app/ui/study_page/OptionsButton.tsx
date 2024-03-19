@@ -14,19 +14,15 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<HTMLButtonElement | null>(null)
     const [oldOptions, setOldOptions] = useState(options)
-
+    
     useEffect(() => {
         if(isOpen) {
             getOptions(uid, studyMode).then((result) => {
                 setOptions(result);
                 setOldOptions(result);
             });
-        }
-    }, [isOpen, setOptions, studyMode, uid]);
-
-    useEffect(() => {
-        if(!isOpen) saveOptions(uid, options, "quiz");
-    }, [isOpen, options, uid])
+        } else saveOptions(uid, options, studyMode);
+    }, [isOpen, options, studyMode, uid])
 
     function handleOption(key: string, value: any, optionKey: number) {
         switch (typeof value) {

@@ -54,7 +54,6 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
                         questionList.push(new ShortAnswerQuestion(studySet, setIndex));
                         setIndex = (setIndex + 1) % studySet.terms.length;
                         setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
-                        console.log(questionsGenerated)
                     }
                 }
             }
