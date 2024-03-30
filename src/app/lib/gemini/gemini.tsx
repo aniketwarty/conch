@@ -12,3 +12,9 @@ export async function generateFRQ(set: StudySet) {
     const question = (await model.generateContent(prompt)).response.text()
     return new FreeResponseQuestion(question);
 }
+
+export async function gradeFRQ(question: string, answer: string) {
+    const prompt = "Is the following answer '" + answer + "' a correct response to the question '" + question + "'?" + 
+    "Format the answer as exactly 'yes' or 'no', followed by a space, followed by a short 1-2 sentence explanation.";
+    return (await model.generateContent(prompt)).response.text();
+}

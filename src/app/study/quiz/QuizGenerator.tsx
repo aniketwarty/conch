@@ -1,35 +1,38 @@
-import { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { StudySet } from "../../lib/classes/study_set";
 import { Button, Center, Input, Spinner } from "@chakra-ui/react";
 import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
 import { QuizChoiceButton } from "./QuizChoiceButton";
 import { IoIosArrowDropright } from "react-icons/io";
 import { generateFRQ } from "../../lib/gemini/gemini";
+import { QuizStatus } from "./QuizPageDisplay";
+import { questionTypes } from "./QuizPageDisplay";
+import { set } from "firebase/database";
 
 interface QuizGeneratorProps {
     studySetString: string;
+    questionList: Question[];
+    setQuestionList: React.Dispatch<React.SetStateAction<Question[]>>;
+    answers: string[];
+    setAnswers: React.Dispatch<React.SetStateAction<string[]>>;
     options: any;
+    setQuizStatus: React.Dispatch<React.SetStateAction<QuizStatus>>;
 }
 
-export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => {
+export const QuizGenerator = ({studySetString, questionList, setQuestionList, answers, setAnswers, options, setQuizStatus}: QuizGeneratorProps) => {
     const studySet = StudySet.fromString(studySetString);
     const startedQuizGeneration = useRef(false)
-    const [questionsGenerated, setQuestionsGenerated] = useState(0);
-    const [questionList, setQuestionList] = useState<Question[]>([]);
-    const [answers, setAnswers] = useState<string[]>(Array(options["Number of Questions"]).fill(""));
+
+    useEffect(() => {console.log(questionList)}, [questionList])
 
     useEffect(() => {
-        const allQuestionTypes = ["True/False Questions", "Multiple Choice Questions", "Short Answer Questions", "Free Response Questions"];
-        const enabledQuestionTypes = allQuestionTypes.filter(type => options[type]);
+        const enabledQuestionTypes = questionTypes.filter(type => options[type]);
         let setIndex = 0;
         
         const getFRQs = async (set: StudySet, numQuestions: number) => {
-            if(questionList.length + numQuestions === options["Number of Questions"]){
-                for(let i = 0; i < numQuestions; i++) {
-                    const question = await generateFRQ(set);
-                    questionList.push(question);
-                    setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
-                }
+            for(let i = 0; i < numQuestions; i++) {
+                const question = await generateFRQ(set);
+                setQuestionList(prevQuestionList => [...prevQuestionList, question]);
             }
         }
 
@@ -41,25 +44,25 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
             for (const questionType of enabledQuestionTypes) {
                 if (questionType === "True/False Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("True/False Questions") < remainder?1:0)); i++) {
-                        questionList.push(new TrueFalseQuestion(studySet, setIndex, true));
+                        setQuestionList(prevQuestionList => [...prevQuestionList, new TrueFalseQuestion(studySet, setIndex, true)]);
                         setIndex = (setIndex + 1) % studySet.terms.length;
-                        setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);                    }
+                    }
                 } else if (questionType === "Multiple Choice Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Multiple Choice Questions") < remainder?1:0)); i++) {
-                        questionList.push(new MultipleChoiceQuestion(studySet, setIndex));
-                        setIndex = (setIndex + 1) % studySet.terms.length;
-                        setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);                    }
+                        setQuestionList(prevQuestionList => [...prevQuestionList, new MultipleChoiceQuestion(studySet, setIndex)]);
+                        setIndex = (setIndex + 1) % studySet.terms.length;  
+                    }
                 } else if (questionType === "Short Answer Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Short Answer Questions") < remainder?1:0)); i++) {
-                        questionList.push(new ShortAnswerQuestion(studySet, setIndex));
+                        setQuestionList(prevQuestionList => [...prevQuestionList, new ShortAnswerQuestion(studySet, setIndex)]);
                         setIndex = (setIndex + 1) % studySet.terms.length;
-                        setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
                     }
                 }
             }
             if(enabledQuestionTypes.includes("Free Response Questions")) {
                 getFRQs(studySet, numQuestionsPerType);
-                setTimeout(() => setQuestionsGenerated(prev => prev + 1), 0);
+            } else {
+                console.log("no")
             }
         }
     }, [])
@@ -141,9 +144,7 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
                 <p className="text-5xl font-bold mx-auto my-5 text-center">Quiz</p>  
                 {questionList.map((question, index) => createQuestion(question, index))}
                 <Center>
-                    <Button className="w-full mb-8" colorScheme="blue" size="lg" onClick={() => {
-                        console.log(answers);
-                    }}>
+                    <Button className="w-full mb-8" colorScheme="blue" size="lg" onClick={() => setQuizStatus(QuizStatus.SUBMITTED)}>
                         Submit
                     </Button>
                 </Center>
@@ -151,7 +152,7 @@ export const QuizGenerator = ({studySetString, options}: QuizGeneratorProps) => 
             <div className="flex flex-col items-center m-auto"> 
                 <Spinner className="p-10"/>
                 <p className="text-2xl mt-8 font-bold">Generating Quiz...</p>
-                <p className="text-2xl font-bold">{Math.round(questionsGenerated/options["Number of Questions"]*100)}%</p>
+                <p className="text-2xl font-bold">{Math.round(questionList.length/options["Number of Questions"]*100)}%</p>
             </div>}
         </div>
     )

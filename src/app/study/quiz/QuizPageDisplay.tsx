@@ -2,9 +2,18 @@
 import { useEffect, useState } from "react";
 import { StudySet } from "../../lib/classes/study_set";
 import { QuizGenerator } from "./QuizGenerator";
+import { QuizGrader } from "./QuizGrader";
 import { StudyModeNavBar } from "../../ui/study_page/StudyModeNavBar";
 import { Button, Checkbox, Icon, Tooltip } from "@chakra-ui/react";
+import { Question } from "../../lib/classes/question";
 
+export const questionTypes = ["True/False Questions", "Multiple Choice Questions", "Short Answer Questions", "Free Response Questions"];
+
+export enum QuizStatus {
+    INITIAL,
+    STARTED,
+    SUBMITTED
+}
 interface QuizPageDisplayProps {
     uid: string;
     studySetString: string;
@@ -13,18 +22,20 @@ interface QuizPageDisplayProps {
 
 export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageDisplayProps) => {
     const studySet = StudySet.fromString(studySetString);
+    const [quizStatus, setQuizStatus] = useState(QuizStatus.INITIAL);
     const [options, setOptions] = useState(initialOptions);
     const [quizOptions, setQuizOptions] = useState(initialOptions);
-    const [generatedQuiz, setGeneratedQuiz] = useState(false);
+    const [questionList, setQuestionList] = useState<Question[]>([]);
+    const [answers, setAnswers] = useState<string[]>(Array(options["Number of Questions"]).fill(""));
 
     useEffect(() => {
-        if(!generatedQuiz) setQuizOptions(options);
-    }, [generatedQuiz, options, uid])
+        if(quizStatus == QuizStatus.INITIAL) setQuizOptions(options);
+    }, [options, quizStatus, uid])
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden">
             <StudyModeNavBar uid={uid} studyMode="quiz" studySetString={studySetString} options={options} setOptions={setOptions}/>
-            {generatedQuiz ? <QuizGenerator studySetString={studySetString} options={quizOptions}/>:
+            {quizStatus === QuizStatus.INITIAL && (
                 <div className="flex flex-col h-5/6 w-1/2 shadow-2xl m-auto p-5 items-center">
                     <p className="text-5xl font-bold m-5 self-center">Quiz</p>  
                     <p className="text-2xl m-5 self-center">
@@ -83,11 +94,18 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                             }}
                         />
                     </div>
-                    <Button className="mt-auto mb-10" colorScheme="blue" size="lg" onClick={() => setGeneratedQuiz(true)}>
+                    <Button className="mt-auto mb-10" colorScheme="blue" size="lg" onClick={() => {setQuizStatus(QuizStatus.STARTED)}}>
                         Generate quiz
                     </Button>
                 </div>
-            }
+            )}
+            {quizStatus === QuizStatus.STARTED && (
+                <QuizGenerator studySetString={studySetString} questionList={questionList}  setQuestionList={setQuestionList} 
+                answers={answers} setAnswers={setAnswers} options={quizOptions} setQuizStatus={setQuizStatus}/>
+            )}
+            {quizStatus === QuizStatus.SUBMITTED && (
+                <QuizGrader studySetString={studySetString} questionList={questionList} answers={answers} options={quizOptions}/>
+            )}
         </div>
     );
 }
