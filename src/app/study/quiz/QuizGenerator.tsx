@@ -23,17 +23,13 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
     const studySet = StudySet.fromString(studySetString);
     const startedQuizGeneration = useRef(false)
 
-    useEffect(() => {console.log(questionList)}, [questionList])
-
     useEffect(() => {
         const enabledQuestionTypes = questionTypes.filter(type => options[type]);
         let setIndex = 0;
         
-        const getFRQs = async (set: StudySet, numQuestions: number) => {
-            for(let i = 0; i < numQuestions; i++) {
-                const question = await generateFRQ(set);
-                setQuestionList(prevQuestionList => [...prevQuestionList, question]);
-            }
+        const getFRQ = async (set: StudySet) => {
+            const frq = await generateFRQ(set);
+            setQuestionList(prevQuestionList => [...prevQuestionList, frq]);
         }
 
         if(!startedQuizGeneration.current) {
@@ -44,25 +40,27 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
             for (const questionType of enabledQuestionTypes) {
                 if (questionType === "True/False Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("True/False Questions") < remainder?1:0)); i++) {
-                        setQuestionList(prevQuestionList => [...prevQuestionList, new TrueFalseQuestion(studySet, setIndex, true)]);
+                        const question = new TrueFalseQuestion(studySet, setIndex, true);
+                        setQuestionList(prevQuestionList => [...prevQuestionList, question]);
                         setIndex = (setIndex + 1) % studySet.terms.length;
                     }
                 } else if (questionType === "Multiple Choice Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Multiple Choice Questions") < remainder?1:0)); i++) {
-                        setQuestionList(prevQuestionList => [...prevQuestionList, new MultipleChoiceQuestion(studySet, setIndex)]);
+                        const question = new MultipleChoiceQuestion(studySet, setIndex);
+                        setQuestionList(prevQuestionList => [...prevQuestionList, question]);
                         setIndex = (setIndex + 1) % studySet.terms.length;  
                     }
                 } else if (questionType === "Short Answer Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Short Answer Questions") < remainder?1:0)); i++) {
-                        setQuestionList(prevQuestionList => [...prevQuestionList, new ShortAnswerQuestion(studySet, setIndex)]);
+                        const question = new ShortAnswerQuestion(studySet, setIndex);
+                        setQuestionList(prevQuestionList => [...prevQuestionList, question]);
                         setIndex = (setIndex + 1) % studySet.terms.length;
                     }
+                } else if (questionType === "Free Response Questions") {
+                    for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Free Response Questions") < remainder?1:0)); i++) {
+                        getFRQ(studySet);
+                    }
                 }
-            }
-            if(enabledQuestionTypes.includes("Free Response Questions")) {
-                getFRQs(studySet, numQuestionsPerType);
-            } else {
-                console.log("no")
             }
         }
     }, [])
