@@ -13,7 +13,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
         if (decodedToken) {
             const cookieStore = cookies();
-            const expiresIn = 60 * 60 * 24 * 30;
+            const expiresIn = 1000 * 60 * 60 * 24 * 14;
             const sessionCookie = await auth().createSessionCookie(idToken, {
                 expiresIn,
             });

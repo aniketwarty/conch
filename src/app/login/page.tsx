@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { signUp, logIn } from "../lib/firebase/auth";
 import { Button, Center, FormControl, FormLabel, Input, Spinner } from "@chakra-ui/react";
-
+//TODO: fix random redirects - localhost issue only?
 export default function LoginPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);

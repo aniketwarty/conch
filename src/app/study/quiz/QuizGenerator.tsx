@@ -1,6 +1,6 @@
 import React, { use, useEffect, useRef, useState } from "react";
 import { StudySet } from "../../lib/classes/study_set";
-import { Button, Center, Input, Spinner } from "@chakra-ui/react";
+import { Button, Center, Input, Spinner, Textarea } from "@chakra-ui/react";
 import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
 import { QuizChoiceButton } from "./QuizChoiceButton";
 import { IoIosArrowDropright } from "react-icons/io";
@@ -22,7 +22,7 @@ interface QuizGeneratorProps {
 export const QuizGenerator = ({studySetString, questionList, setQuestionList, answers, setAnswers, options, setQuizStatus}: QuizGeneratorProps) => {
     const studySet = StudySet.fromString(studySetString);
     const startedQuizGeneration = useRef(false)
-
+    //TODO: shuffle set before making questions
     useEffect(() => {
         const enabledQuestionTypes = questionTypes.filter(type => options[type]);
         let setIndex = 0;
@@ -65,7 +65,7 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
         }
     }, [])
 
-    function createQuestion(question: Question, index: number) {
+    function displayQuestion(question: Question, index: number) {
         if(question instanceof TrueFalseQuestion) {
             return(
                 <div className="flex flex-row mt-2 p-5 bg-white rounded-lg mb-10 shadow-lg" key={index}>
@@ -81,8 +81,8 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
                             <p className="w-1/2 m-2 text-lg font-bold">{question.definition}</p>
                         </div>
                         <div className="flex flex-row my-2 w-full place-items-stretch">
-                            <QuizChoiceButton option="True" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
-                            <QuizChoiceButton option="False" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
+                            <QuizChoiceButton value="True" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
+                            <QuizChoiceButton value="False" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
                         </div>
                         <div className="grid grid-rows-2 grid-cols-2 my-2 justify-items-stretch">
                             {question.choices.map((choice, key) => {
-                                return <QuizChoiceButton key={key} option={choice} answers={answers} setAnswers={setAnswers} index={index} prefix={String.fromCharCode(65+key)}/>
+                                return <QuizChoiceButton key={key} value={choice} answers={answers} setAnswers={setAnswers} index={index} prefix={String.fromCharCode(65+key)}/>
                             })}
                         </div>
                     </div>
@@ -127,7 +127,7 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
                             <p className="m-auto text-lg font-bold">{question.question}</p>
                         </div>
                         <div className="flex my-2 justify-items-stretch">
-                            <Input className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} placeholder="Answer..."
+                            <Textarea className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} placeholder="Answer..."
                             value={answers[index]} onChange={(e) => {setAnswers({...answers, [index]: e.target.value})}}/>
                         </div>
                     </div>
@@ -137,12 +137,12 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
     }
 
     return (
-        <div className="flex flex-col h-5/6 w-1/2 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto">
+        <div className="flex flex-col h-5/6 w-2/5 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto">
             {questionList.length>=options["Number of Questions"] ? <div className="h-full w-full">
                 <p className="text-5xl font-bold mx-auto my-5 text-center">Quiz</p>  
-                {questionList.map((question, index) => createQuestion(question, index))}
+                {questionList.map((question, index) => displayQuestion(question, index))}
                 <Center>
-                    <Button className="w-full mb-8" colorScheme="blue" size="lg" onClick={() => setQuizStatus(QuizStatus.SUBMITTED)}>
+                    <Button className="w-full mb-5" colorScheme="blue" size="lg" onClick={() => setQuizStatus(QuizStatus.SUBMITTED)}>
                         Submit
                     </Button>
                 </Center>

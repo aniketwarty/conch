@@ -22,7 +22,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                 setOldOptions(result);
             });
         } else saveOptions(uid, options, studyMode);
-    }, [isOpen, options, studyMode, uid])
+    }, [isOpen])
 
     function handleOption(key: string, value: any, optionKey: number) {
         switch (typeof value) {
@@ -37,9 +37,10 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                                 (key === "Multiple Choice Questions" && !options["True/False Questions"] && options["Multiple Choice Questions"] && !options["Short Answer Questions"] && !options["Free Response Questions"]) ||
                                 (key === "Short Answer Questions" && !options["True/False Questions"] && !options["Multiple Choice Questions"] && options["Short Answer Questions"] && !options["Free Response Questions"]) ||
                                 (key === "Free Response Questions" && !options["True/False Questions"] && !options["Multiple Choice Questions"] && !options["Short Answer Questions"] && options["Free Response Questions"])
-                                
                             }
-                            onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
+                            onChange={(e) => {
+                                setOptions((prevOptions: any) => ({...prevOptions, [key]: e.target.checked }));
+                            }}
                         >
                         </Checkbox>
                     </div>
@@ -51,9 +52,8 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                         <NumberInput
                             variant={"outline"} className="mr-3" width={"80px"} 
                             defaultValue={value} min={-1} max={key === "Number of Questions" ? 30 : 999}
-                            onChange={(e) => {
-                                setOptions({ ...options, [key]: Number(e) })
-                            }}
+                            onChange={(e) => setOptions((prevOptions: any) => ({...prevOptions, [key]: Number(e) }))}
+
                         >
                             <NumberInputField/>
                             <NumberInputStepper>

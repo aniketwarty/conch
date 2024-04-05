@@ -29,14 +29,18 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
     const [answers, setAnswers] = useState<string[]>(Array(options["Number of Questions"]).fill(""));
 
     useEffect(() => {
-        if(quizStatus == QuizStatus.INITIAL) setQuizOptions(options);
+        if(quizStatus == QuizStatus.INITIAL) {
+            setQuizOptions(options);
+            setQuestionList([]);
+            setAnswers(Array(options["Number of Questions"]).fill(""));
+        }
     }, [options, quizStatus, uid])
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden">
             <StudyModeNavBar uid={uid} studyMode="quiz" studySetString={studySetString} options={options} setOptions={setOptions}/>
             {quizStatus === QuizStatus.INITIAL && (
-                <div className="flex flex-col h-5/6 w-1/2 shadow-2xl m-auto p-5 items-center">
+                <div className="flex flex-col h-5/6 w-2/5 shadow-2xl m-auto p-5 items-center">
                     <p className="text-5xl font-bold m-5 self-center">Quiz</p>  
                     <p className="text-2xl m-5 self-center">
                         {options["Number of Questions"]===-1 ? (studySet.terms.length + " questions"):(options["Number of Questions"] + " questions")} 
@@ -104,7 +108,7 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                 answers={answers} setAnswers={setAnswers} options={quizOptions} setQuizStatus={setQuizStatus}/>
             )}
             {quizStatus === QuizStatus.SUBMITTED && (
-                <QuizGrader studySetString={studySetString} questionList={questionList} answers={answers} options={quizOptions}/>
+                <QuizGrader studySetString={studySetString} questionList={questionList} answers={answers} setQuizStatus={setQuizStatus}/>
             )}
         </div>
     );
