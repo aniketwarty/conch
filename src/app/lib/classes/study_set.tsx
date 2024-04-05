@@ -47,6 +47,19 @@ export class StudySet {
         }
     }
 
+    shuffle() {
+        const shuffledTerms = [...this.terms];
+        const shuffledDefinitions = [...this.definitions];
+
+        for (let i = shuffledTerms.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledTerms[i], shuffledTerms[j]] = [shuffledTerms[j], shuffledTerms[i]];
+            [shuffledDefinitions[i], shuffledDefinitions[j]] = [shuffledDefinitions[j], shuffledDefinitions[i]];
+        }
+
+        return new StudySet(this.name, shuffledTerms, shuffledDefinitions, this.last_studied, this.uid);
+    }
+
     static fromFirestore(uid: string, name: string, data: any){
         return new StudySet(name, data.terms, data.definitions, data.last_studied.toDate(), uid);
     }

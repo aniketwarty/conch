@@ -28,7 +28,7 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
             if(result.charAt(0) === "C") setNumCorrectQuestions(prevNumCorrectQuestions => prevNumCorrectQuestions+1);
         }
 
-        if(!startedQuizGrading.current) {//TODO: only grade FRQs? - others seem useless
+        if(!startedQuizGrading.current) {
             startedQuizGrading.current = true;
             for(let i = 0; i < questionList.length; i++) {
                 if(questionList[i] instanceof TrueFalseQuestion) {

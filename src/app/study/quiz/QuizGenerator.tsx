@@ -22,8 +22,9 @@ interface QuizGeneratorProps {
 export const QuizGenerator = ({studySetString, questionList, setQuestionList, answers, setAnswers, options, setQuizStatus}: QuizGeneratorProps) => {
     const studySet = StudySet.fromString(studySetString);
     const startedQuizGeneration = useRef(false)
-    //TODO: shuffle set before making questions
+
     useEffect(() => {
+        let shuffledSet = studySet.shuffle();
         const enabledQuestionTypes = questionTypes.filter(type => options[type]);
         let setIndex = 0;
         
@@ -40,21 +41,24 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
             for (const questionType of enabledQuestionTypes) {
                 if (questionType === "True/False Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("True/False Questions") < remainder?1:0)); i++) {
-                        const question = new TrueFalseQuestion(studySet, setIndex, true);
+                        const question = new TrueFalseQuestion(shuffledSet, setIndex, true);
                         setQuestionList(prevQuestionList => [...prevQuestionList, question]);
                         setIndex = (setIndex + 1) % studySet.terms.length;
+                        if(setIndex === 0) shuffledSet = shuffledSet.shuffle();
                     }
                 } else if (questionType === "Multiple Choice Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Multiple Choice Questions") < remainder?1:0)); i++) {
-                        const question = new MultipleChoiceQuestion(studySet, setIndex);
+                        const question = new MultipleChoiceQuestion(shuffledSet, setIndex);
                         setQuestionList(prevQuestionList => [...prevQuestionList, question]);
-                        setIndex = (setIndex + 1) % studySet.terms.length;  
+                        setIndex = (setIndex + 1) % studySet.terms.length;
+                        if(setIndex === 0) shuffledSet = shuffledSet.shuffle();
                     }
                 } else if (questionType === "Short Answer Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Short Answer Questions") < remainder?1:0)); i++) {
-                        const question = new ShortAnswerQuestion(studySet, setIndex);
+                        const question = new ShortAnswerQuestion(shuffledSet, setIndex);
                         setQuestionList(prevQuestionList => [...prevQuestionList, question]);
                         setIndex = (setIndex + 1) % studySet.terms.length;
+                        if(setIndex === 0) shuffledSet = shuffledSet.shuffle();
                     }
                 } else if (questionType === "Free Response Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Free Response Questions") < remainder?1:0)); i++) {

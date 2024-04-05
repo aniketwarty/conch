@@ -16,6 +16,7 @@ export class TrueFalseQuestion extends Question {
 
     constructor(set: StudySet, index: number, useTerm: boolean){ //TODO: handle case where set is of length 1
         const answer = Math.random() < 0.5 ? "True":"False";
+        console.log(answer)
         super("", answer);
         if(answer === "True") {
             this.term = set.terms[index]

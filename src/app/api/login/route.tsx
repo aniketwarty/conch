@@ -21,7 +21,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 name: "session",
                 value: sessionCookie,
                 maxAge: expiresIn,
-                // TODO: change httpOnly: true,
+                // PROD: change httpOnly: true,
                 // secure: true,
             });
 

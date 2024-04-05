@@ -12,7 +12,7 @@ export async function getSetString(searchParams: any) {
     else if (!setString) {
         setString = await fetchStudySet(setUid, setName);
         if(setString) {
-            setCookie(null, "study_set", setString); //TODO: fix this (not running)
+            setCookie(null, "study_set", setString); //TODO: fix this (not running) to avoid fetching set every time
         }
         else redirect("/home");
     }
