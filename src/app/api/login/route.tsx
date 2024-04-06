@@ -38,7 +38,8 @@ export async function GET(request: NextRequest) {
     try {
         const session = cookies().get("session")?.value || "";
         const uid = (await auth().verifySessionCookie(session)).uid;
-        response = NextResponse.json({ uid: uid }, { status: 200 });
+        const token = await auth().createCustomToken(uid)
+        response = NextResponse.json({ token: token, uid: uid }, { status: 200 });
     } catch (error) {
         console.error("Error getting uid: ", error);
     }

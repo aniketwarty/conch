@@ -19,7 +19,6 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
     const [results, setResults] = useState<string[]>([]);
     const startedQuizGrading = useRef(false);
     const [numCorrectQuestions, setNumCorrectQuestions] = useState(0);
-    const circleRadius = 25;
 
     useEffect(() => {
         const gradeFRQ = async (index: number) => {

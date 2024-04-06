@@ -37,7 +37,6 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
             startedQuizGeneration.current = true;
             const numQuestionsPerType = Math.floor(options["Number of Questions"] / enabledQuestionTypes.length);
             const remainder = options["Number of Questions"] % enabledQuestionTypes.length;
-            //TODO: shuffle around the questions so you dont just see the order of the terms repeat every time
             for (const questionType of enabledQuestionTypes) {
                 if (questionType === "True/False Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("True/False Questions") < remainder?1:0)); i++) {

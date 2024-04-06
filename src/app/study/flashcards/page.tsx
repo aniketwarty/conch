@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { getSetString } from "../../lib/util/study";
 import { StudySet } from "../../lib/classes/study_set";
 import { cookies } from "next/headers";
+import { signInWithCustomToken } from "firebase/auth";
+import { auth } from "../../lib/firebase/auth";
 
 export default async function FlashcardsPage({searchParams}: {searchParams: any}) {
     const setString = await getSetString(searchParams);
@@ -23,7 +25,9 @@ export default async function FlashcardsPage({searchParams}: {searchParams: any}
         redirect("/login");
     }
 
-    const uid = (await response.json()).uid;
+    const responseJson = await response.json();
+    if(auth.currentUser===null) await signInWithCustomToken(auth, responseJson.token);
+    const uid = responseJson.uid;
     const initialOptions = await getOptions(uid, "flashcards");
 
     return (

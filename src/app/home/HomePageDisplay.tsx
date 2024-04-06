@@ -22,25 +22,30 @@ export const HomePageDisplay = ({ setList } : HomePageProps) => {
             <NavBar/>
             <p className="text-3xl font-bold m-10"> Your sets </p>
             <div className="flex flex-row">
-            {(setList ?? []).length===0  ? <Spinner className="ml-12 p-5"/> : (setList?.map((set, index) => (
-                <Link
-                    key={index}
-                    href={{
-                        pathname: "/study",
-                        query: {
-                            setUid: StudySet.fromString(set).uid,
-                            setName: StudySet.fromString(set).name,
-                        },
-                    }}
-                    onClick={() => setLoading(true)}
-                >
-                    <div className="flex flex-col ml-10 p-5 shadow-2xl rounded-sm">
-                        <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
-                        <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
-                        <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                {(setList ?? []).length===0  ? <Spinner className="ml-12 p-5"/> : (setList?.map((set, index) => (
+                    <Link
+                        key={index}
+                        href={{
+                            pathname: "/study",
+                            query: {
+                                setUid: StudySet.fromString(set).uid,
+                                setName: StudySet.fromString(set).name,
+                            },
+                        }}
+                        onClick={() => setLoading(true)}
+                    >
+                        <div className="flex flex-col ml-10 p-5 shadow-2xl rounded-md">
+                            <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
+                            <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
+                            <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                        </div>
+                    </Link>
+                )))}
+                <Link href="/create">
+                    <div className="flex h-full w-52 ml-10 p-5 rounded-md" style={{backgroundColor: 'rgba(216, 216, 216, 0.4)'}}>
+                        <p className="text-5xl font-bold m-auto" style={{color: 'rgba(0, 0, 0, 0.6)'}}>+</p>
                     </div>
                 </Link>
-            )))}
         </div>
         </div>
     );

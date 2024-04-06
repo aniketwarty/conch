@@ -1,12 +1,10 @@
-'use server';
-import { redirect } from 'next/navigation';
-import { fetchStudySets } from '../lib/firebase/firestore';
-import { HomePageDisplay } from './HomePageDisplay';
-import { cookies } from 'next/headers';
-import { auth } from '../lib/firebase/auth';
-import { signInWithCustomToken } from 'firebase/auth';
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { CreatePageDisplay } from "./CreatePageDisplay";
+import { signInWithCustomToken } from "firebase/auth";
+import { auth } from "../lib/firebase/auth";
 
-export default async function Home() {
+export default async function Create() {
     const response = await fetch("http://localhost:3000/api/login", {//PROD: change to production URL
         method: "GET",
         headers: {
@@ -22,10 +20,8 @@ export default async function Home() {
     const responseJson = await response.json();
     if(auth.currentUser===null) await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;
-    const setList = await fetchStudySets(uid);
-
+    
     return (
-        <HomePageDisplay setList={setList}/>
+       <CreatePageDisplay uid={uid}/> 
     );
 }
-
