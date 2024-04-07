@@ -14,7 +14,7 @@ export const AccountButton = () => {
 
     return (
         <RiAccountCircleFill
-            className="m-2 h-10 w-10"
+            className="ml-auto mr-2 h-10 w-10"
             onClick={onClick}
         >
         </RiAccountCircleFill>

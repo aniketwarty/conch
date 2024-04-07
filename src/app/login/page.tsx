@@ -1,16 +1,21 @@
 'use client';
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { signUp, logIn } from "../lib/firebase/auth";
-import { Button, Center, FormControl, FormLabel, Input, Spinner } from "@chakra-ui/react";
+import { Alert, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Center, FormControl, FormLabel, Input, Spinner, useDisclosure } from "@chakra-ui/react";
+import { set } from "firebase/database";
+import { saveOptions } from "../lib/firebase/firestore";
 //TODO: fix random redirects - localhost issue only?
 export default function LoginPage() {
     const router = useRouter();
+    const onClose = useDisclosure().onClose;
+    const cancelRef = React.useRef<HTMLButtonElement | null>(null)
     const [loading, setLoading] = useState(false);
     const [signUpEmail, setSignUpEmail] = useState("");
     const [signUpPassword, setSignUpPassword] = useState("");
     const [logInEmail, setLogInEmail] = useState("");
     const [logInPassword, setLogInPassword] = useState("");
+    const [alertMessage, setAlertMessage] = useState("");
 
     function handleInputChange(event: React.ChangeEvent<HTMLInputElement>, stateSetter: React.Dispatch<React.SetStateAction<string>>) {
         stateSetter(event.target.value);
@@ -20,22 +25,36 @@ export default function LoginPage() {
         setLoading(true);
         const response = await signUp(signUpEmail, signUpPassword);
         if(response.status === 200) router.push("/home");
-        else console.log("Error logging in: ", response);
-        setLoading(false);
+        else setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
+        setLoading(false);  
     }
 
     async function handleLogIn() {
-        setLoading(true);
+        setLoading(true); //TODO: make an alert with the login error
         const response = await logIn(logInEmail, logInPassword);
         if(response.status === 200) router.push("/home");
-        else {
-            console.log("Error logging in: ", response);
-            setLoading(false);
-        }
+        else setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
+        setLoading(false);
     }
 
     return (
         <div className="bg-slate-100 h-screen w-screen top-0 flex items-center">
+            <AlertDialog isOpen={alertMessage!==""} leastDestructiveRef={cancelRef} onClose={onClose}>
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader className="-mb-2" fontSize='3xl' fontWeight='bold'>Error</AlertDialogHeader>
+                        <AlertDialogBody>{alertMessage}</AlertDialogBody>
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={() => {
+                                setAlertMessage("");
+                                onClose()
+                            }}>
+                                OK
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>  
             {loading && (
                 <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
                     <Spinner className="p-5 m-auto"/>

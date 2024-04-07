@@ -1,14 +1,12 @@
 import { firebaseApp } from "./firebase";
 import { createUserWithEmailAndPassword, getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "firebase/auth";
 import { destroyCookie } from "nookies";
+import { FirebaseError } from "firebase/app";
 
 export const auth = getAuth(firebaseApp);
 
 export async function signUp(signUpEmail: string, signUpPassword: string) {
-    let response = {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Error logging in' }),
-    } as unknown as Response;
+    let response = new Response(JSON.stringify({ error: 'Error signing up' }), { status: 500 });
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
         const token = await userCredential.user.getIdToken();
@@ -21,7 +19,10 @@ export async function signUp(signUpEmail: string, signUpPassword: string) {
             response = res;
         })
     } catch (error) {
-        console.log("Error logging in: ", error);
+        console.log(error)
+        if(error instanceof FirebaseError) {
+            response = new Response(JSON.stringify({ error: error.message }), { status: 400 });
+        }
     }
     return response;
 }
@@ -43,7 +44,10 @@ export async function logIn(logInEmail: string, logInPassword: string) {
             response = res;
         })
     } catch (error) {
-        console.log("Error logging in: ", error);
+        console.log(error)
+        if(error instanceof FirebaseError) {
+            response = new Response(JSON.stringify({ error: error.message }), { status: 400 });
+        }
     }
     return response;
 }
