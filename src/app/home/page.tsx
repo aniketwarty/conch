@@ -25,7 +25,7 @@ export default async function Home() {
     const setList = await fetchStudySets(uid);
 
     return (
-        <HomePageDisplay setList={setList}/>
+        <HomePageDisplay setList={setList} uid={uid}/>
     );
 }
 

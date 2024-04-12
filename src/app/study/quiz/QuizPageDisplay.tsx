@@ -6,6 +6,7 @@ import { QuizGrader } from "./QuizGrader";
 import { StudyModeNavBar } from "../../ui/study_page/StudyModeNavBar";
 import { Button, Checkbox, Icon, Tooltip } from "@chakra-ui/react";
 import { Question } from "../../lib/classes/question";
+import { saveOptions } from "@/app/lib/firebase/firestore";
 
 export const questionTypes = ["True/False Questions", "Multiple Choice Questions", "Short Answer Questions", "Free Response Questions"];
 
@@ -30,11 +31,13 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
 
     useEffect(() => {
         if(quizStatus == QuizStatus.INITIAL) {
+            saveOptions(uid, options, "quiz");
+            console.log(uid)
             setQuizOptions(options);
             setQuestionList([]);
             setAnswers(Array(options["Number of Questions"]).fill(""));
         }
-    }, [options, quizStatus, uid])
+    }, [options, quizStatus])
 
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden">
@@ -43,9 +46,9 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                 <div className="flex flex-col h-5/6 w-2/5 shadow-2xl m-auto p-5 items-center">
                     <p className="text-5xl font-bold m-5 self-center">Quiz</p>  
                     <p className="text-2xl m-5 self-center">
-                        {options["Number of Questions"]===-1 ? (studySet.terms.length + " questions"):(options["Number of Questions"] + " questions")} 
+                        {options["Number of Questions"] + " questions"} 
                         {" • "}
-                        {options["Time Limit"]===-1 ? "No time limit" : `${Math.floor(options["Time Limit"] / 60)}:${(options["Time Limit"] % 60).toString().padStart(2, '0')} time limit`}
+                        {options["Time Limit (seconds)"]===-1 ? "No time limit" : `${Math.floor(options["Time Limit (seconds)"] / 60)}:${(options["Time Limit (seconds)"] % 60).toString().padStart(2, '0')} time limit`}
                     </p>
                     <div className="flex flex-row my-2">
                         <p className="ml-3 mr-3 text-2xl">True/False Questions</p>

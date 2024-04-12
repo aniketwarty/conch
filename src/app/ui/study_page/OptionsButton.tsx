@@ -18,6 +18,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
     useEffect(() => {
         if(isOpen) {
             getOptions(uid, studyMode).then((result) => {
+                console.log(result)
                 setOptions(result);
                 setOldOptions(result);
             });
@@ -51,7 +52,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
                         <p className="ml-3 mr-auto text-lg">{key}</p>
                         <NumberInput
                             variant={"outline"} className="mr-3" width={"80px"} 
-                            defaultValue={value} min={-1} max={key === "Number of Questions" ? 30 : 999}
+                            defaultValue={value} min={key!=="Time Limit (seconds)"?0:-1} max={key === "Number of Questions" ? 30 : 999}
                             onChange={(e) => setOptions((prevOptions: any) => ({...prevOptions, [key]: Number(e) }))}
 
                         >

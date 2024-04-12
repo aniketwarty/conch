@@ -18,7 +18,7 @@ interface QuizGeneratorProps {
     options: any;
     setQuizStatus: React.Dispatch<React.SetStateAction<QuizStatus>>;
 }
-
+//TODO: reduce number of gemini calls as per rate limits
 export const QuizGenerator = ({studySetString, questionList, setQuestionList, answers, setAnswers, options, setQuizStatus}: QuizGeneratorProps) => {
     const studySet = StudySet.fromString(studySetString);
     const startedQuizGeneration = useRef(false)

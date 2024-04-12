@@ -2,6 +2,7 @@ import { firebaseApp } from "./firebase";
 import { createUserWithEmailAndPassword, getAuth, signInWithCustomToken, signInWithEmailAndPassword } from "firebase/auth";
 import { destroyCookie } from "nookies";
 import { FirebaseError } from "firebase/app";
+import { createUserDB } from "./firestore";
 
 export const auth = getAuth(firebaseApp);
 
@@ -10,6 +11,7 @@ export async function signUp(signUpEmail: string, signUpPassword: string) {
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
         const token = await userCredential.user.getIdToken();
+        await createUserDB(userCredential.user.uid);
         await fetch("/api/login", {
             method: "POST",
             headers: {
