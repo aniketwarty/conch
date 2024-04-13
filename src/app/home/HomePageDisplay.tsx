@@ -6,11 +6,10 @@ import { NavBar } from '../ui/nav_bar/NavBar';
 import { Spinner } from '@chakra-ui/react';
 
 interface HomePageProps {
-    uid: string;//TODO: remove uid
     setList: string[] | null;
 }
 
-export const HomePageDisplay = ({ setList, uid } : HomePageProps) => {
+export const HomePageDisplay = ({ setList } : HomePageProps) => {
     const [loading, setLoading] = useState(false);
 
     return (
@@ -21,7 +20,6 @@ export const HomePageDisplay = ({ setList, uid } : HomePageProps) => {
                 </div>
             )}
             <NavBar/>
-            <p>{uid}</p>
             <p className="text-3xl font-bold m-10"> Your sets </p>
             <div className="flex flex-row">
                 {setList?.map((set, index) => (

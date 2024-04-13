@@ -11,7 +11,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
     
     return (
         <div className="bg-slate-100 h-screen w-screen">
-            <Button onClick={() => createStudySet(new StudySet("test", ["term1"], ["definition1"], new Date(), uid))}>Create</Button>
+            <Button onClick={() => createStudySet(new StudySet("test2", ["term1"], ["definition1"], new Date(), uid))}>Create</Button>
         </div>
     );
 }

@@ -1,6 +1,5 @@
 import { collection, getDocs, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { firebaseApp } from "./firebase";
-import firebase from "firebase/auth";
 import { StudySet } from "../classes/study_set";
 import { defaultFlashcardOptions, defaultQuizOptions } from "../../study/default_options";
 
@@ -18,7 +17,7 @@ export async function createUserDB(uid: string) {
 export async function createStudySet(studySet: StudySet) {
     try {
         const setRef = doc(db, `users/${studySet.uid}/study_sets/${studySet.name}`);
-        await setDoc(setRef, {terms: studySet.terms, definitions: studySet.definitions, last_studied: new Date()});
+        await setDoc(setRef, {terms: studySet.terms, definitions: studySet.definitions, last_studied: new Date(), shared_uids: []});
     } catch (e) {
         console.log(e);
     }

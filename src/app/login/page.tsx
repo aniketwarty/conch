@@ -25,16 +25,20 @@ export default function LoginPage() {
         setLoading(true);
         const response = await signUp(signUpEmail, signUpPassword);
         if(response.status === 200) router.push("/home");
-        else setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
-        setLoading(false);  
+        else {
+            setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
+            setLoading(false);
+        }
     }
 
     async function handleLogIn() {
         setLoading(true); //TODO: make an alert with the login error
         const response = await logIn(logInEmail, logInPassword);
         if(response.status === 200) router.push("/home");
-        else setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
-        setLoading(false);
+        else {
+            setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
+            setLoading(false);
+        }
     }
 
     return (
@@ -72,7 +76,7 @@ export default function LoginPage() {
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
                             value={signUpPassword} onChange={(event) => handleInputChange(event, setSignUpPassword)} 
-                            onKeyDown={(event) => {if (event.key === "Enter") {handleLogIn()}}}/>
+                            onKeyDown={(event) => {if (event.key === "Enter") handleSignUp()}}/>
                     </FormControl>
                     <Button colorScheme="blue" size="lg" className="mt-5 w-full" 
                     onClick={handleSignUp}>Sign up</Button>
@@ -93,7 +97,7 @@ export default function LoginPage() {
                         <FormLabel>Password</FormLabel>
                         <Input type="password" placeholder="Enter your password"
                             value={logInPassword} onChange={(event) => handleInputChange(event, setLogInPassword)} 
-                            onKeyDown={(event) => {if (event.key === "Enter") {handleLogIn()}}}/>
+                            onKeyDown={(event) => {if (event.key === "Enter") handleLogIn()}}/>
                     </FormControl>
                     <Button colorScheme="blue" size="lg" className="mt-5 w-full" 
                     onClick={handleLogIn}>Log in</Button>
