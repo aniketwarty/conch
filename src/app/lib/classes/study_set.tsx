@@ -60,6 +60,10 @@ export class StudySet {
         return new StudySet(this.name, shuffledTerms, shuffledDefinitions, this.last_studied, this.uid);
     }
 
+    compare(other: StudySet) {
+        return this.name === other.name && this.uid === other.uid;
+    }
+
     static fromFirestore(uid: string, name: string, data: any){
         return new StudySet(name, data.terms, data.definitions, data.last_studied.toDate(), uid);
     }
@@ -74,8 +78,13 @@ export class StudySet {
     }
 
     static fromString(str: string){
-        const data = JSON.parse(str);
-        return new StudySet(data.name, data.terms, data.definitions, new Date(data.last_studied), data.uid);
+        try {
+            const data = JSON.parse(str);
+            return new StudySet(data.name, data.terms, data.definitions, new Date(data.last_studied), data.uid);
+        } catch(e){
+            console.log(e);
+            return new StudySet("", [], [], new Date(), "");
+        }
     }
 
     toString(){

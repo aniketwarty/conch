@@ -10,12 +10,12 @@ import { IoChatboxSharp } from "react-icons/io5";
 import { MdOutlineQuiz } from "react-icons/md";
 import { RiShareForwardLine } from "react-icons/ri";
 import { StudySet } from "../lib/classes/study_set";
-import { error } from "console";
+import { shareSet } from "../lib/firebase/firestore";
 
 interface StudyPageDisplayProps {
     studySetString: string;
 }
-
+//TODO: add unsharing
 export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
     const studySet = StudySet.fromString(studySetString);
     const [loading, setLoading] = useState(false);
@@ -112,7 +112,7 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
 
                                 <AlertDialogFooter>
                                     <Button ref={cancelRef} onClick={() => {
-                                        //share function
+                                        shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail])
                                         onClose()
                                     }}>
                                         Share

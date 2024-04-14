@@ -12,11 +12,6 @@ export default async function Create() {
         },
     })
 
-    if (response.status !== 200) {
-        console.log("Error getting uid")
-        redirect("/login");
-    }
-
     const responseJson = await response.json();
     if(auth.currentUser===null) await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;

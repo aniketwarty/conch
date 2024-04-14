@@ -36,7 +36,8 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## TODO
-## add creating sets
 ## add sharing
+## add creating/deleting sets
 ## send for testing
+## add editing sets
 ## add games

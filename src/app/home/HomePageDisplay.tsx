@@ -1,16 +1,44 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { StudySet } from "../lib/classes/study_set";
 import { NavBar } from '../ui/nav_bar/NavBar';
 import { Spinner } from '@chakra-ui/react';
+import { auth } from "../lib/firebase/auth";
+import { signInWithCustomToken } from "firebase/auth";
+import { fetchRecentSets, fetchStudySets } from "../lib/firebase/firestore";
+import { parseCookies } from "nookies";
+import { get } from "http";
 
 interface HomePageProps {
-    setList: string[] | null;
+    initialSetList: string[] | null;
 }
 
-export const HomePageDisplay = ({ setList } : HomePageProps) => {
-    const [loading, setLoading] = useState(false);
+export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
+    const [loading, setLoading] = useState(true);
+    const [setList, setSetList] = useState<string[]>([]);//TODO: change to useState<string[]>(initialSetList) after fixing cacheing thing
+    const [recentSetList, setRecentSetList] = useState<string[]>([]);
+
+    useEffect(() => {
+        async function getSets() {
+            const cookies = parseCookies();
+            console.log("use effect")
+            const response = await fetch("http://localhost:3000/api/login", {//PROD: change to production URL
+                method: "GET",
+                headers: {
+                    Cookie: `session=${cookies.session}`,
+                },
+            });
+            
+            const responseJson = await response.json();
+            await signInWithCustomToken(auth, responseJson.token);
+            const uid = responseJson.uid;
+            setSetList(await fetchStudySets(uid));
+            setRecentSetList(await fetchRecentSets(uid));
+            setLoading(false);
+        }
+        getSets();
+    }, []);
 
     return (
         <div className="bg-slate-100 h-screen w-screen flex flex-col">
@@ -21,8 +49,8 @@ export const HomePageDisplay = ({ setList } : HomePageProps) => {
             )}
             <NavBar/>
             <p className="text-3xl font-bold m-10"> Your sets </p>
-            <div className="flex flex-row">
-                {setList?.map((set, index) => (
+            <div className="flex flex-row mb-5">
+                {setList.length>0?setList.map((set, index) => (
                     <Link
                         key={index}
                         href={{
@@ -32,7 +60,10 @@ export const HomePageDisplay = ({ setList } : HomePageProps) => {
                                 setName: StudySet.fromString(set).name,
                             },
                         }}
-                        onClick={() => setLoading(true)}
+                        onClick={() => {
+                            setLoading(true); 
+                            console.log("click uid", StudySet.fromString(set).uid)
+                        }}
                     >
                         <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md">
                             <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
@@ -40,13 +71,45 @@ export const HomePageDisplay = ({ setList } : HomePageProps) => {
                             <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
                         </div>
                     </Link>
-                ))}
+                )):<>
+                    <div className="flex h-32 w-52 ml-10 p-5 rounded-md" style={{backgroundColor: 'rgba(216, 216, 216, 0.4)'}}></div>
+                    {/* <div className="flex h-32 w-52 ml-10 p-5 rounded-md" style={{backgroundColor: 'rgba(216, 216, 216, 0.4)'}}></div>
+                    <div className="flex h-32 w-52 ml-10 p-5 rounded-md" style={{backgroundColor: 'rgba(216, 216, 216, 0.4)'}}></div> */}
+                </>}
                 <Link href="/create">
                     <div className="flex h-32 w-52 ml-10 p-5 rounded-md" style={{backgroundColor: 'rgba(216, 216, 216, 0.4)'}}>
                         <p className="text-5xl font-bold m-auto" style={{color: 'rgba(0, 0, 0, 0.6)'}}>+</p>
                     </div>
                 </Link>
-        </div>
+            </div>
+            {recentSetList.length>0?<>
+                <p className="text-3xl font-bold m-10"> Recently viewed sets </p>
+                <div className="flex flex-row mb-5">
+                    {recentSetList.map((set, index) => (
+                        <Link
+                            key={index}
+                            href={{
+                                pathname: "/study",
+                                query: {
+                                    setUid: StudySet.fromString(set).uid,
+                                    setName: StudySet.fromString(set).name,
+                                },
+                            }}
+                            onClick={() => {
+                                setLoading(true); 
+                                console.log("click uid", StudySet.fromString(set).uid)
+                            }}
+                        >
+                            <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md">
+                                <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
+                                <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
+                                <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                            </div>
+                        </Link>
+                    ))}
+                </div>
+            </>:<></>}
+
         </div>
     );
 }

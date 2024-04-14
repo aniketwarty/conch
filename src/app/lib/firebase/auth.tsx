@@ -56,5 +56,7 @@ export async function logIn(logInEmail: string, logInPassword: string) {
 
 export async function logOut() {
     destroyCookie(null, "session");
+    destroyCookie(null, "study_set")
+    await auth.currentUser?.getIdToken(true);
     await auth.signOut();
 }

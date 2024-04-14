@@ -11,7 +11,7 @@ export const NavBar = () => {
                     pathname: "/home",
                 }}>
                     <h1 className="ml-5 text-2xl font-bold p-2">
-                        Conch
+                        Name
                     </h1>
                 </Link>
                 <AccountButton/>

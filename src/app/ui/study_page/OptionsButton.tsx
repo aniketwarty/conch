@@ -18,7 +18,6 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
     useEffect(() => {
         if(isOpen) {
             getOptions(uid, studyMode).then((result) => {
-                console.log(result)
                 setOptions(result);
                 setOldOptions(result);
             });

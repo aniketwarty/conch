@@ -1,10 +1,10 @@
 'use client';
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { signUp, logIn } from "../lib/firebase/auth";
-import { Alert, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Center, FormControl, FormLabel, Input, Spinner, useDisclosure } from "@chakra-ui/react";
-import { set } from "firebase/database";
-import { saveOptions } from "../lib/firebase/firestore";
+import { signUp, logIn, auth } from "../lib/firebase/auth";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Center, FormControl, FormLabel, Input, Spinner, useDisclosure } from "@chakra-ui/react";
+import { signInWithCustomToken } from "firebase/auth";
+
 //TODO: fix random redirects - localhost issue only?
 export default function LoginPage() {
     const router = useRouter();
@@ -24,7 +24,10 @@ export default function LoginPage() {
     async function handleSignUp() {
         setLoading(true);
         const response = await signUp(signUpEmail, signUpPassword);
-        if(response.status === 200) router.push("/home");
+        if(response.status === 200) {
+            await signInWithCustomToken(auth, (await response.json()).token);
+            router.push("/home", );
+        }
         else {
             setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
             setLoading(false);
@@ -34,7 +37,10 @@ export default function LoginPage() {
     async function handleLogIn() {
         setLoading(true); //TODO: make an alert with the login error
         const response = await logIn(logInEmail, logInPassword);
-        if(response.status === 200) router.push("/home");
+        if(response.status === 200) {
+            await signInWithCustomToken(auth, (await response.json()).token);
+            router.push("/home");
+        }
         else {
             setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
             setLoading(false);

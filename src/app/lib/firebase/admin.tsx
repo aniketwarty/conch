@@ -1,8 +1,10 @@
 import { initializeApp, getApps } from 'firebase-admin/app';
 import { firebaseAdminConfig } from './admin_config';
+import { auth } from "firebase-admin";
 
-export function initializeAdmin() {
-    if (getApps().length <= 0) {
-        initializeApp(firebaseAdminConfig);
-    }
+if (getApps().length <= 0) {
+    initializeApp(firebaseAdminConfig);
 }
+
+export const admin = auth()
+

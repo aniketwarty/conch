@@ -32,7 +32,6 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
     useEffect(() => {
         if(quizStatus == QuizStatus.INITIAL) {
             saveOptions(uid, options, "quiz");
-            console.log(uid)
             setQuizOptions(options);
             setQuestionList([]);
             setAnswers(Array(options["Number of Questions"]).fill(""));
