@@ -13,7 +13,7 @@ import { get } from "http";
 interface HomePageProps {
     initialSetList: string[] | null;
 }
-
+//TODO: fix random not logging in on client
 export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
     const [loading, setLoading] = useState(true);
     const [setList, setSetList] = useState<string[]>([]);//TODO: change to useState<string[]>(initialSetList) after fixing cacheing thing
@@ -62,7 +62,6 @@ export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
                         }}
                         onClick={() => {
                             setLoading(true); 
-                            console.log("click uid", StudySet.fromString(set).uid)
                         }}
                     >
                         <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md">
@@ -97,13 +96,12 @@ export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
                             }}
                             onClick={() => {
                                 setLoading(true); 
-                                console.log("click uid", StudySet.fromString(set).uid)
                             }}
                         >
                             <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md">
                                 <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
                                 <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
-                                <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                                <p className="">{"Last viewed " + StudySet.fromString(set).getFormattedLastStudied()}</p>
                             </div>
                         </Link>
                     ))}

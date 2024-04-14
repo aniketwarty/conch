@@ -9,6 +9,7 @@ import { IoMdClose } from "react-icons/io";
 import { IoChatboxSharp } from "react-icons/io5";
 import { MdOutlineQuiz } from "react-icons/md";
 import { RiShareForwardLine } from "react-icons/ri";
+import { FaRegCopy } from "react-icons/fa6";
 import { StudySet } from "../lib/classes/study_set";
 import { shareSet } from "../lib/firebase/firestore";
 
@@ -96,6 +97,7 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
                                         </InputRightElement>
                                     </InputGroup>
                                     {errorMessage!==""?<p className="text-red-600 text-sm">{errorMessage}</p>:<></>}
+                                    {/* TODO: allow sharing with anyone with the link */}
                                     <div className="flex flex-wrap">
                                         {sharedEmails.map((email, index) => {
                                             return (
@@ -107,6 +109,12 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
                                                 </div>
                                             );
                                         })}
+                                    </div>
+                                    <p className="text-sm mt-10">Shareable link:</p>
+                                    <div className="flex flex-row border-2 border-slate-700 rounded-md px-2 py-px w-full items-center" 
+                                    onClick={() => navigator.clipboard.writeText(window.location.href)}>
+                                        <p className="truncate mr-2">{window.location.href}</p>
+                                        <FaRegCopy size={30}/>
                                     </div>
                                 </AlertDialogBody>
 

@@ -26,7 +26,6 @@ export async function addToRecentSets(uid: string, studySet: string) {
                 i--;
             }
         }
-        console.log(recentSets);
         if(recentSets.length >= 5) {
             recentSets.pop();
         }
