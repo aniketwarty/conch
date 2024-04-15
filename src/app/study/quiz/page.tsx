@@ -1,7 +1,7 @@
 'use server';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getOptions, updateLastStudied } from "../../lib/firebase/firestore";
+import { addToRecentSets, fetchStudySet, getOptions, updateLastStudied } from "../../lib/firebase/firestore";
 import { getSetString } from "../../lib/util/study";
 import { QuizPageDisplay } from "./QuizPageDisplay";
 import { StudySet } from "../../lib/classes/study_set";
@@ -21,18 +21,10 @@ export default async function QuizPage({searchParams}: {searchParams: any}) {
     const uid = authResponseJson.uid;
     const initialOptions = await getOptions(uid, "quiz");
 
-    const setResponse = await fetch("http://localhost:3000/api/study_set", {//PROD: change to production URL
-        method: "GET",
-        headers: {
-            uid: uid,
-            setUid: searchParams.setUid,
-            setName: searchParams.setName,
-        }
-    })
-
-    if(setResponse.redirected) return redirect("/home");
-    const setResponseJson = await setResponse.json();
-    const setString = setResponseJson.setString;
+    const setString = await fetchStudySet(searchParams.setUid, searchParams.setName, uid);
+    if(setString==="") return redirect("/home");
+    await updateLastStudied(StudySet.fromString(setString));
+    await addToRecentSets(uid, setString);
     
     return (
         <QuizPageDisplay uid={uid} studySetString={setString} initialOptions={initialOptions}/>

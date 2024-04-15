@@ -1,7 +1,7 @@
 'use server'
 import { StudyPageDisplay } from "./StudyPageDisplay";
 import { StudySet } from "../lib/classes/study_set";
-import { updateLastStudied } from "../lib/firebase/firestore";
+import { addToRecentSets, fetchStudySet, updateLastStudied } from "../lib/firebase/firestore";
 import { cookies } from "next/headers";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../lib/firebase/auth";
@@ -15,25 +15,15 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
         },
     })
 
-
     const authResponseJson = await authResponse.json();
     await signInWithCustomToken(auth, authResponseJson.token);
     const uid = authResponseJson.uid;
 
-    const setResponse = await fetch("http://localhost:3000/api/study_set", {//PROD: change to production URL
-        method: "GET",
-        headers: {
-            uid: uid,
-            setUid: searchParams.setUid,
-            setName: searchParams.setName,
-        },
-    })
-
-    if(setResponse.redirected) {
-        return redirect("/home");
-    }
-    const setResponseJson = !setResponse.redirected?await setResponse.json():{setString: ""};
-    const setString = setResponseJson.setString;
+    //TODO: add set cookies
+    const setString = await fetchStudySet(searchParams.setUid, searchParams.setName, uid);
+    if(setString==="") return redirect("/home");
+    await updateLastStudied(StudySet.fromString(setString));
+    await addToRecentSets(uid, setString);
 
     return (
         <StudyPageDisplay studySetString={setString}/>
