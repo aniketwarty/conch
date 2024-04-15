@@ -1,8 +1,8 @@
 'use client';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavBar } from "../ui/nav_bar/NavBar";
 import { StudyModeButton } from "../ui/study_page/StudyModeButton";
-import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Input, InputGroup, InputRightAddon, InputRightElement, Spinner, useDisclosure } from "@chakra-ui/react";
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Input, InputGroup, InputRightAddon, InputRightElement, Spinner, useDisclosure, useEditable } from "@chakra-ui/react";
 import { BsCardText } from "react-icons/bs";
 import { FaGamepad, FaPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
@@ -25,6 +25,11 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
     const [currentEmail, setCurrentEmail] = useState<string>("");
     const [sharedEmails, setSharedEmails] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const linkRef = React.useRef<string>("");
+
+    useEffect(() => {
+        linkRef.current = window.location.href;
+    }, [])
 
     function addEmail() {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -56,7 +61,6 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
                 <NavBar/>
                 <div className="flex flex-row mt-5 mx-10">
                     <p className="text-3xl font-bold">{studySet.name}</p> 
-                    {/* TODO: convert to chakra button */}
                     <button className="ml-auto  px-4 py-2 flex items-center bg-blue-500 text-white rounded-md"
                     onClick={() => {
                         setCurrentEmail("")
@@ -112,8 +116,8 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
                                     </div>
                                     <p className="text-sm mt-10">Shareable link:</p>
                                     <div className="flex flex-row border-2 border-slate-700 rounded-md px-2 py-px w-full items-center" 
-                                    onClick={() => navigator.clipboard.writeText(window.location.href)}>
-                                        <p className="truncate mr-2">{window.location.href}</p>
+                                    onClick={() => navigator.clipboard.writeText(linkRef.current)}>
+                                        <p className="truncate mr-2">{linkRef.current}</p>
                                         <FaRegCopy size={30}/>
                                     </div>
                                 </AlertDialogBody>
@@ -136,6 +140,7 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
                 
                 <div className="flex flex-row h-5/6 w-full mb-5">
                     <div className="flex flex-col m-5 w-1/4 justify-between">
+                        {/* TODO: disable game1 and game 2 and chat */}
                         <StudyModeButton text="Flashcards" icon={BsCardText} modePath="flashcards" studySetString={studySetString} setLoading={setLoading}/>
                         <StudyModeButton text="Quiz" icon={MdOutlineQuiz} modePath="quiz" studySetString={studySetString} setLoading={setLoading}/>
                         <StudyModeButton text="Game 1" icon={FaGamepad} modePath="game1" studySetString={studySetString} setLoading={setLoading}/>

@@ -1,11 +1,11 @@
 'use server';
-import { fetchStudySets } from '../lib/firebase/firestore';
+import { fetchRecentSets, fetchStudySets } from '../lib/firebase/firestore';
 import { HomePageDisplay } from './HomePageDisplay';
 import { cookies } from 'next/headers';
 import { auth } from '../lib/firebase/auth';
 import { signInWithCustomToken } from 'firebase/auth';
 
-export default async function Home() {//TODO: fix this not running when logging in after logging out soon before
+export default async function Home() {//TODO: fix this caching
     console.log("home")
     const response = await fetch("http://localhost:3000/api/login", {//PROD: change to production URL
         method: "GET",
@@ -18,9 +18,10 @@ export default async function Home() {//TODO: fix this not running when logging 
     await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;
     const setList = await fetchStudySets(uid);
+    const recentSetList = await fetchRecentSets(uid);
 
     return (
-        <HomePageDisplay initialSetList={setList}/>
+        <HomePageDisplay setList={setList} recentSetList={recentSetList}/>
     );
 }
 

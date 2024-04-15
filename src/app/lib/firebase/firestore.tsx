@@ -2,13 +2,14 @@ import { collection, getDocs, doc, getDoc, getFirestore, setDoc } from "firebase
 import { firebaseApp } from "./firebase";
 import { StudySet } from "../classes/study_set";
 import { defaultFlashcardOptions, defaultQuizOptions } from "../../study/default_options";
+import { auth } from "./auth";
 
 export const db = getFirestore(firebaseApp);
 
 export async function createUserDB(uid: string) {
     try {
         const userRef = doc(db, `users/${uid}`);
-        await setDoc(userRef, {dateAccountCreated: new Date()});
+        await setDoc(userRef, {dateAccountCreated: new Date(), recentSets: []});
     } catch (e) {
         console.log(e);
     }
@@ -67,13 +68,11 @@ export async function fetchStudySets(uid: string) {
             setList.push(set);
         });
     } catch (e) {
-        console.log(e)
+        console.log("sets", e, "param uid", uid, "client uid", auth.currentUser?.uid)
     }
 
     return setList;
 };
-
-//TODO: change firebase rules to allow accessing friends study sets
 
 export async function fetchStudySet(setUid: string, setName: string, uid: string) {
     let set = "";
@@ -83,7 +82,7 @@ export async function fetchStudySet(setUid: string, setName: string, uid: string
         const setSnapshot = await getDoc(setRef);
         set = (StudySet.fromFirestore(setUid, setSnapshot.id, setSnapshot.data())).toString();
     } catch (e) {
-        console.log(e);
+        console.log("set", e, "param uid", uid, "client uid", auth.currentUser?.uid)
     }
     
     return set;

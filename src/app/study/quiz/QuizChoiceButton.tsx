@@ -29,7 +29,6 @@ interface GradedQuizChoiceButtonProps {
 }
 
 export const GradedQuizChoiceButton = ({value, color, prefix, stretch}: GradedQuizChoiceButtonProps) => {
-    //TODO: replace with div?
     return (
         <Box className={`bg-slate-200 m-2 p-2 border-2 rounded-md shadow-xl ${stretch ? ' w-full' : ''}`} borderColor={color}> 
             <p className="text-center font-semibold">{prefix ? `${prefix}. ${value}` : value}</p>

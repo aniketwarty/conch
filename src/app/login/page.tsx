@@ -6,6 +6,7 @@ import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, Al
 import { signInWithCustomToken } from "firebase/auth";
 
 //TODO: fix random redirects - localhost issue only?
+//TODO: add logo and product name and description at top, add created by/powerered by in bottom
 export default function LoginPage() {
     const router = useRouter();
     const onClose = useDisclosure().onClose;
@@ -26,7 +27,7 @@ export default function LoginPage() {
         const response = await signUp(signUpEmail, signUpPassword);
         if(response.status === 200) {
             await signInWithCustomToken(auth, (await response.json()).token);
-            router.push("/home", );
+            window.location.href = "/home"
         }
         else {
             setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);
@@ -39,7 +40,7 @@ export default function LoginPage() {
         const response = await logIn(logInEmail, logInPassword);
         if(response.status === 200) {
             await signInWithCustomToken(auth, (await response.json()).token);
-            router.push("/home");
+            window.location.href = "/home"
         }
         else {
             setAlertMessage(`Error (${response.status}): ` + (await response.json()).error);

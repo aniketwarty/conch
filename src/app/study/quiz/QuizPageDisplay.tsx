@@ -80,6 +80,7 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                         />
                     </div>
                     <div className="flex flex-row my-2">
+                        {/* TODO: add ai logo/mention AI somewhere */}
                         <p className="ml-3 text-2xl">Free Response Questions</p>
                         <Tooltip label={
                             <>

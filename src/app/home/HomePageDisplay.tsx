@@ -11,35 +11,14 @@ import { parseCookies } from "nookies";
 import { get } from "http";
 
 interface HomePageProps {
-    initialSetList: string[] | null;
+    setList: string[] | null;
+    recentSetList: string[] | null;
 }
 //TODO: fix random not logging in on client
-export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
-    const [loading, setLoading] = useState(true);
-    const [setList, setSetList] = useState<string[]>([]);//TODO: change to useState<string[]>(initialSetList) after fixing cacheing thing
-    const [recentSetList, setRecentSetList] = useState<string[]>([]);
-
-    useEffect(() => {
-        async function getSets() {
-            const cookies = parseCookies();
-            console.log("use effect")
-            const response = await fetch("http://localhost:3000/api/login", {//PROD: change to production URL
-                method: "GET",
-                headers: {
-                    Cookie: `session=${cookies.session}`,
-                },
-            });
-            
-            const responseJson = await response.json();
-            await signInWithCustomToken(auth, responseJson.token);
-            const uid = responseJson.uid;
-            setSetList(await fetchStudySets(uid));
-            setRecentSetList(await fetchRecentSets(uid));
-            setLoading(false);
-        }
-        getSets();
-    }, []);
-
+export const HomePageDisplay = ({ setList, recentSetList } : HomePageProps) => {
+    const [loading, setLoading] = useState(false);
+    // const [setList, setSetList] = useState<string[]>(initialSetList??[]);
+    // const [recentSetList, setRecentSetList] = useState<string[]>(initialRecentSetList??[]);
     return (
         <div className="bg-slate-100 h-screen w-screen flex flex-col">
             {loading && (
@@ -50,7 +29,7 @@ export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
             <NavBar/>
             <p className="text-3xl font-bold m-10"> Your sets </p>
             <div className="flex flex-row mb-5">
-                {setList.length>0?setList.map((set, index) => (
+                {setList??[].length>0?setList!.map((set, index) => (
                     <Link
                         key={index}
                         href={{
@@ -81,10 +60,10 @@ export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
                     </div>
                 </Link>
             </div>
-            {recentSetList.length>0?<>
+            {recentSetList??[].length>0?<>
                 <p className="text-3xl font-bold m-10"> Recently viewed sets </p>
                 <div className="flex flex-row mb-5">
-                    {recentSetList.map((set, index) => (
+                    {recentSetList!.map((set, index) => (
                         <Link
                             key={index}
                             href={{
@@ -107,7 +86,6 @@ export const HomePageDisplay = ({ initialSetList } : HomePageProps) => {
                     ))}
                 </div>
             </>:<></>}
-
         </div>
     );
 }

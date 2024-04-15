@@ -29,7 +29,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 }
 
 export async function GET(request: NextRequest) {
-    //TODO: verify whether user has access here
+    //TODO: move set verification here
     const cookieStore = cookies();
     const headerStore = headers();
     const setCookie = cookieStore.get("set")?.value || "";
