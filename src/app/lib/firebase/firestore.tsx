@@ -98,8 +98,20 @@ export async function updateLastStudied(studySet: StudySet) {
 
 }
 
+export async function fetchSharedEmails(setUid: string, setName: string) {
+    const response = await fetch("http://localhost:3000/api/study_set/share", {
+        method: "GET",
+        headers: {
+            setUid: setUid,
+            setName: setName,
+        },
+    });
+    return (await response.json()).shared_emails;
+
+}
+
 export async function shareSet(setUid: string, setName: string, sharedEmails: string[]) {
-    await fetch("http://localhost:3000/api/study_set", {
+    await fetch("http://localhost:3000/api/study_set/share", {
         method: "POST",
         headers: {
             shared_emails: sharedEmails.join(","),
@@ -107,16 +119,6 @@ export async function shareSet(setUid: string, setName: string, sharedEmails: st
             setName: setName,
         },
     });
-}
-
-export async function shareSetWithUids(setUid: string, setName: string, sharedUids: string[]) {
-    try {
-        const setRef = doc(db, `users/${setUid}/study_sets/${setName}`);
-        const oldSharedUids = (await getDoc(setRef)).data()?.shared_uids;
-        await setDoc(setRef, {shared_uids: [...oldSharedUids, ...sharedUids]}, {merge: true});
-    } catch (e) {
-        console.log(e);
-    }
 }
 
 export async function getOptions(uid: string, studyMode: string) {

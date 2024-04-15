@@ -22,7 +22,6 @@ interface QuizPageDisplayProps {
 }
 
 export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageDisplayProps) => {
-    const studySet = StudySet.fromString(studySetString);
     const [quizStatus, setQuizStatus] = useState(QuizStatus.INITIAL);
     const [options, setOptions] = useState(initialOptions);
     const [quizOptions, setQuizOptions] = useState(initialOptions);

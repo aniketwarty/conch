@@ -15,15 +15,16 @@ import { shareSet } from "../lib/firebase/firestore";
 
 interface StudyPageDisplayProps {
     studySetString: string;
+    initialSharedEmails: string[];
 }
 //TODO: add unsharing
-export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
+export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPageDisplayProps) => {
     const studySet = StudySet.fromString(studySetString);
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<HTMLButtonElement | null>(null)
     const [currentEmail, setCurrentEmail] = useState<string>("");
-    const [sharedEmails, setSharedEmails] = useState<string[]>([]);
+    const [sharedEmails, setSharedEmails] = useState<string[]>(initialSharedEmails);
     const [errorMessage, setErrorMessage] = useState("");
     const linkRef = React.useRef<string>("");
 
@@ -33,21 +34,23 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
 
     function addEmail() {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        setSharedEmails(prevSharedEmails => {
-            if(currentEmail==="") {
-                return prevSharedEmails
-            } else if (!regex.test(currentEmail)) {
-                setErrorMessage("Please enter a valid email")
-                return prevSharedEmails;
-            } else if(prevSharedEmails.includes(currentEmail)){
-                setErrorMessage("That email is already included")
-                return prevSharedEmails;
-            } else {
-                setErrorMessage("")
-                return [...prevSharedEmails, currentEmail];
-            }
-        })
-        setCurrentEmail("")
+        if(currentEmail==="") {
+            setSharedEmails(prevSharedEmails => prevSharedEmails)
+            return false
+        } else if (!regex.test(currentEmail)) {
+            setErrorMessage("Please enter a valid email")
+            setSharedEmails(prevSharedEmails => prevSharedEmails)
+            return false;
+        } else if(sharedEmails.includes(currentEmail)){
+            setErrorMessage("That email is already included")
+            setSharedEmails(prevSharedEmails => prevSharedEmails)
+            return false;
+        } else {
+            setErrorMessage("")
+            setCurrentEmail("")
+            setSharedEmails(prevSharedEmails => [...prevSharedEmails, currentEmail]);
+            return true;
+        }
     }
 
     return (
@@ -64,7 +67,6 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
                     <button className="ml-auto  px-4 py-2 flex items-center bg-blue-500 text-white rounded-md"
                     onClick={() => {
                         setCurrentEmail("")
-                        setSharedEmails([])
                         setErrorMessage("")
                         onOpen()
                     }}>
@@ -103,16 +105,14 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
                                     {errorMessage!==""?<p className="text-red-600 text-sm">{errorMessage}</p>:<></>}
                                     {/* TODO: allow sharing with anyone with the link */}
                                     <div className="flex flex-wrap">
-                                        {sharedEmails.map((email, index) => {
-                                            return (
-                                                <div key={index} className="flex flex-row bg-slate-100 w-fit rounded-md items-center my-2 mr-2 px-3 py-2">
-                                                    <p className="mr-1">{email}</p>
-                                                    <button onClick={() => {setSharedEmails(prevSharedEmails => prevSharedEmails.filter(e => e !== email))}}>
-                                                        <IoMdClose/>
-                                                    </button>
-                                                </div>
-                                            );
-                                        })}
+                                        {sharedEmails??[].length>0?sharedEmails!.map((email, index) => {
+                                            return index>0?<div key={index} className="flex flex-row bg-slate-100 w-fit rounded-md items-center my-2 mr-2 px-3 py-2">
+                                                <p className="mr-1">{email}</p>
+                                                <button onClick={() => {setSharedEmails(prevSharedEmails => prevSharedEmails.filter(e => e !== email))}}>
+                                                    <IoMdClose/>
+                                                </button>
+                                            </div>:<></>;
+                                        }):<></>}
                                     </div>
                                     <p className="text-sm mt-10">Shareable link:</p>
                                     <div className="flex flex-row border-2 border-slate-700 rounded-md px-2 py-px w-full items-center" 
@@ -124,7 +124,8 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
 
                                 <AlertDialogFooter>
                                     <Button ref={cancelRef} onClick={() => {
-                                        shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail])
+                                        if(addEmail()) shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail]);
+                                        else shareSet(studySet.uid, studySet.name, sharedEmails);
                                         onClose()
                                     }}>
                                         Share

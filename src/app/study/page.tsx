@@ -1,7 +1,7 @@
 'use server'
 import { StudyPageDisplay } from "./StudyPageDisplay";
 import { StudySet } from "../lib/classes/study_set";
-import { addToRecentSets, fetchStudySet, updateLastStudied } from "../lib/firebase/firestore";
+import { addToRecentSets, fetchSharedEmails, fetchStudySet, updateLastStudied } from "../lib/firebase/firestore";
 import { cookies } from "next/headers";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../lib/firebase/auth";
@@ -24,8 +24,9 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
     if(setString==="") return redirect("/home");
     await updateLastStudied(StudySet.fromString(setString));
     await addToRecentSets(uid, setString);
+    const sharedEmails = await fetchSharedEmails(searchParams.setUid, searchParams.setName);
 
     return (
-        <StudyPageDisplay studySetString={setString}/>
+        <StudyPageDisplay studySetString={setString} initialSharedEmails={sharedEmails}/>
     )
 }
