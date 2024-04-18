@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { admin } from "../../lib/firebase/admin";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { redirect } from "next/dist/server/api-utils";
 
 export async function POST(request: NextRequest, response: NextResponse) {
     revalidatePath("/home", "page");
