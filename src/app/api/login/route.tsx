@@ -32,14 +32,16 @@ export async function POST(request: NextRequest, response: NextResponse) {
 }
 
 export async function GET(request: NextRequest) {
+    const s = cookies().get("session")?.value || "";
     try {
         const session = cookies().get("session")?.value || "";
         console.log("session", session)
         const uid = (await admin.verifySessionCookie(session)).uid;
         const token = await admin.createCustomToken(uid)
+        console.log("success")
         return NextResponse.json({ token: token, uid: uid }, { status: 200 });
     } catch (error) {
-        console.error("Error getting uid: ", error);
+        console.error("session", s, "Error getting uid: ", error);
     }
     return NextResponse.redirect(new URL("/login", request.url));//TODO: fix this (same issue as study)
 }
