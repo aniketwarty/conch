@@ -5,7 +5,7 @@ import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../lib/firebase/auth";
 
 export default async function Create() {
-    const response = await fetch("http://localhost:3000/api/login", {//PROD: change to production URL
+    const response = await fetch("http://conch.netlify.app/api/login", {
         method: "GET",
         headers: {
             Cookie: `session=${cookies().get("session")?.value}`,
