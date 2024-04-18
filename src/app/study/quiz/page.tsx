@@ -2,7 +2,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { addToRecentSets, fetchStudySet, getOptions, updateLastStudied } from "../../lib/firebase/firestore";
-import { getSetString } from "../../lib/util/study";
 import { QuizPageDisplay } from "./QuizPageDisplay";
 import { StudySet } from "../../lib/classes/study_set";
 import { signInWithCustomToken } from "firebase/auth";

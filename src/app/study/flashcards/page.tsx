@@ -2,7 +2,6 @@
 import { addToRecentSets, fetchStudySet, getOptions, updateLastStudied } from "../../lib/firebase/firestore";
 import { FlashcardPageDisplay } from "./FlashcardPageDisplay";
 import { redirect } from "next/navigation";
-import { getSetString } from "../../lib/util/study";
 import { StudySet } from "../../lib/classes/study_set";
 import { cookies } from "next/headers";
 import { signInWithCustomToken } from "firebase/auth";
