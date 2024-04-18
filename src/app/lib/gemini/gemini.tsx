@@ -1,9 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { geminiApiKey } from "./config";
 import { StudySet } from "../classes/study_set";
 import { FreeResponseQuestion } from "../classes/question";
 
-const gemini = new GoogleGenerativeAI(geminiApiKey);
+const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY??"");
 export const model = gemini.getGenerativeModel({model: "gemini-pro"})
 
 export async function generateFRQ(set: StudySet) {
