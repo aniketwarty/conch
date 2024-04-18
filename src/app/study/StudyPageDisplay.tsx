@@ -28,10 +28,6 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
     const [errorMessage, setErrorMessage] = useState("");
     const linkRef = React.useRef<string>("");
 
-    useEffect(() => {
-        linkRef.current = window.location.href;
-    }, [])
-
     function addEmail() {
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         if(currentEmail==="") {
@@ -53,8 +49,12 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
         }
     }
 
+    useEffect(() => {
+        linkRef.current = window.location.href;
+    }, [])
+
     return (
-        <div className="flex flex-col bg-slate-100 h-screen w-screen">
+        <div className="flex flex-col bg-slate-100 h-full w-screen">
             {loading && (
                 <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
                     <Spinner className="p-5 m-auto"/>
@@ -154,7 +154,7 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
                             return (
                                 <div key={index} className="flex flex-row mt-5 p-5 w-full shadow-2xl rounded-lg">
                                     <p className="text-lg m-3 w-1/2">{term}</p>
-                                    <div className="h-full w-px bg-black"/>
+                                    <div className="w-px bg-black"/>
                                     <p className="text-lg m-3 w-1/2">{studySet.definitions[index]}</p>
                                 </div>
                             );
@@ -163,6 +163,5 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
                 </div>
             </div>}
         </div>
-        
     );
 }

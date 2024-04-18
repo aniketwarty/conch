@@ -68,7 +68,7 @@ export async function fetchStudySets(uid: string) {
             setList.push(set);
         });
     } catch (e) {
-        console.log("sets", e, "param uid", uid, "client uid", auth.currentUser?.uid)
+        console.log(e)
     }
 
     return setList;
@@ -82,7 +82,7 @@ export async function fetchStudySet(setUid: string, setName: string, uid: string
         const setSnapshot = await getDoc(setRef);
         set = (StudySet.fromFirestore(setUid, setSnapshot.id, setSnapshot.data())).toString();
     } catch (e) {
-        console.log("set", e, "param uid", uid, "client uid", auth.currentUser?.uid)
+        console.log(e)
     }
     
     return set;
@@ -106,7 +106,7 @@ export async function fetchSharedEmails(setUid: string, setName: string) {
             setName: setName,
         },
     });
-    return (await response.json()).shared_emails;
+    return (await response.json()).shared_emails ?? [];
 
 }
 

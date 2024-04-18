@@ -44,7 +44,6 @@ export async function GET(request: NextRequest) {
                 console.log(`Failed to get user with uid ${uid}: ${error}`);
             }
         }
-        console.log("get", sharedEmails)
         return NextResponse.json({shared_emails: sharedEmails}, { status: 200 });
     } catch (e) {
         console.log(e);

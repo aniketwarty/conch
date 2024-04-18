@@ -21,7 +21,7 @@ export const AccountButton = () => {
                         <RiAccountCircleFill className="h-10 w-10"/>
                     </div>
                 </PopoverTrigger>
-                <PopoverContent py={1} px={0} _focus={{ boxShadow: "none" }} border="1px" borderColor="gray.400">
+                <PopoverContent py={0.5} px={0} _focus={{ boxShadow: "none" }} border="1px" borderColor="gray.400" width="250px">
                     <PopoverBody p={0}>
                         <Button className="w-full" onClick={onClick} borderRadius="0">
                             Profile

@@ -14,12 +14,38 @@ export class StudySet {
     }
 
     add(term: string, definition: string){
-        this.terms.push(term);
-        this.definitions.push(definition);
+        return new StudySet(this.name, [...this.terms, term], [...this.definitions, definition], this.last_studied, this.uid);
     }
+
+    changeName(newName: string){
+        this.name = newName;
+        return this;
+    }
+
+    changeTerm(index: number, newTerm: string){
+        this.terms[index] = newTerm;
+        return this;
+    }
+
+    changeDefinition(index: number, newDefinition: string){
+        this.definitions[index] = newDefinition;
+        return this;
+    }
+
+    removeEmptyTerms() {
+        for (let i = this.terms.length - 1; i >= 0; i--) {
+            if (this.terms[i] === "" || this.definitions[i] === "") {
+                this.terms.splice(i, 1);
+                this.definitions.splice(i, 1);
+            }
+        }
+        return this;
+    }
+    
 
     updateLaststudied(){
         this.last_studied = new Date(Date.now());
+        return this;
     }
 
     getFormattedLastStudied(): string {
@@ -66,15 +92,6 @@ export class StudySet {
 
     static fromFirestore(uid: string, name: string, data: any){
         return new StudySet(name, data.terms, data.definitions, data.last_studied.toDate(), uid);
-    }
-
-    toFirestore(){
-        return {
-            name: this.name,
-            terms: this.terms,
-            definitions: this.definitions,
-            last_studied: this.last_studied
-        }
     }
 
     static fromString(str: string){
