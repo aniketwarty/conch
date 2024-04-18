@@ -1,10 +1,10 @@
 import { admin } from "../../lib/firebase/admin";
 import { cookies, headers } from "next/headers";
+import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
-import { redirect } from "next/dist/server/api-utils";
 
-export async function POST(request: NextRequest, response: NextResponse) {
-    const authorization = headers().get("Authorization");
+export async function POST(request: NextApiRequest, response: NextApiResponse) {
+    const authorization = request.headers.authorization;
     if (authorization?.startsWith("Bearer ")) {
         const idToken = authorization.split("Bearer ")[1];
         const decodedToken = await admin.verifyIdToken(idToken);
@@ -20,12 +20,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 name: "session",
                 value: sessionCookie,
                 maxAge: expiresIn,
-                // PROD: change httpOnly: true,
+                httpOnly: true,
                 // secure: true,
             });
-            return NextResponse.json({token: await admin.createCustomToken(decodedToken.uid)}, {status: 200});
+
+            response.setHeader('Set-Cookie', `session=${sessionCookie}; Max-Age=${expiresIn}; HttpOnly; Path=/;`);
+            return response.status(200).json({token: await admin.createCustomToken(decodedToken.uid)});
         }
-        return NextResponse.json({}, { status: 401 });
+        return response.status(401).json({});
     }
 
     
