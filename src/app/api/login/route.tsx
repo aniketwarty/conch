@@ -16,15 +16,20 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 expiresIn,
             });
 
-            cookieStore.set({
-                name: "session",
-                value: sessionCookie,
-                maxAge: expiresIn,
-                httpOnly: true,
-                secure: true,
-                sameSite: "lax",
+            // cookieStore.set({
+            //     name: "session",
+            //     value: sessionCookie,
+            //     maxAge: expiresIn,
+            //     httpOnly: true,
+            //     secure: true,
+            //     sameSite: "lax",
+            // });
+            return NextResponse.json({token: await admin.createCustomToken(decodedToken.uid)}, {
+                status: 200,
+                headers: {
+                    "Set-Cookie": "session=sessionCookie; Max-Age=1209600000; HttpOnly; Secure; SameSite=Lax"
+                }
             });
-            return NextResponse.json({token: await admin.createCustomToken(decodedToken.uid)}, {status: 200});
         }
         return NextResponse.json({}, { status: 401 });
     }
