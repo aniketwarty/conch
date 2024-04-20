@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 maxAge: expiresIn,
                 httpOnly: true,
                 secure: true,
-                sameSite: "none",
+                sameSite: "lax",
             });
             return NextResponse.json({token: await admin.createCustomToken(decodedToken.uid)}, {status: 200});
         }
