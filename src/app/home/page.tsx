@@ -16,6 +16,7 @@ export default async function Home() {//TODO: fix this caching
     
     if(response.redirected) redirect("/login")
     const responseJson = await response.json();
+    console.log("responseJson", responseJson)
     await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;
     const setList = await fetchStudySets(uid);

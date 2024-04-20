@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
             name: "set",
             value: "value",
             maxAge: 1000 * 60 * 60 * 24 * 14,
-            // PROD: change httpOnly: true,
+            httpOnly: true,
             // secure: true,
         });
 

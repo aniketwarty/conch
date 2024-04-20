@@ -1,11 +1,9 @@
-import { revalidatePath } from "next/cache";
 import { admin } from "../../lib/firebase/admin";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { redirect } from "next/dist/server/api-utils";
 
 export async function POST(request: NextRequest, response: NextResponse) {
-    revalidatePath("/home", "page");
     const authorization = headers().get("Authorization");
     if (authorization?.startsWith("Bearer ")) {
         const idToken = authorization.split("Bearer ")[1];
@@ -35,10 +33,11 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
 export async function GET(request: NextRequest) {
     try {
-        revalidatePath("/home", "page");
         const session = cookies().get("session")?.value || "";
+        console.log("session", session)
         const uid = (await admin.verifySessionCookie(session)).uid;
         const token = await admin.createCustomToken(uid)
+        console.log("success")
         return NextResponse.json({ token: token, uid: uid }, { status: 200 });
     } catch (error) {
         console.error("Error getting uid: ", error);
