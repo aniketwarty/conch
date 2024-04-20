@@ -33,7 +33,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
 export async function GET(request: NextRequest) {
     try {
-        const session = cookies().get("session")?.value || "";
+        const session = cookies().get("session")?.value || "empty";
         console.log("session", session)
         const uid = (await admin.verifySessionCookie(session)).uid;
         const token = await admin.createCustomToken(uid)
