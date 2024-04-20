@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { StudySet } from "../classes/study_set";
 import { FreeResponseQuestion } from "../classes/question";
 
-const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY??"");
+const gemini = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY??"");
 export const model = gemini.getGenerativeModel({model: "gemini-pro"})
 
 export async function generateFRQ(set: StudySet) {

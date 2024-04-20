@@ -23,6 +23,7 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
             });
         } else saveOptions(uid, options, studyMode);
     }, [isOpen])
+    //TODO: make prevent optionsfrom reverting after cancel
 
     function handleOption(key: string, value: any, optionKey: number) {
         switch (typeof value) {

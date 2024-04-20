@@ -12,7 +12,7 @@ export const NavBar = () => {
                     pathname: "/home",
                 }}>
                     <h1 className="ml-5 text-2xl font-bold p-2">
-                        Name
+                        Conch
                     </h1>
                 </Link>
                 <AccountButton/>

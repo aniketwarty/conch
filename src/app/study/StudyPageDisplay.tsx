@@ -64,6 +64,7 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
                 <NavBar/>
                 <div className="flex flex-row mt-5 mx-10">
                     <p className="text-3xl font-bold">{studySet.name}</p> 
+                    {/* TODO: add terms and some other info separated by dots */}
                     <button className="ml-auto  px-4 py-2 flex items-center bg-blue-500 text-white rounded-md"
                     onClick={() => {
                         setCurrentEmail("")
