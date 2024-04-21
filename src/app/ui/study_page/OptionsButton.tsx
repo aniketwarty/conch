@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, 
     AlertDialogOverlay, Button, Checkbox, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Spinner, useDisclosure } from "@chakra-ui/react"
 import { getOptions, saveOptions } from "../../lib/firebase/firestore";
+import { AccentColor4 } from "@/app/colors";
 
 interface OptionsButtonProps {
     uid: string;
@@ -71,7 +72,9 @@ export const OptionsButton = ({ uid, options, setOptions, studyMode }: OptionsBu
 
     return (
         <>
-            <Button variant="outline" className="ml-auto w-20 rounded-lg" onClick={onOpen}>Options</Button>
+            <Button className="ml-auto w-20 rounded-lg shadow-md" onClick={onOpen} style={{backgroundColor: AccentColor4, color: "white"}}>
+                Options
+            </Button>
             <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>

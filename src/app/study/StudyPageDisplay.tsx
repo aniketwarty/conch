@@ -12,19 +12,19 @@ import { RiShareForwardLine } from "react-icons/ri";
 import { FaRegCopy } from "react-icons/fa6";
 import { StudySet } from "../lib/classes/study_set";
 import { fetchSharedEmails, shareSet } from "../lib/firebase/firestore";
+import { AccentColor1, AccentColor2, BackgroundColor } from "../colors";
 
 interface StudyPageDisplayProps {
     studySetString: string;
-    initialSharedEmails: string[];
 }
 //TODO: add unsharing
-export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPageDisplayProps) => {
+export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
     const studySet = StudySet.fromString(studySetString);
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<HTMLButtonElement | null>(null)
     const [currentEmail, setCurrentEmail] = useState<string>("");
-    const [sharedEmails, setSharedEmails] = useState<string[]>(initialSharedEmails);
+    const [sharedEmails, setSharedEmails] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     const linkRef = React.useRef<string>("");
 
@@ -59,7 +59,7 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
     }, [])
 
     return (
-        <div className="flex flex-col bg-slate-100 h-full w-screen">
+        <div className="flex flex-col h-full w-screen" style={{backgroundColor: BackgroundColor}}>
             {loading && (
                 <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
                     <Spinner className="p-5 m-auto"/>
@@ -68,20 +68,25 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
             {!studySet ? <Spinner className="p-5 m-auto"/> : <div>
                 <NavBar/>
                 <div className="flex flex-row mt-5 mx-10">
-                    <p className="text-3xl font-bold">{studySet.name}</p> 
+                    <p className="my-auto">
+                        <span className=" text-3xl font-bold">{studySet.name}</span>
+                        <span className="mx-2 text-2xl">•</span>
+                        <span className="text-2xl">{studySet.terms.length} terms</span>
+                    </p> 
                     {/* TODO: add terms and some other info separated by dots */}
                     <button className="ml-auto  px-4 py-2 flex items-center bg-blue-500 text-white rounded-md"
+                    style={{backgroundColor: AccentColor1}}
                     onClick={() => {
                         setCurrentEmail("")
                         setErrorMessage("")
                         onOpen()
                     }}>
-                        Share
-                        <RiShareForwardLine className="ml-2" />
+                        <p className="text-black">Share</p>
+                        <RiShareForwardLine className="ml-2" color="black"/>
                     </button>
                     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                         <AlertDialogOverlay>
-                            <AlertDialogContent>
+                            <AlertDialogContent backgroundColor={AccentColor2}>
                                 <AlertDialogHeader className="-mb-2" fontSize='3xl' fontWeight='bold'>Share</AlertDialogHeader>
 
                                 <AlertDialogBody justifyContent={"space-between"}>
@@ -112,7 +117,7 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
                                     {/* TODO: allow sharing with anyone with the link */}
                                     <div className="flex flex-wrap">
                                         {sharedEmails??[].length>0?sharedEmails!.map((email, index) => {
-                                            return index>0?<div key={index} className="flex flex-row bg-slate-100 w-fit rounded-md items-center my-2 mr-2 px-3 py-2">
+                                            return index>0?<div key={index} className="flex flex-row bg-slate-200 w-fit rounded-md items-center my-2 mr-2 px-3 py-2">
                                                 <p className="mr-1">{email}</p>
                                                 <button onClick={() => {setSharedEmails(prevSharedEmails => prevSharedEmails.filter(e => e !== email))}}>
                                                     <IoMdClose/>
@@ -129,7 +134,8 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
                                 </AlertDialogBody>
 
                                 <AlertDialogFooter>
-                                    <Button ref={cancelRef} onClick={() => {
+                                    <Button style={{ backgroundColor: '#E0E7FF' }} 
+                                    ref={cancelRef} onClick={() => {
                                         if(addEmail()) shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail]);
                                         else shareSet(studySet.uid, studySet.name, sharedEmails);
                                         onClose()
@@ -158,7 +164,7 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
                     <div className="flex flex-col h-full w-3/4 px-8 pb-14 overflow-y-auto">
                         {studySet.terms.map((term, index) => {
                             return (
-                                <div key={index} className="flex flex-row mt-5 p-5 w-full shadow-2xl rounded-lg">
+                                <div key={index} className="flex flex-row mt-5 p-5 w-full shadow-md rounded-lg" style={{backgroundColor: AccentColor2}}>
                                     <p className="text-lg m-3 w-1/2">{term}</p>
                                     <div className="w-px bg-black"/>
                                     <p className="text-lg m-3 w-1/2">{studySet.definitions[index]}</p>

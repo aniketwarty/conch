@@ -8,6 +8,7 @@ import { generateFRQ } from "../../lib/gemini/gemini";
 import { QuizStatus } from "./QuizPageDisplay";
 import { questionTypes } from "./QuizPageDisplay";
 import { set } from "firebase/database";
+import { AccentColor2, AccentColor4 } from "@/app/colors";
 
 interface QuizGeneratorProps {
     studySetString: string;
@@ -140,17 +141,17 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
     }
 
     return (
-        <div className="flex flex-col h-5/6 w-2/5 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto">
+        <div className="flex flex-col h-5/6 w-2/5 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto" style={{backgroundColor: AccentColor2}}>
             {questionList.length>=options["Number of Questions"] ? <div className="h-full w-full">
                 <p className="text-5xl font-bold mx-auto my-5 text-center">Quiz</p>  
                 {questionList.map((question, index) => displayQuestion(question, index))}
                 <Center>
-                    <Button className="w-full mb-5" colorScheme="blue" size="lg" onClick={() => setQuizStatus(QuizStatus.SUBMITTED)}>
+                    <Button className="w-full mb-5" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => setQuizStatus(QuizStatus.SUBMITTED)}>
                         Submit
                     </Button>
                 </Center>
             </div>:
-            <div className="flex flex-col items-center m-auto"> 
+            <div className="flex flex-col items-center m-auto" style={{backgroundColor: AccentColor2}}> 
                 <Spinner className="p-10"/>
                 <p className="text-2xl mt-8 font-bold">Generating Quiz...</p>
                 <p className="text-2xl font-bold">{Math.round(questionList.length/options["Number of Questions"]*100)}%</p>

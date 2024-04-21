@@ -1,12 +1,12 @@
 'use client';
 import { useEffect, useState } from "react";
-import { StudySet } from "../../lib/classes/study_set";
 import { QuizGenerator } from "./QuizGenerator";
 import { QuizGrader } from "./QuizGrader";
 import { StudyModeNavBar } from "../../ui/study_page/StudyModeNavBar";
 import { Button, Checkbox, Icon, Tooltip } from "@chakra-ui/react";
 import { Question } from "../../lib/classes/question";
 import { saveOptions } from "@/app/lib/firebase/firestore";
+import { AccentColor2, AccentColor4, BackgroundColor } from "@/app/colors";
 
 export const questionTypes = ["True/False Questions", "Multiple Choice Questions", "Short Answer Questions", "Free Response Questions"];
 
@@ -27,7 +27,7 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
     const [quizOptions, setQuizOptions] = useState(initialOptions);
     const [questionList, setQuestionList] = useState<Question[]>([]);
     const [answers, setAnswers] = useState<string[]>(Array(options["Number of Questions"]).fill(""));
-
+//TODO: fix cancelling options button resetting options
     useEffect(() => {
         if(quizStatus == QuizStatus.INITIAL) {
             saveOptions(uid, options, "quiz");
@@ -38,10 +38,10 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
     }, [options, quizStatus])
 
     return (
-        <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden">
+        <div className="flex flex-col h-screen w-screen overflow-hidden" style={{backgroundColor: BackgroundColor}}>
             <StudyModeNavBar uid={uid} studyMode="quiz" studySetString={studySetString} options={options} setOptions={setOptions}/>
             {quizStatus === QuizStatus.INITIAL && (
-                <div className="flex flex-col h-5/6 w-2/5 shadow-2xl m-auto p-5 items-center">
+                <div className="flex flex-col h-5/6 w-2/5 shadow-2xl rounded-lg m-auto p-5 items-center" style={{backgroundColor: AccentColor2}}>
                     <p className="text-5xl font-bold m-5 self-center">Quiz</p>  
                     <p className="text-2xl m-5 self-center">
                         {options["Number of Questions"] + " questions"} 
@@ -100,7 +100,7 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                             }}
                         />
                     </div>
-                    <Button className="mt-auto mb-10" colorScheme="blue" size="lg" onClick={() => {setQuizStatus(QuizStatus.STARTED)}}>
+                    <Button className="mt-auto mb-10" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => {setQuizStatus(QuizStatus.STARTED)}}>
                         Generate quiz
                     </Button>
                 </div>

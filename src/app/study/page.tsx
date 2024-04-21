@@ -30,6 +30,6 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
     await addToRecentSets(uid, setString);
 
     return (
-        <StudyPageDisplay studySetString={setString} initialSharedEmails={sharedEmails}/>
+        <StudyPageDisplay studySetString={setString}/>
     )
 }
