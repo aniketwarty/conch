@@ -11,7 +11,7 @@ import { MdOutlineQuiz } from "react-icons/md";
 import { RiShareForwardLine } from "react-icons/ri";
 import { FaRegCopy } from "react-icons/fa6";
 import { StudySet } from "../lib/classes/study_set";
-import { shareSet } from "../lib/firebase/firestore";
+import { fetchSharedEmails, shareSet } from "../lib/firebase/firestore";
 
 interface StudyPageDisplayProps {
     studySetString: string;
@@ -49,8 +49,13 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
         }
     }
 
-    useEffect(() => {
+    useEffect(() => { 
+        async function getSharedEmails() {
+            const sharedEmails = await fetchSharedEmails(studySet.uid, studySet.name);
+            setSharedEmails(sharedEmails)
+        }
         linkRef.current = window.location.href;
+        getSharedEmails();
     }, [])
 
     return (

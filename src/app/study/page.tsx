@@ -28,8 +28,6 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
     if(setString==="") return redirect("/home");
     await updateLastStudied(StudySet.fromString(setString));
     await addToRecentSets(uid, setString);
-    console.log("uid", auth.currentUser?.uid)
-    const sharedEmails = await fetchSharedEmails(searchParams.setUid, searchParams.setName);
 
     return (
         <StudyPageDisplay studySetString={setString} initialSharedEmails={sharedEmails}/>
