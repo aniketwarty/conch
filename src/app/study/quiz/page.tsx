@@ -8,7 +8,7 @@ import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../../lib/firebase/auth";
 
 export default async function QuizPage({searchParams}: {searchParams: any}) {
-    const authResponse = await fetch("http://conch.netlify.app/api/login", {
+    const authResponse = await fetch("https://conch.netlify.app/api/login", {
         method: "GET",
         headers: {
             Cookie: `session=${cookies().get("session")?.value}`,

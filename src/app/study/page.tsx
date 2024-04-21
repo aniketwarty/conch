@@ -8,7 +8,7 @@ import { auth } from "../lib/firebase/auth";
 import { redirect } from "next/navigation";
 
 export default async function StudyPage({searchParams}: {searchParams: any}) {
-    const authResponse = await fetch("http://conch.netlify.app/api/login", {
+    const authResponse = await fetch("https://conch.netlify.app/api/login", {
         method: "GET",
         headers: {
             Cookie: `session=${cookies().get("session")?.value}`,

@@ -7,20 +7,17 @@ import { signInWithCustomToken } from 'firebase/auth';
 import { redirect } from 'next/navigation';
 
 export default async function Home() {//TODO: fix this caching
-    const sessionCookie = cookies().get("session")?.value;
-    const headers: { [key: string]: string } = {
-        "Accept": "application/json"
-    };
-
-    if (sessionCookie) {
-        headers["Cookie"] = `session=${sessionCookie}`;
+    console.log("clientCookies", cookies())
+    const response = await fetch("https://conch.netlify.app/api/auth", {//PROD: change to production URL
+    method: "GET",
+    credentials: "include",
+    headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Cache-Control": "no-cache",
+        // "Cookie": `session=${parseCookies().session}`
     }
-
-    const response = await fetch("http://conch.netlify.app/api/login", {
-        method: "GET",
-        credentials: "include",
-        headers
-    });
+});
     
     if(response.redirected) redirect("/login")
     const responseJson = await response.json();
