@@ -32,6 +32,6 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
     const sharedEmails = await fetchSharedEmails(searchParams.setUid, searchParams.setName);
 
     return (
-        <StudyPageDisplay studySetString={setString} initialSharedEmails={sharedEmails}/>
+        <StudyPageDisplay studySetString={setString}/>
     )
 }

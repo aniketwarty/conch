@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { NavBar } from "../ui/nav_bar/NavBar";
 import { StudyModeButton } from "../ui/study_page/StudyModeButton";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Input, InputGroup, InputRightAddon, InputRightElement, Spinner, useDisclosure, useEditable } from "@chakra-ui/react";
@@ -11,20 +11,20 @@ import { MdOutlineQuiz } from "react-icons/md";
 import { RiShareForwardLine } from "react-icons/ri";
 import { FaRegCopy } from "react-icons/fa6";
 import { StudySet } from "../lib/classes/study_set";
-import { shareSet } from "../lib/firebase/firestore";
+import { fetchSharedEmails, shareSet } from "../lib/firebase/firestore";
+import { get } from "http";
 
 interface StudyPageDisplayProps {
     studySetString: string;
-    initialSharedEmails: string[];
 }
 //TODO: add unsharing
-export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPageDisplayProps) => {
+export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
     const studySet = StudySet.fromString(studySetString);
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef<HTMLButtonElement | null>(null)
     const [currentEmail, setCurrentEmail] = useState<string>("");
-    const [sharedEmails, setSharedEmails] = useState<string[]>(initialSharedEmails);
+    const [sharedEmails, setSharedEmails] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
     const linkRef = React.useRef<string>("");
 
@@ -51,6 +51,14 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
 
     useEffect(() => {
         linkRef.current = window.location.href;
+    }, [])
+
+    useEffect(() => {
+        async function getSharedEmails() {
+            const sharedEmails = await fetchSharedEmails(studySet.uid, studySet.name);
+            setSharedEmails(sharedEmails)
+        }
+        getSharedEmails();
     }, [])
 
     return (
