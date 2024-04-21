@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
     }
 
     try {
-        await fetch(new URL("/api/login", request.url), {
+        await fetch(new URL("/api/auth", request.url), {
             method: "GET",
             headers: {
                 Cookie: `session=${session?.value}`,

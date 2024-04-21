@@ -1,7 +1,6 @@
 import { admin } from "../../lib/firebase/admin";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { redirect } from "next/dist/server/api-utils";
 
 export async function POST(request: NextRequest, response: NextResponse) {
     const authorization = headers().get("Authorization");
@@ -33,12 +32,12 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
 export async function GET(request: NextRequest) {
     try {
-        const session = cookies().get("session")?.value || "empty";
+        const session = cookies().get("session")?.value || "none";
         const uid = (await admin.verifySessionCookie(session)).uid;
         const token = await admin.createCustomToken(uid)
         return NextResponse.json({ token: token, uid: uid }, { status: 200 });
     } catch (error) {
         console.error("Error getting uid: ", error);
     }
-    return NextResponse.redirect(new URL("/login", request.url));//TODO: fix this (same issue as study)
+    return NextResponse.json({}, {status: 500});//TODO: fix this (same issue as study)
 }
