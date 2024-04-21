@@ -7,7 +7,7 @@ import { signInWithCustomToken } from 'firebase/auth';
 import { redirect } from 'next/navigation';
 
 export default async function Home() {
-    const response = await fetch("http://localhost:3000/api/auth", {//PROD: change to production URL
+    const response = await fetch("https://conch.netlify.app/api/auth", {//PROD: change to production URL
         method: "GET",
         credentials: "include",
         headers: {
