@@ -12,7 +12,7 @@ export async function signUp(signUpEmail: string, signUpPassword: string) {
         const userCredential = await createUserWithEmailAndPassword(auth, signUpEmail, signUpPassword);
         const token = await userCredential.user.getIdToken();
         await createUserDB(userCredential.user.uid);
-        await fetch("/api/login", {
+        await fetch("/api/auth", {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + token,
@@ -37,7 +37,7 @@ export async function logIn(logInEmail: string, logInPassword: string) {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, logInEmail, logInPassword);
         const token = await userCredential.user.getIdToken();
-        await fetch("/api/login", {
+        await fetch("/api/auth", {
             method: "POST",
             headers: {
                 Authorization: "Bearer " + token,
