@@ -81,8 +81,9 @@ export async function fetchStudySet(setUid: string, setName: string, uid: string
         const setRef = doc(db, `users/${setUid}/study_sets/${setName}`);
         const setSnapshot = await getDoc(setRef);
         set = (StudySet.fromFirestore(setUid, setSnapshot.id, setSnapshot.data())).toString();
+        //TODO: add to recent sets for user
     } catch (e) {
-        console.log(e)
+        console.log(e, setUid, setName, uid)
     }
     
     return set;
