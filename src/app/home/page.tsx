@@ -15,7 +15,7 @@ export default async function Home() {//TODO: fix this caching
         "Content-Type": "application/json",
         "Accept": "application/json",
         "Cache-Control": "no-cache",
-        // "Cookie": `session=${parseCookies().session}`
+        "Cookie": `session=${cookies().get("session")?.value ?? "unable to get client cookie"}`
     }
 });
     
