@@ -7,6 +7,7 @@ import { GradedQuizChoiceButton } from "./QuizChoiceButton";
 import Link from "next/link";
 import { StudySet } from "../../lib/classes/study_set";
 import { QuizStatus } from "./QuizPageDisplay";
+import { AccentColor2, AccentColor4 } from "@/app/colors";
 
 interface QuizGraderProps {
     studySetString: string;
@@ -147,7 +148,7 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
     }
 
     return (
-        <div className="flex flex-col h-5/6 w-2/5 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto">
+        <div className="flex flex-col h-5/6 w-2/5 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto"style={{backgroundColor: AccentColor2}} >
             {results.length >= questionList.length ? <div className="h-full w-full">
                 <div className="flex flex-row m-5 items-center">
                     <p className="text-5xl font-bold text-left mr-auto">Great job!</p>
@@ -165,9 +166,9 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                             setName: StudySet.fromString(studySetString).name,
                         },
                     }}>
-                        <Button className="w-full mb-5" colorScheme="blue" size="lg">Home</Button>
+                        <Button className="w-full mb-5" style={{backgroundColor: AccentColor4, color: "white"}} size="lg">Home</Button>
                     </Link>
-                    <Button className="w-full mb-5" colorScheme="blue" size="lg" onClick={() => setQuizStatus(QuizStatus.INITIAL)}>Retry</Button>
+                    <Button className="w-full mb-5" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => setQuizStatus(QuizStatus.INITIAL)}>Retry</Button>
                 </div>
             </div>: 
             <div className="flex flex-col items-center m-auto"> 

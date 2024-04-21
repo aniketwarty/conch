@@ -14,7 +14,7 @@ export const AccountButton = () => {
     };
 
     return (
-        <div className="ml-auto mr-2">
+        <div className="ml-auto mr-5">
             <Popover placement="bottom">
                 <PopoverTrigger>
                     <div>
@@ -24,12 +24,9 @@ export const AccountButton = () => {
                 <PopoverContent py={0.5} px={0} _focus={{ boxShadow: "none" }} border="1px" borderColor="gray.400" width="250px">
                     <PopoverBody p={0}>
                         <Button className="w-full" onClick={onClick} borderRadius="0">
-                            Profile
-                        </Button>
-                        <div className="w-full bg-gray-300 h-px"/>
-                        <Button className="w-full" onClick={onClick} borderRadius="0">
                             Log out
                         </Button>
+                        <div className="w-full bg-gray-300 h-px"/>
                     </PopoverBody>
                 </PopoverContent>
             </Popover>

@@ -8,7 +8,7 @@ import { auth } from "../lib/firebase/auth";
 import { redirect } from "next/navigation";
 
 export default async function StudyPage({searchParams}: {searchParams: any}) {
-    const authResponse = await fetch("https://conch.netlify.app/api/auth", {//PROD: change to production URL
+    const authResponse = await fetch("http://localhost:3000/api/auth", {//PROD: change to production URL
         method: "GET",
         credentials: "include",
         headers: {
@@ -17,7 +17,7 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
             "Cache-Control": "no-cache",
             "Cookie": `session=${cookies().get("session")?.value ?? "unable to get client cookie"}`
         }
-    });
+    })
 
     const authResponseJson = await authResponse.json();
     await signInWithCustomToken(auth, authResponseJson.token);
@@ -28,8 +28,6 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
     if(setString==="") return redirect("/home");
     await updateLastStudied(StudySet.fromString(setString));
     await addToRecentSets(uid, setString);
-    console.log(auth.currentUser?.uid)
-    // const sharedEmails = await fetchSharedEmails(searchParams.setUid, searchParams.setName);
 
     return (
         <StudyPageDisplay studySetString={setString}/>

@@ -118,7 +118,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
                 </div>
                 
                 <FormControl>
-                    <p className="font-bold">Conch</p>
+                    <p className="font-bold">Name</p>
                     <Input variant={"outline"} borderColor="black" _hover={{ outline: "black" }}
                     onChange={(e) => setStudySet(prevStudySet => prevStudySet.changeName(e.target.value))}/>
                 </FormControl>
@@ -133,9 +133,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
                             contentEditable suppressContentEditableWarning
                             onInput={(e) => {
                                 const text = e.currentTarget.innerText;
-                                console.log(text)
                                 setStudySet(prevStudySet => prevStudySet.changeTerm(index, text));
-                                console.log(studySet)
                             }}/>
 
                         </FormControl>

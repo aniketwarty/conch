@@ -4,6 +4,7 @@ import Link from "next/link";
 import { StudySet } from "../lib/classes/study_set";
 import { NavBar } from '../ui/nav_bar/NavBar';
 import { Spinner } from '@chakra-ui/react';
+import { AccentColor2, BackgroundColor } from "../colors";
 
 interface HomePageProps {
     setList: string[] | null;
@@ -14,7 +15,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
     const [loading, setLoading] = useState(false);
 
     return (
-        <div className="bg-gray-100 h-screen w-screen flex flex-col">
+        <div className="h-screen w-screen flex flex-col" style={{backgroundColor: BackgroundColor}}>
             {loading && (
                 <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
                     <Spinner className="p-5 m-auto" />
@@ -38,7 +39,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                                 setLoading(true);
                             }}
                         >
-                            <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md bg-white">
+                            <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                 <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
                                 <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
                                 <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
@@ -74,7 +75,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                                     setLoading(true);
                                 }}
                             >
-                                <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md bg-white">
+                                <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                     <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
                                     <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
                                     <p className="">{"Last viewed " + StudySet.fromString(set).getFormattedLastStudied()}</p>
