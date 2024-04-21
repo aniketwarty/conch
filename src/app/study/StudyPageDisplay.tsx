@@ -50,14 +50,11 @@ export const StudyPageDisplay = ({studySetString}: StudyPageDisplayProps) => {
     }
 
     useEffect(() => {
-        linkRef.current = window.location.href;
-    }, [])
-
-    useEffect(() => {
         async function getSharedEmails() {
             const sharedEmails = await fetchSharedEmails(studySet.uid, studySet.name);
             setSharedEmails(sharedEmails)
         }
+        linkRef.current = window.location.href;
         getSharedEmails();
     }, [])
 
