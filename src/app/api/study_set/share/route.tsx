@@ -41,11 +41,13 @@ export async function GET(request: NextRequest) {
         const sharedEmails = [];
         for (const uid of sharedUids) {
             try {
+                console.log("uid loop", uid)
                 sharedEmails.push((await admin.getUser(uid)).email);
             } catch (error) {
                 console.log(`Failed to get user with uid ${uid}: ${error}`);
             }
         }
+        console.log("sharedEmails", sharedEmails)
         return NextResponse.json({shared_emails: sharedEmails}, { status: 200 });
     } catch (e) {
         console.log(e);
