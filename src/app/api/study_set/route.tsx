@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     if(setCookie!=="") return NextResponse.json({setString: decodeURIComponent(setCookie)}, {status: 200});
 
-    if(setUid==="" || setName==="") return NextResponse.redirect(new URL("/home", request.url))
+    if(setUid==="" || setName==="") return NextResponse.redirect(new URL("/home", request.url)) //TODO: change to json response
 
     const setString = await fetchStudySet(setUid, setName, uid);
     if(setString!=="") {

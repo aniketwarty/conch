@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
     const setUid = headerStore.get("setUid") || "";
     const setName = headerStore.get("setName") || "";
     try {
+        console.log("setUid", setUid, "setName", setName, `users/${setUid}/study_sets/${setName}`)
         const setRef = doc(db, `users/${setUid}/study_sets/${setName}`);
         const sharedUids = (await getDoc(setRef)).data()?.shared_uids || [];
         const sharedEmails = [];

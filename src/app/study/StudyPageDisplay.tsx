@@ -112,7 +112,7 @@ export const StudyPageDisplay = ({studySetString, initialSharedEmails}: StudyPag
                                                 <button onClick={() => {setSharedEmails(prevSharedEmails => prevSharedEmails.filter(e => e !== email))}}>
                                                     <IoMdClose/>
                                                 </button>
-                                            </div>:<></>;
+                                            </div>:<div key={index}></div>;
                                         }):<></>}
                                     </div>
                                     <p className="text-sm mt-10">Shareable link:</p>

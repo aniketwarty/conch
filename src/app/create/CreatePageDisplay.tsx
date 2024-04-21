@@ -133,9 +133,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
                             contentEditable suppressContentEditableWarning
                             onInput={(e) => {
                                 const text = e.currentTarget.innerText;
-                                console.log(text)
                                 setStudySet(prevStudySet => prevStudySet.changeTerm(index, text));
-                                console.log(studySet)
                             }}/>
 
                         </FormControl>
