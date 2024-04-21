@@ -29,7 +29,7 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
     await updateLastStudied(StudySet.fromString(setString));
     await addToRecentSets(uid, setString);
     console.log(auth.currentUser?.uid)
-    const sharedEmails = await fetchSharedEmails(searchParams.setUid, searchParams.setName);
+    // const sharedEmails = await fetchSharedEmails(searchParams.setUid, searchParams.setName);
 
     return (
         <StudyPageDisplay studySetString={setString}/>
