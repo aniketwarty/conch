@@ -41,7 +41,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                                 <div className="flex flex-row">
                                     <p className="text-2xl font-bold mt-3">{StudySet.fromString(set).name}</p>
                                     <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound={true} onClick={(event) => {
-                                        event.stopPropagation();
+                                        event.preventDefault();
                                         window.location.href = "/edit?setUid=" + StudySet.fromString(set).uid + "&setName=" + StudySet.fromString(set).name;
                                     }}/>
                                 </div>
