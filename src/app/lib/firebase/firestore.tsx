@@ -1,4 +1,4 @@
-import { collection, getDocs, doc, getDoc, getFirestore, setDoc } from "firebase/firestore";
+import { collection, getDocs, doc, getDoc, getFirestore, setDoc, deleteDoc } from "firebase/firestore";
 import { firebaseApp } from "./firebase";
 import { StudySet } from "../classes/study_set";
 import { defaultFlashcardOptions, defaultQuizOptions } from "../../study/default_options";
@@ -88,6 +88,26 @@ export async function fetchStudySet(setUid: string, setName: string, uid: string
     return set;
 };
 
+export async function updateSet(studySet: StudySet) {
+    try {
+        const setRef = doc(db, `users/${studySet.uid}/study_sets/${studySet.name}`);
+        await setDoc(setRef, {terms: studySet.terms, definitions: studySet.definitions}, {merge: true});
+    } catch (e) {
+        console.log(e);
+    }
+
+}
+
+export async function deleteSet(setUid: string, setName: string) {
+    try {
+        const setRef = doc(db, `users/${setUid}/study_sets/${setName}`);
+        await deleteDoc(setRef);
+    } catch (e) {
+        console.log(e);
+    }
+
+}
+
 export async function updateLastStudied(studySet: StudySet) {
     try {
         const setRef = doc(db, `users/${studySet.uid}/study_sets/${studySet.name}`);
@@ -96,6 +116,18 @@ export async function updateLastStudied(studySet: StudySet) {
         console.log(e);
     }
 
+}
+
+
+export async function shareSet(setUid: string, setName: string, sharedEmails: string[]) {
+    await fetch("http://localhost:3000/api/study_set/share", {
+        method: "POST",
+        headers: {
+            shared_emails: sharedEmails.join(","),
+            setUid: setUid,
+            setName: setName,
+        },
+    });
 }
 
 export async function fetchSharedEmails(setUid: string, setName: string) {
@@ -108,17 +140,6 @@ export async function fetchSharedEmails(setUid: string, setName: string) {
     });
     return (await response.json()).shared_emails ?? [];
 
-}
-
-export async function shareSet(setUid: string, setName: string, sharedEmails: string[]) {
-    await fetch("http://localhost:3000/api/study_set/share", {
-        method: "POST",
-        headers: {
-            shared_emails: sharedEmails.join(","),
-            setUid: setUid,
-            setName: setName,
-        },
-    });
 }
 
 export async function getOptions(uid: string, studyMode: string) {

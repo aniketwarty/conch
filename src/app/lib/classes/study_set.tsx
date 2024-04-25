@@ -32,6 +32,10 @@ export class StudySet {
         return this;
     }
 
+    remove(index: number){
+        return new StudySet(this.name, this.terms.filter((_, i) => i !== index), this.definitions.filter((_, i) => i !== index), this.last_studied, this.uid);
+    }
+
     removeEmptyTerms() {
         for (let i = this.terms.length - 1; i >= 0; i--) {
             if (this.terms[i] === "" || this.definitions[i] === "") {

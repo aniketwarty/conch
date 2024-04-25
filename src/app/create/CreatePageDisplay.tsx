@@ -1,6 +1,6 @@
 'use client'
 import { StudySet } from "../lib/classes/study_set";
-import { NavBar } from "../ui/nav_bar/NavBar";
+import { NavBar } from "../ui/NavBar";
 import React, { use, useEffect, useState } from 'react';
 import { FaPlus, FaRegCopy, FaUserPlus } from "react-icons/fa6";
 import { Box, Button, FormControl, FormLabel, Input, VStack, HStack, IconButton, Textarea, useColorModeValue, AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, InputGroup, InputRightElement, useDisclosure } from "@chakra-ui/react";
@@ -135,7 +135,6 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
                                 const text = e.currentTarget.innerText;
                                 setStudySet(prevStudySet => prevStudySet.changeTerm(index, text));
                             }}/>
-
                         </FormControl>
                         <div className="mx-4"/>
                         <FormControl>

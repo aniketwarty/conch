@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from "react";
-import { NavBar } from "../ui/nav_bar/NavBar";
+import { NavBar } from "../ui/NavBar";
 import { StudyModeButton } from "../ui/study_page/StudyModeButton";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Input, InputGroup, InputRightAddon, InputRightElement, Spinner, useDisclosure, useEditable } from "@chakra-ui/react";
 import { BsCardText } from "react-icons/bs";

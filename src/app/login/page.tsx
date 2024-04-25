@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { signUp, logIn, auth } from "../lib/firebase/auth";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Center, FormControl, FormLabel, Input, Spinner, useDisclosure } from "@chakra-ui/react";
 import { signInWithCustomToken } from "firebase/auth";
-import { LoginNavBar } from "../ui/nav_bar/NavBar";
+import { LoginNavBar } from "../ui/NavBar";
 import { AccentColor2, BackgroundColorGradient } from "../colors";
 
 //TODO: fix random redirects - localhost issue only?
