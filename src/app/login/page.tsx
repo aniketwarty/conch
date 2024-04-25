@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { signUp, logIn, auth } from "../lib/firebase/auth";
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, Center, FormControl, FormLabel, Input, Spinner, useDisclosure } from "@chakra-ui/react";
 import { signInWithCustomToken } from "firebase/auth";
+import { LoginNavBar } from "../ui/nav_bar/NavBar";
+import { AccentColor2, BackgroundColorGradient } from "../colors";
 
 //TODO: fix random redirects - localhost issue only?
 //TODO: add logo and product name and description at top, add created by/powerered by in bottom
@@ -49,7 +51,8 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="bg-slate-100 h-screen w-screen top-0 flex items-center">
+        <div className="bg-slate-100 h-screen w-screen top-0 flex items-center" style={{background: BackgroundColorGradient}}>
+            <LoginNavBar/>
             <AlertDialog isOpen={alertMessage!==""} leastDestructiveRef={cancelRef} onClose={onClose}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
@@ -71,7 +74,7 @@ export default function LoginPage() {
                     <Spinner className="p-5 m-auto"/>
                 </div>
             )}
-            <div className="shadow-2xl rounded-lg flex flex-row m-auto p-4 w-3/5 h-1/2">
+            <div className="shadow-2xl rounded-lg flex flex-row m-auto p-4 w-3/5 h-1/2" style={{backgroundColor: AccentColor2}}>
                 <div className="flex flex-col w-full items-center m-5 justify-between">
                     <p className="text-5xl font-bold object-center m-5"> Sign up </p>
                     <FormControl>
