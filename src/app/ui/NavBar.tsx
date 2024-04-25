@@ -17,7 +17,7 @@ export const NavBar = () => {
                 <Link href = {{
                     pathname: "/home",
                 }}>
-                    <Image src="/logo.png" alt="Logo" className="ml-10 mt-4" height={40} width={150}/>
+                    <img src="/logo.png" alt="Logo" className="ml-10 mt-4" height={40} width={150}/>
                 </Link>
                 {/* TODO: add home, shared sets, etc */}
                 <div className="ml-auto mr-5">
