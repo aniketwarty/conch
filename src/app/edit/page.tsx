@@ -29,6 +29,6 @@ export default async function Edit({searchParams}: {searchParams: any}) {
     await addToRecentSets(uid, setString);
 
     return (
-        <EditPageDisplay studySetString={setString} uid={uid}/>
+        <EditPageDisplay initialStudySetString={setString} uid={uid}/>
     );
 }

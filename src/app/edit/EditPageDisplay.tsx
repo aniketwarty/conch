@@ -13,12 +13,12 @@ import { set, update } from "firebase/database";
 
 interface EditPageDisplayProps {
     uid: string;
-    studySetString: string;
+    initialStudySetString: string;
 }
 
-export const EditPageDisplay = ({uid, studySetString}: EditPageDisplayProps) => {
+export const EditPageDisplay = ({uid, initialStudySetString}: EditPageDisplayProps) => {
     const router = useRouter();
-    const [studySet, setStudySet] = useState(StudySet.fromString(studySetString));
+    const [studySet, setStudySet] = useState(StudySet.fromString(initialStudySetString));
     const [loading, setLoading] = useState(false);
     const { isOpen: isOpenShare, onOpen: onOpenShare, onClose: onCloseShare } = useDisclosure()
     const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure()
@@ -175,7 +175,10 @@ export const EditPageDisplay = ({uid, studySetString}: EditPageDisplayProps) => 
                             </AlertDialogContent>
                         </AlertDialogOverlay>
                     </AlertDialog>
-                    <FaRegCheckCircle className="mx-3" size={"25px"} onClick={onOpenEdit}/>
+                    <FaRegCheckCircle className="mx-3" size={"25px"} onClick={() => {
+                        if(studySet !== StudySet.fromString(initialStudySetString)) onOpenEdit();
+                        else router.push("/home");
+                    }}/>
                     <AlertDialog isOpen={isOpenEdit} leastDestructiveRef={cancelRef} onClose={onCloseEdit}>
                         <AlertDialogOverlay>
                             <AlertDialogContent backgroundColor={AccentColor2}>
