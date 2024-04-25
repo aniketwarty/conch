@@ -9,5 +9,4 @@ export const defaultQuizOptions = {
     "Number of Questions": 10,
     "Short Answer Questions": false,
     "True/False Questions": true,
-    "Time Limit (seconds)": -1,
 }

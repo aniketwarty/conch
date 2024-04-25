@@ -45,8 +45,8 @@ export const QuizPageDisplay = ({uid, studySetString, initialOptions}: QuizPageD
                     <p className="text-5xl font-bold m-5 self-center">Quiz</p>  
                     <p className="text-2xl m-5 self-center">
                         {options["Number of Questions"] + " questions"} 
-                        {" • "}
-                        {options["Time Limit (seconds)"]===-1 ? "No time limit" : `${Math.floor(options["Time Limit (seconds)"] / 60)}:${(options["Time Limit (seconds)"] % 60).toString().padStart(2, '0')} time limit`}
+                        {/* {" • "}
+                        {options["Time Limit (seconds)"]===-1 ? "No time limit" : `${Math.floor(options["Time Limit (seconds)"] / 60)}:${(options["Time Limit (seconds)"] % 60).toString().padStart(2, '0')} time limit`} */}
                     </p>
                     <div className="flex flex-row my-2">
                         <p className="ml-3 mr-3 text-2xl">True/False Questions</p>

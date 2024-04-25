@@ -7,6 +7,7 @@ import { Box, Button, FormControl, FormLabel, Input, VStack, HStack, IconButton,
 import { IoMdClose } from "react-icons/io";
 import { createStudySet } from "../lib/firebase/firestore";
 import { useRouter } from "next/navigation";
+import { AccentColor2, BackgroundColor } from "../colors";
 
 
 interface CreatePageDisplayProps {
@@ -52,10 +53,9 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
     }, [studySet]);
 
     return (
-        <div className="bg-gray-100 h-full w-screen flex flex-col">
+        <div className="bg-gray-100 h-full w-screen flex flex-col" style={{backgroundColor: BackgroundColor}}>
             <NavBar/>
-            {/* <Button onClick={() => createStudySet(new StudySet("test2", ["term1"], ["definition1"], new Date(), uid))}>Create</Button> */}
-            <div className="bg-slate-200 my-10 mx-40 rounded-2xl h-full shadow-lg px-10 flex flex-col">
+            <div className="bg-slate-200 my-10 mx-40 rounded-2xl h-full shadow-lg px-10 flex flex-col" style={{backgroundColor: AccentColor2}}>
                 <div className="flex flex-row items-center">
                     <p className="text-3xl font-bold my-8">Create set</p>
                     <FaUserPlus className="ml-auto mr-3" size={"25px"} onClick={onOpen}/>
@@ -153,10 +153,10 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
                         {/* TODO: add removing terms */}
                     </div>)
                 })}
-                <Button className="w-full mt-4" backgroundColor={"gray.50"} onClick={() => {
+                <Button className="w-full mt-4 shadow-xl" backgroundColor={"gray.50"} onClick={() => {
                     setStudySet(prevStudySet => prevStudySet.add("", ""));
                 }}>+</Button>
-                <Button className="w-full my-4" backgroundColor={"gray.50"} onClick={() => {
+                <Button className="w-full my-4 shadow-xl" backgroundColor={"gray.50"} onClick={() => {
                     createStudySet(studySet.removeEmptyTerms())
                     //TODO: fix sharing not working on this navigation
                     router.push(`/study/?setUid=${studySet.uid}&setName=${studySet.name}`)

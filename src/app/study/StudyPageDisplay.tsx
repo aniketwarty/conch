@@ -59,7 +59,7 @@ export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
     }, [])
 
     return (
-        <div className="flex flex-col h-full w-screen" style={{backgroundColor: BackgroundColor}}>
+        <div className="flex flex-col h-screen w-screen overflow-hidden" style={{backgroundColor: BackgroundColor}}>
             {loading && (
                 <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
                     <Spinner className="p-5 m-auto"/>
@@ -151,17 +151,16 @@ export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
                     </AlertDialog>
                 </div>
                 
-                <div className="flex flex-row h-5/6 w-full mb-5">
-                    <div className="flex flex-col m-5 w-1/4 justify-between">
-                        {/* TODO: disable game1 and game 2 and chat */}
+                <div className="flex flex-row h-full w-full mb-5">
+                    <div className="flex flex-col m-5 w-1/4 justify-between h-5/6">
                         <StudyModeButton text="Flashcards" icon={BsCardText} modePath="flashcards" studySetString={studySetString} setLoading={setLoading}/>
                         <StudyModeButton text="Quiz" icon={MdOutlineQuiz} modePath="quiz" studySetString={studySetString} setLoading={setLoading}/>
-                        <StudyModeButton text="Game 1" icon={FaGamepad} modePath="game1" studySetString={studySetString} setLoading={setLoading}/>
-                        <StudyModeButton text="Game 2" icon={FaGamepad} modePath="game2" studySetString={studySetString} setLoading={setLoading}/>
-                        <StudyModeButton text="Chat" icon={IoChatboxSharp} modePath="chat" studySetString={studySetString} setLoading={setLoading}/>
+                        <StudyModeButton text="Coming soon" modePath="game1" studySetString={studySetString} setLoading={setLoading} disabled={true}/>
+                        <StudyModeButton text="Coming soon" modePath="game2" studySetString={studySetString} setLoading={setLoading} disabled={true}/>
+                        <StudyModeButton text="Coming soon" modePath="chat" studySetString={studySetString} setLoading={setLoading} disabled={true}/>
                     </div>
-                    <div className="ml-5 mb-5 w-px bg-black"/>
-                    <div className="flex flex-col h-full w-3/4 px-8 pb-14 overflow-y-auto">
+                    <div className="h-4/5 w-px ml-5 mb-5 bg-black grow"/>
+                    <div className="flex flex-col h-[80vh] w-3/4 px-8 pb-14 overflow-y-auto">
                         {studySet.terms.map((term, index) => {
                             return (
                                 <div key={index} className="flex flex-row mt-5 p-5 w-full shadow-md rounded-lg" style={{backgroundColor: AccentColor2}}>

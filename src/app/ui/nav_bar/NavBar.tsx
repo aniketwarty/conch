@@ -13,6 +13,7 @@ export const NavBar = () => {
                 }}>
                     <Image src="/logo.png" alt="Logo" className="ml-10 mt-4" height={40} width={150}/>
                 </Link>
+                {/* TODO: add home, shared sets, etc */}
                 <AccountButton/>
             </div>
             <div className="w-full bg-gray-400 h-px"/>

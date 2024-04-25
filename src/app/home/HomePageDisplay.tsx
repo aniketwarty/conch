@@ -4,7 +4,7 @@ import Link from "next/link";
 import { StudySet } from "../lib/classes/study_set";
 import { NavBar } from '../ui/nav_bar/NavBar';
 import { Spinner } from '@chakra-ui/react';
-import { AccentColor2, BackgroundColor } from "../colors";
+import { AccentColor2, BackgroundColor, BackgroundColorGradient } from "../colors";
 
 interface HomePageProps {
     setList: string[] | null;
@@ -15,7 +15,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
     const [loading, setLoading] = useState(false);
 
     return (
-        <div className="h-screen w-screen flex flex-col" style={{backgroundColor: BackgroundColor}}>
+        <div className="h-screen w-screen flex flex-col" style={{background: BackgroundColorGradient}}>
             {loading && (
                 <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
                     <Spinner className="p-5 m-auto" />
@@ -24,6 +24,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
             <NavBar />
             <p className="text-3xl font-bold m-10">Your sets</p>
             <div className="flex flex-row mb-5">
+                {/* TODO: add edit button/page */}
                 {setList??[].length > 0 ? (
                     setList!.map((set, index) => (
                         <Link
@@ -52,7 +53,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                     </>
                 )}
                 <Link href="/create">
-                    <div className="flex h-32 w-52 ml-10 p-5 rounded-md bg-gray-300">
+                    <div className="flex h-32 w-52 ml-10 p-5 rounded-md bg-gray-300 shadow-2xl">
                         <p className="text-5xl font-bold m-auto" style={{ color: 'rgba(0, 0, 0, 0.6)' }}>+</p>
                     </div>
                 </Link>
