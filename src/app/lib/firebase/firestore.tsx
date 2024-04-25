@@ -120,7 +120,7 @@ export async function updateLastStudied(studySet: StudySet) {
 
 
 export async function shareSet(setUid: string, setName: string, sharedEmails: string[]) {
-    await fetch("http://localhost:3000/api/study_set/share", {
+    await fetch("https://conch.netlify.app/api/study_set/share", {
         method: "POST",
         headers: {
             shared_emails: sharedEmails.join(","),
@@ -131,7 +131,7 @@ export async function shareSet(setUid: string, setName: string, sharedEmails: st
 }
 
 export async function fetchSharedEmails(setUid: string, setName: string) {
-    const response = await fetch("http://localhost:3000/api/study_set/share", {
+    const response = await fetch("https://conch.netlify.app/api/study_set/share", {
         method: "GET",
         headers: {
             setUid: setUid,

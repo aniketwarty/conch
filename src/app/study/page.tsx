@@ -8,7 +8,7 @@ import { auth } from "../lib/firebase/auth";
 import { redirect } from "next/navigation";
 
 export default async function StudyPage({searchParams}: {searchParams: any}) {
-    const authResponse = await fetch("http://localhost:3000/api/auth", {//PROD: change to production URL
+    const authResponse = await fetch("https://conch.netlify.app/api/auth", {//PROD: change to production URL
         method: "GET",
         credentials: "include",
         headers: {

@@ -8,7 +8,7 @@ import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../../lib/firebase/auth";
 
 export default async function QuizPage({searchParams}: {searchParams: any}) {
-    const authResponse = await fetch("http://localhost:3000/api/auth", {//PROD: change to production URL
+    const authResponse = await fetch("https://conch.netlify.app/api/auth", {//PROD: change to production URL
         method: "GET",
         credentials: "include",
         headers: {
