@@ -53,7 +53,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
     }, [studySet]);
 
     return (
-        <div className="bg-gray-100 h-full w-screen flex flex-col" style={{backgroundColor: BackgroundColor}}>
+        <div className="h-full w-screen flex flex-col" style={{backgroundColor: BackgroundColor}}>
             <NavBar/>
             <div className="bg-slate-200 my-10 mx-40 rounded-2xl h-full shadow-lg px-10 flex flex-col" style={{backgroundColor: AccentColor2}}>
                 <div className="flex flex-row items-center">

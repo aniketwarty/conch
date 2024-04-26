@@ -12,6 +12,7 @@ interface HomePageProps {
     recentSetList: string[] | null;
 }
 //TODO: handle overflow for your sets and recent sets
+//TODO: add alert for trying to open nonexistent/deleted sets
 export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
     const [loading, setLoading] = useState(false);
 

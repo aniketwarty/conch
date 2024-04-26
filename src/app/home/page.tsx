@@ -18,7 +18,7 @@ export default async function Home() {
         }
     })
     
-    if(response.redirected) redirect("/login")
+    if(!response.ok) redirect("/login")
     const responseJson = await response.json();
     await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;
