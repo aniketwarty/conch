@@ -123,7 +123,7 @@ export async function fetchRecentSets(uid: string) {
 
 // Sharing sets
 export async function shareSet(setUid: string, setName: string, sharedEmails: string[]) {
-    await fetch("http://localhost:3000/api/study_set/share", {
+    await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/study_set/share", {
         method: "POST",
         headers: {
             shared_emails: sharedEmails.join(","),
@@ -134,7 +134,7 @@ export async function shareSet(setUid: string, setName: string, sharedEmails: st
 }
 
 export async function fetchSharedEmails(setUid: string, setName: string) {
-    const response = await fetch("http://localhost:3000/api/study_set/share", {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/study_set/share", {
         method: "GET",
         headers: {
             setUid: setUid,

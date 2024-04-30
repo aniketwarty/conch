@@ -5,7 +5,7 @@ import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../lib/firebase/auth";
 
 export default async function Create() {
-    const response = await fetch("http://localhost:3000/api/auth", {//PROD: change to production URL
+    const response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/auth", {//PROD: change to production URL
         method: "GET",
         credentials: "include",
         headers: {

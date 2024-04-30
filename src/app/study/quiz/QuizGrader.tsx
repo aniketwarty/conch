@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
-import { checkFRQ } from "../../lib/gemini/gemini";
+import { checkFRQ } from "../../lib/gemini";
 import { Button, Center, CircularProgress, CircularProgressLabel, Input, Spinner, Textarea } from "@chakra-ui/react";
 import { IoIosArrowDropright } from "react-icons/io";
 import { GradedQuizChoiceButton } from "./QuizChoiceButton";
@@ -159,16 +159,16 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                 </div>
                 {questionList.map((question, index) => displayGradedQuestion(question, index))}
                 <div className="flex flex-row">
-                    <Link className="mr-2 w-full" href={{
+                    <Button className="mr-2 mb-5 w-1/2" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => setQuizStatus(QuizStatus.INITIAL)}>Retry</Button>
+                    <Link className="mr-2 mb-5 w-1/2" href={{
                         pathname: "/study",
                         query: {
                             setUid: StudySet.fromString(studySetString).uid,
                             setName: StudySet.fromString(studySetString).name,
                         },
                     }}>
-                        <Button className="w-full mb-5" style={{backgroundColor: AccentColor4, color: "white"}} size="lg">Home</Button>
+                        <Button className="w-full" style={{backgroundColor: AccentColor4, color: "white"}} size="lg">Done</Button>
                     </Link>
-                    <Button className="w-full mb-5" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => setQuizStatus(QuizStatus.INITIAL)}>Retry</Button>
                 </div>
             </div>: 
             <div className="flex flex-col items-center m-auto"> 
