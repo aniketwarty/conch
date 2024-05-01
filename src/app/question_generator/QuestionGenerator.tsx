@@ -18,7 +18,7 @@ interface QuestionGeneratorProps {
     setQuestionList: React.Dispatch<React.SetStateAction<MultiPartQuestion[]>>;
     setQuestionGeneratorStatus: React.Dispatch<React.SetStateAction<QuestionGeneratorStatus>>;
 }
-
+//TODO: handle when mcq button text is too long
 export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, useFRQ, questionList, setQuestionList, setQuestionGeneratorStatus}: QuestionGeneratorProps) => {
     const startedQuestionGeneration = useRef(false);
     const finishedQuestionGeneration = useRef(false);
@@ -43,7 +43,6 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
 
         async function generateQuestions() {
             const response = await generateQuestionsFromTopic(topic, numQuestions, useAP, APUnits, useMCQ, useFRQ);
-            console.log(response)
             let responseList = response.split('\n');
 
             responseList = responseList.filter((x, index) => x !== "" || responseList[index - 1] !== "");
@@ -72,7 +71,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
 
     function updateAnswer(questionIndex: number, partIndex: number, answer: string) {
         setQuestionList(prevQuestionList => {
-            return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answers: [...q.answers.map((a, i) => i === partIndex ? answer : a)]} : q) as MultiPartQuestion[]];
+            return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answers: q.answers.map((oldAnswer, i) => partIndex === i ? answer : oldAnswer)} : q) as MultiPartQuestion[]];
         })
     }
     //TODO: add some way to format tables into smth more readable

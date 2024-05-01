@@ -26,7 +26,7 @@ export async function checkFRQ(question: string, answer: string) {//TODO: tune p
 }
 
 export async function generateQuestionsFromTopic(topic: string, numQuestions: number, useAP: boolean, APUnits: string, useMCQ: boolean, useFRQ: boolean) {
-    let prompt = useAP ? "Using only past AP " + topic + " exams, generate " + numQuestions + " AP-style questions solely on AP " + topic + (APUnits!==""?" unit(s) " + APUnits:"") + " that could appear on the AP test.":
+    let prompt = useAP ? "Using only past AP " + topic + " exams, generate " + numQuestions + " AP-style questions solely on AP " + topic + (APUnits!==""?" unit(s) " + APUnits:"") + " that could appear on the AP test. ":
     "Generate " + numQuestions + " questions on the topic " + topic + "."
     if(useMCQ && useFRQ) prompt += `Include both multiple choice and multi-paragraph multi-part free response word problems that both ask about applications of concepts in a specific scenario, mirroring past AP exams.
     Make sure every question and part isn't general and is answerable using only the information provided.
@@ -60,48 +60,33 @@ export async function generateQuestionsFromTopic(topic: string, numQuestions: nu
     return result.response.text();
 }
 
-export async function checkMultiPartQuestion(questionList: MultiPartQuestion[]) {
-    let prompt = `I will give you a series of questions that are either multiple choice or free response.
-    Free response example:
-    Question 1 (Free Response)
-    Question text
-    (a) Part 1
-    (b) Part 2
-    (c) Part 3
-    (d) Part 4
-    Answers:
-    (a) Answer 1
-    (b) Answer 2
-    (c) Answer 3
-    (d) Answer 4
-    Multiple choice example:
-    Question 1 (Multiple Choice)
-    Question text
-    (a) Choice 1
-    (b) Choice 2
-    (c) Choice 3
-    (d) Choice 4
-    Answer: (a) Choice 1
-    For each free response question, determine if the answers are correct for each part of the question and give 1-2 sentences of feedback, even if they are correct. 
-    For each multiple choice question, determine if the answer is the best answer.
-    Format free response questions like this example for a 4-part question, with C for correct or I for incorrect:
+export async function checkMultiPartQuestions(questionList: MultiPartQuestion[]) {
+    let prompt = `I will give you a series of multiple choice and multi-part free response questions with answers that a student submitted.
+For each multi-part free response question, determine if the answers are correct for each part of the question and give 1-2 sentences of feedback, even if they are correct. 
+For each multiple choice question, determine if the answer is the best answer and give 1-2 sentences of feedback if not.
+If the student's answer is empty, give a short 1-2 sentence explanation for the answer to the question.
+Format multi-part free response questions like this example for a 4-part question, with every part marked as C for correct or I for incorrect:
     Question 1 (Free Response)
     (a) C. Although the answer is correct, it would have been better to include ...
     (b) I. The answer is incorrect because ...
     (c) C. 
     (d) I. The answer is incorrect because ...
-    Format multiple choice questions like this example for a correct response:
-    C. 
-    Or this example for an incorrect response:
-    I. The answer is incorrect because ...`
+Format multiple choice questions like this:
+    Question 2 (Multiple Choice)
+    I. The answer is incorrect because ...
+Here are the questions and responses: \n`
     for(const question of questionList) {
         prompt += question.heading + "\n";
         prompt += question.question + "\n";
+        question.heading.includes("Multiple Choice")?prompt += "Answer choices:\n":prompt += "Parts of the question:\n";
         for(let i = 0; i < question.parts.length; i++) {
-            prompt += "(" + String.fromCharCode(97 + i) + ") " + question.parts[i] + "\n";
+            prompt += question.parts[i] + "\n";
         }
-        prompt += "Answer: " + question.answer + "\n";
+        question.heading.includes("Multiple Choice")?prompt += "\nAnswer: \"" + question.answer + "\"\n":
+        prompt += "\nAnswers:\"\n" + question.answers.map((x, i) => "(" + String.fromCharCode(97 + i) + ") \"" + x + "\"").join("\n") + "\"\n";
+        prompt += "\n";
     }
+    console.log(prompt)
     try {
         return (await model.generateContent(prompt)).response.text();
     } catch (e) {

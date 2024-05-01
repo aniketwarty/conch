@@ -68,7 +68,9 @@ export const LoginNavBar = () => {
         <div>
             <div className="h-20 items-center w-full top-0 flex z-0 bg-gray-100"/>
             <div className="h-20 items-center w-full fixed top-0 flex z-40 bg-gray-100 shadow-xl" style={{backgroundColor: AccentColor1}}>
-                <Image src="/logo.png" alt="Logo" className="ml-10 mt-4" height={40} width={150}/>
+                <div className="ml-10 mr-5 my-auto">
+                    <img src="/logo.png" alt="Logo" height={40} width={150}/>
+                </div>
             </div>
             <div className="w-full bg-gray-400 h-px"/>
         </div>

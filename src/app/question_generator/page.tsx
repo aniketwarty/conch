@@ -12,7 +12,7 @@ export enum QuestionGeneratorStatus {
     STARTED,
     SUBMITTED
 }
-
+//TODO: figure out how to do auth
 export default function QuestionGeneratorPage() {
     const [questionGeneratorStatus, setQuestionGeneratorStatus] = useState<QuestionGeneratorStatus>(QuestionGeneratorStatus.INITIAL);
     const [topic, setTopic] = useState<string>("");

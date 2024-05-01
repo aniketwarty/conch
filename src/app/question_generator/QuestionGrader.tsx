@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { MultiPartQuestion } from "../lib/classes/question";
-import { checkMultiPartQuestion } from "../lib/gemini";
+import { checkMultiPartQuestions } from "../lib/gemini";
 import { Button, Center, CircularProgress, CircularProgressLabel, Input, Spinner, Textarea } from "@chakra-ui/react";
 import { IoIosArrowDropright } from "react-icons/io";
 import Link from "next/link";
@@ -19,16 +19,14 @@ export const QuestionGrader = ({questionList, setQuestionGeneratorStatus}: Quest
     const [numCorrectQuestions, setNumCorrectQuestions] = useState(0);
 
     useEffect(() => {
-        const gradeQuestion = async (index: number) => {
-            const result = await checkMultiPartQuestion(questionList[index]);
-            setResults(prevResults => [...prevResults, "I. " + "explanation"]);
+        const gradeQuestions = async () => {
+            const result = await checkMultiPartQuestions(questionList);
+            console.log(result);
         }
 
         if(!startedQuizGrading.current) {
             startedQuizGrading.current = true;
-            for(let i = 0; i < questionList.length; i++) {
-                gradeQuestion(i);
-            }
+            gradeQuestions();
         }
     }, [])
 
