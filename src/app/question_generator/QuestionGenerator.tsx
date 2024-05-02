@@ -37,7 +37,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
 
         function addQuestionPart(questionIndex: number, part: string) {
             setQuestionList(prevQuestionList => {
-                return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, parts: [...q.parts, part]} : q) as MultiPartQuestion[]];
+                return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, parts: [...q.parts, part], answers: [...q.answers, ""]} : q) as MultiPartQuestion[]];
             })
         }
 
@@ -52,7 +52,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                 if (/Question \d/.test(x)) {
                     questionListIndex++;
                     setQuestionHeading(questionListIndex, x.replace(/\*/g, ''));
-                } else if(/^\(\w\)/.test(x.replace(/\*/g, ''))) {
+                } else if(/^\(\w\)/.test(x)) {
                     addQuestionPart(questionListIndex, x.replace(/\*/g, ''));
                 }
                 else if (x !== ""){
@@ -71,6 +71,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
 
     function updateAnswer(questionIndex: number, partIndex: number, answer: string) {
         setQuestionList(prevQuestionList => {
+            console.log(prevQuestionList)
             return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answers: q.answers.map((oldAnswer, i) => partIndex === i ? answer : oldAnswer)} : q) as MultiPartQuestion[]];
         })
     }
@@ -104,12 +105,12 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                     </div>
                 ))}
                 <div className="flex flex-row w-full">
-                    <Button className="w-full mr-5" colorScheme="blue" onClick={() => {
+                    <Button className="w-full mr-3" colorScheme="blue" onClick={() => {
                         startedQuestionGeneration.current = false;
                         finishedQuestionGeneration.current = false;
                         setRegenerate(!regenerate);
                     }}>Regenerate</Button>
-                    <Button className="w-full ml-5" colorScheme="blue" 
+                    <Button className="w-full ml-3" colorScheme="blue" 
                     onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.SUBMITTED)}>Submit</Button>
                 </div>
                 

@@ -75,13 +75,15 @@ export class FreeResponseQuestion extends Question {
 export class MultiPartQuestion extends Question {
     heading: string;
     parts: string[];
-    answers: string[]
+    answers: string[];
+    results: string[][];
 
     constructor(heading: string, question: string, parts: string[]){
         super(question, "")
         this.heading = heading;
         this.parts = parts;
         this.answers = Array(parts.length).fill("");
+        this.results = Array(parts.length).fill([]);
     }
 
     formatPartsForPrompt() {

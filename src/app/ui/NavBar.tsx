@@ -24,11 +24,11 @@ export const NavBar = () => {
                     </Button>
                 </Link>
 
-                <Link href="/recently_shared" className="mx-5 my-auto">
+                {/* <Link href="/recently_shared" className="mx-5 my-auto">
                     <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
                         <p className="text-black font-bold text-2xl mt-px">Recently shared</p>
                     </Button>
-                </Link>
+                </Link> */}
                 
                 <Link href="/question_generator" className="mx-5 my-auto">
                     <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>

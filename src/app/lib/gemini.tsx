@@ -65,15 +65,15 @@ export async function checkMultiPartQuestions(questionList: MultiPartQuestion[])
 For each multi-part free response question, determine if the answers are correct for each part of the question and give 1-2 sentences of feedback, even if they are correct. 
 For each multiple choice question, determine if the answer is the best answer and give 1-2 sentences of feedback if not.
 If the student's answer is empty, give a short 1-2 sentence explanation for the answer to the question.
-Format multi-part free response questions like this example for a 4-part question, with every part marked as C for correct or I for incorrect:
+Format multi-part free response questions exactly like this example for a 4-part question, with every part marked as Correct or Incorrect:
     Question 1 (Free Response)
-    (a) C. Although the answer is correct, it would have been better to include ...
-    (b) I. The answer is incorrect because ...
-    (c) C. 
-    (d) I. The answer is incorrect because ...
+    (a) Correct. Although the answer is correct, it would have been better to include ...
+    (b) Incorrect. The answer is incorrect because ...
+    (c) Correct. 
+    (d) Incorrect. The answer is incorrect because ...
 Format multiple choice questions like this:
     Question 2 (Multiple Choice)
-    I. The answer is incorrect because ...
+    Incorrect. The answer is incorrect because ...
 Here are the questions and responses: \n`
     for(const question of questionList) {
         prompt += question.heading + "\n";
@@ -83,13 +83,13 @@ Here are the questions and responses: \n`
             prompt += question.parts[i] + "\n";
         }
         question.heading.includes("Multiple Choice")?prompt += "\nAnswer: \"" + question.answer + "\"\n":
-        prompt += "\nAnswers:\"\n" + question.answers.map((x, i) => "(" + String.fromCharCode(97 + i) + ") \"" + x + "\"").join("\n") + "\"\n";
+        prompt += "\nAnswers:\n" + question.answers.map((x, i) => "(" + String.fromCharCode(97 + i) + ") \"" + x + "\"").join("\n") + "\n";
         prompt += "\n";
     }
     console.log(prompt)
     try {
         return (await model.generateContent(prompt)).response.text();
     } catch (e) {
-        return ["The AI was unable to determine if the answers were correct.\n(" + e + ")"];
+        return "The AI was unable to determine if the answers were correct.\n(" + e + ")";
     }
 }

@@ -9,19 +9,30 @@ import { QuestionGeneratorStatus } from "./page";
 
 interface QuestionGraderProps {
     useAP: boolean;
-    questionList: MultiPartQuestion[];
+    initialQuestionList: MultiPartQuestion[];
     setQuestionGeneratorStatus: React.Dispatch<React.SetStateAction<QuestionGeneratorStatus>>;
 }
 
-export const QuestionGrader = ({questionList, setQuestionGeneratorStatus}: QuestionGraderProps) => {
-    const [results, setResults] = useState<string[]>([]);
+export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}: QuestionGraderProps) => {
+    const [questionList, setQuestionList] = useState<MultiPartQuestion[]>(initialQuestionList);
     const startedQuizGrading = useRef(false);
-    const [numCorrectQuestions, setNumCorrectQuestions] = useState(0);
+    const finishedQuizGrading = useRef(false);
 
     useEffect(() => {
         const gradeQuestions = async () => {
-            const result = await checkMultiPartQuestions(questionList);
-            console.log(result);
+            //TODO: handle gemini error
+            const results = (await checkMultiPartQuestions(questionList)).split("\n").filter((line) => line !== "");
+            let questionIndex = -1;
+            let partIndex = -1;
+            for(let i = 0; i < results.length; i++) {
+                if (/Question \d/.test(results[i])) {
+                    questionIndex++;
+                    partIndex = -1;
+                } else if (results[i].startsWith("Correct. ") || results[i].startsWith("Incorrect. ")) {
+                    partIndex++;
+                    setQuestionList(prevQuestionList => [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, results: [...q.results.slice(0, partIndex), results[i], ...q.answers.slice(partIndex + 1)]} : q) as MultiPartQuestion[]])
+                }
+            }
         }
 
         if(!startedQuizGrading.current) {
@@ -35,20 +46,19 @@ export const QuestionGrader = ({questionList, setQuestionGeneratorStatus}: Quest
             <div key={index} className="flex flex-col w-full m-5">
                 <p className="text-2xl font-bold">{question.question}</p>
                 <p className="text-xl">{question.answer}</p>
-                <p className="text-xl">{results[index]}</p>
             </div>
         )
     }
 
     return (
         <div className="flex flex-col h-5/6 w-2/5 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto"style={{backgroundColor: AccentColor2}} >
-            {results.length >= questionList.length ? <div className="h-full w-full">
+            {finishedQuizGrading.current ? <div className="h-full w-full">
                 <div className="flex flex-row m-5 items-center">
                     <p className="text-5xl font-bold text-left mr-auto">Great job!</p>
-                    <CircularProgress className="mr-8" value={numCorrectQuestions/questionList.length*100} color="green" size={"100px"}>
-                        <CircularProgressLabel>{Math.round(numCorrectQuestions/questionList.length*100)}%</CircularProgressLabel>
+                    <CircularProgress className="mr-8"  color="green" size={"100px"}>
+                        <CircularProgressLabel>Grading questions</CircularProgressLabel>
                     </CircularProgress>
-                    <p className="text-3xl">{numCorrectQuestions}/{questionList.length}</p>
+                    <p className="text-3xl">100/100</p>
                 </div>
                 {questionList.map((question, index) => displayGradedQuestion(question, index))}
                 <div className="flex flex-row">
@@ -61,8 +71,8 @@ export const QuestionGrader = ({questionList, setQuestionGeneratorStatus}: Quest
             <div className="flex flex-col items-center m-auto"> 
                 <Spinner className="p-10"/>
                 <p className="text-2xl mt-8 font-bold">Grading Quiz...</p>
-                <p className="text-2xl font-bold">{Math.round(results.length/questionList.length*100)}%</p>
             </div>}
         </div>
     )
 }
+
