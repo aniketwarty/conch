@@ -24,9 +24,9 @@ export const NavBar = () => {
                     </Button>
                 </Link>
 
-                <Link href="/recently_shared" className="mx-5 my-auto">
+                <Link href="/shared_sets" className="mx-5 my-auto">
                     <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
-                        <p className="text-black font-bold text-2xl mt-px">Recently shared</p>
+                        <p className="text-black font-bold text-2xl mt-px">Shared sets</p>
                     </Button>
                 </Link>
                 

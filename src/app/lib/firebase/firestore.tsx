@@ -109,7 +109,7 @@ export async function addToRecentSets(uid: string, studySet: string) {
     }
 
 }
-
+//TODO: make recent set storage based on setUid and name
 export async function fetchRecentSets(uid: string) {
     try {
         const userRef = doc(db, `users/${uid}/`);
@@ -142,6 +142,15 @@ export async function fetchSharedEmails(setUid: string, setName: string) {
         },
     });
     return (await response.json()).shared_emails ?? [];
+
+}
+
+// Fetching shared sets
+export async function fetchSetsSharedWithYou() {
+    
+}
+
+export async function fetchRecentlySharedSets() {
 
 }
 
