@@ -51,11 +51,11 @@ export const QuestionGeneratorChoiceButton = ({value, question, questionIndex, s
             console.log(value, question.answer)
             if(question.answer !== value) {
                 setQuestionList(prevQuestionList => {
-                    return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answer: value} : q)];
+                    return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answer: value} : q)] as MultiPartQuestion[];
                 })
             } else {
                 setQuestionList(prevQuestionList => {
-                    return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answer: ""} : q)];
+                    return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answer: ""} : q)] as MultiPartQuestion[];
                 })
             }
         }}>

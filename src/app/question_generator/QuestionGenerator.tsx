@@ -56,11 +56,11 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                     if(/^\(\w\)/.test(x)) {
                         tempQuestionList[tempQuestionList.length-1].parts.push(x.replace(/\*/g, ''));
                     } else {
-                        tempQuestionList[tempQuestionList.length-1].parts[tempQuestionList[tempQuestionList.length-1].parts.length-1] += x.replace(/\*/g, '');
+                        tempQuestionList[tempQuestionList.length-1].parts[tempQuestionList[tempQuestionList.length-1].parts.length-1] += "\n" + x.replace(/\*/g, '');
                     }
                 }
                 else if (x !== "" && questionPart === 1){
-                    tempQuestionList[tempQuestionList.length-1].question += x.replace(/\*/g, '');
+                    tempQuestionList[tempQuestionList.length-1].question += x.replace(/\*/g, '') + "\n";
                 }
             }
             setQuestionList(tempQuestionList);
@@ -94,9 +94,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                         <br/>
                         {question.heading.includes("Multiple Choice") ? 
                             question.parts.map((choice, choiceIndex) => (
-                                <div key={choiceIndex} className="flex flex-row w-full">
-                                    <QuestionGeneratorChoiceButton value={choice} question={question} questionIndex={questionIndex} setQuestionList={setQuestionList}/>
-                                </div>
+                                <QuestionGeneratorChoiceButton key={choiceIndex} value={choice} question={question} questionIndex={questionIndex} setQuestionList={setQuestionList}/>
                             )):
                             question.parts.map((part, partIndex) => (
                                 <div key={partIndex} className="mb-5">
@@ -108,7 +106,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                         <br/>
                     </div>
                 ))}
-                <div className="flex flex-row w-full">
+                <div className="flex flex-row w-full mt-10">
                     <Button className="w-full mr-3" colorScheme="blue" onClick={() => {
                         startedQuestionGeneration.current = false;
                         finishedQuestionGeneration.current = false;

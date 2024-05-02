@@ -152,7 +152,7 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
             {results.length >= questionList.length ? <div className="h-full w-full">
                 <div className="flex flex-row m-5 items-center">
                     <p className="text-5xl font-bold text-left mr-auto">Great job!</p>
-                    <CircularProgress className="mr-8" value={numCorrectQuestions/questionList.length*100} color="green" size={"100px"}>
+                    <CircularProgress className="mr-8" value={numCorrectQuestions/questionList.length*100} color="green" trackColor="red" size={"100px"}>
                         <CircularProgressLabel>{Math.round(numCorrectQuestions/questionList.length*100)}%</CircularProgressLabel>
                     </CircularProgress>
                     <p className="text-3xl">{numCorrectQuestions}/{questionList.length}</p>
