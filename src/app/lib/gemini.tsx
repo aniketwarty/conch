@@ -28,7 +28,7 @@ export async function checkFRQ(question: string, answer: string) {//TODO: tune p
 export async function generateQuestionsFromTopic(topic: string, numQuestions: number, useAP: boolean, APUnits: string, useMCQ: boolean, useFRQ: boolean) {
     let prompt = useAP ? "Using only past AP " + topic + " exams, generate " + numQuestions + " AP-style questions solely on AP " + topic + (APUnits!==""?" unit(s) " + APUnits:"") + " that could appear on the AP test. ":
     "Generate " + numQuestions + " questions on the topic " + topic + "."
-    if(useMCQ && useFRQ) prompt += `Include both multiple choice and multi-paragraph multi-part free response word problems that both ask about applications of concepts in a specific scenario, mirroring past AP exams.
+    if(useMCQ && useFRQ) prompt += `Include both multiple choice and multi-paragraph multi-part free response word problems about half and half that both ask about applications of concepts in a specific scenario, mirroring past AP exams.
     Make sure every question and part isn't general and is answerable using only the information provided.
     Do not include any images or graphs. Format the question exactly like with no other non-question text: 
     Question 1 (Free Response)
@@ -42,19 +42,25 @@ export async function generateQuestionsFromTopic(topic: string, numQuestions: nu
     Do not include any images or graphs. Format the question exactly like this with no other non-question text: 
     Question 1 (Multiple Choice)
     Question text 
-    (a) Part 1 
-    (b) Part 2 
-    (c) Part 3 
-    (d) Part 4`
+    (a) Choice 1 
+    (b) Choice 2 
+    (c) Choice 3 
+    (d) Choice 4`
     else if(useFRQ) prompt += ` Include only multi-paragraph multi-part free response word problems about applications of concepts in a specific scenario, mirroring past AP exams. 
     Make sure each part isn't a general question and is answerable using only the information provided. 
-    Do not include any images or graphs. Format the question exactly like this with no other non-question text: 
+    Do not include any images or graphs. Format the questions exactly like this with no other non-question text: 
     Question 1 (Free Response)
     Question text 
     (a) Part 1 
     (b) Part 2 
     (c) Part 3 
-    (d) Part 4` 
+    (d) Part 4
+    Question 2 (Multiple Choice)
+    Question text 
+    (a) Choice 1 
+    (b) Choice 2 
+    (c) Choice 3 
+    (d) Choice 4` 
     console.log(prompt)
     const result = await model.generateContent(prompt);
     return result.response.text();
@@ -78,12 +84,12 @@ Here are the questions and responses: \n`
     for(const question of questionList) {
         prompt += question.heading + "\n";
         prompt += question.question + "\n";
-        question.heading.includes("Multiple Choice")?prompt += "Answer choices:\n":prompt += "Parts of the question:\n";
+        question.heading.includes("Multiple Choice") ? prompt += "Answer choices:\n" : prompt += "Parts of the question:\n";
         for(let i = 0; i < question.parts.length; i++) {
             prompt += question.parts[i] + "\n";
         }
-        question.heading.includes("Multiple Choice")?prompt += "\nAnswer: \"" + question.answer + "\"\n":
-        prompt += "\nAnswers:\n" + question.answers.map((x, i) => "(" + String.fromCharCode(97 + i) + ") \"" + x + "\"").join("\n") + "\n";
+        question.heading.includes("Multiple Choice") ? prompt += "\nAnswer: \"" + question.answer + "\"\n":
+        prompt += "\nAnswers:\n" + question.parts.map((x, i) => "(" + String.fromCharCode(97 + i) + ") \"" + question.answers[i] + "\"").join("\n") + "\n";
         prompt += "\n";
     }
     console.log(prompt)

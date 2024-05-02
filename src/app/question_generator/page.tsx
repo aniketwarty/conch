@@ -21,7 +21,7 @@ export default function QuestionGeneratorPage() {
     const [numQuestions, setNumQuestions] = useState<number>(4);
     const [useMCQ, setUseMCQ] = useState<boolean>(true);
     const [useFRQ, setUseFRQ] = useState<boolean>(true);
-    const [questionList, setQuestionList] = useState<MultiPartQuestion[]>(Array(numQuestions).fill(new MultiPartQuestion("", "", [])));
+    const [questionList, setQuestionList] = useState<MultiPartQuestion[]>([]);
 
     return (
         <div className="h-screen w-screen flex flex-col overflow-hidden" style={{backgroundColor: BackgroundColor}}>
@@ -79,7 +79,7 @@ export default function QuestionGeneratorPage() {
                 questionList={questionList} setQuestionList={setQuestionList} setQuestionGeneratorStatus={setQuestionGeneratorStatus}/>
             )}
             {questionGeneratorStatus===QuestionGeneratorStatus.SUBMITTED && (
-                <QuestionGrader useAP={useAP} questionList={questionList} setQuestionGeneratorStatus={setQuestionGeneratorStatus}/>
+                <QuestionGrader useAP={useAP} initialQuestionList={questionList} setQuestionGeneratorStatus={setQuestionGeneratorStatus}/>
             )}
         </div>
     )

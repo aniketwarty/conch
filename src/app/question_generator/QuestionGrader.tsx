@@ -22,17 +22,27 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
         const gradeQuestions = async () => {
             //TODO: handle gemini error
             const results = (await checkMultiPartQuestions(questionList)).split("\n").filter((line) => line !== "");
+            console.log(results)
             let questionIndex = -1;
             let partIndex = -1;
+            const tempQuestionList = [...questionList];
+            console.log("initial", initialQuestionList)
             for(let i = 0; i < results.length; i++) {
                 if (/Question \d/.test(results[i])) {
                     questionIndex++;
                     partIndex = -1;
-                } else if (results[i].startsWith("Correct. ") || results[i].startsWith("Incorrect. ")) {
-                    partIndex++;
-                    setQuestionList(prevQuestionList => [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, results: [...q.results.slice(0, partIndex), results[i], ...q.answers.slice(partIndex + 1)]} : q) as MultiPartQuestion[]])
+                } else {
+                    if (results[i].includes("Correct. ") || results[i].includes("Incorrect. ")) partIndex++;
+                    if (tempQuestionList[questionIndex].results[partIndex] === undefined) {
+                        tempQuestionList[questionIndex].results[partIndex] = results[i];
+                    } else {
+                        tempQuestionList[questionIndex].results[partIndex] += results[i];
+                    }
                 }
+                console.log("loop", questionIndex, partIndex, results[i], tempQuestionList)
             }
+            console.log("tql", tempQuestionList)
+            setQuestionList(tempQuestionList);
         }
 
         if(!startedQuizGrading.current) {

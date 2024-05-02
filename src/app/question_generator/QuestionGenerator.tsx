@@ -44,21 +44,26 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
         async function generateQuestions() {
             const response = await generateQuestionsFromTopic(topic, numQuestions, useAP, APUnits, useMCQ, useFRQ);
             let responseList = response.split('\n');
-
             responseList = responseList.filter((x, index) => x !== "" || responseList[index - 1] !== "");
-
-            let questionListIndex = -1;
+            const tempQuestionList: MultiPartQuestion[] = [];
+            let questionPart = 0;
             for (const x of responseList) {
                 if (/Question \d/.test(x)) {
-                    questionListIndex++;
-                    setQuestionHeading(questionListIndex, x.replace(/\*/g, ''));
-                } else if(/^\(\w\)/.test(x)) {
-                    addQuestionPart(questionListIndex, x.replace(/\*/g, ''));
+                    tempQuestionList.push(new MultiPartQuestion(x.replace(/\*/g, ''), "", []));
+                    questionPart = 1;
+                } else if(/^\(\w\)/.test(x) || questionPart === 2) {
+                    questionPart = 2;
+                    if(/^\(\w\)/.test(x)) {
+                        tempQuestionList[tempQuestionList.length-1].parts.push(x.replace(/\*/g, ''));
+                    } else {
+                        tempQuestionList[tempQuestionList.length-1].parts[tempQuestionList[tempQuestionList.length-1].parts.length-1] += x.replace(/\*/g, '');
+                    }
                 }
-                else if (x !== ""){
-                    addToQuestion(questionListIndex, x.replace(/\*/g, '') + "\n");
+                else if (x !== "" && questionPart === 1){
+                    tempQuestionList[tempQuestionList.length-1].question += x.replace(/\*/g, '');
                 }
             }
+            setQuestionList(tempQuestionList);
             finishedQuestionGeneration.current = true;
         }
 
@@ -71,7 +76,6 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
 
     function updateAnswer(questionIndex: number, partIndex: number, answer: string) {
         setQuestionList(prevQuestionList => {
-            console.log(prevQuestionList)
             return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answers: q.answers.map((oldAnswer, i) => partIndex === i ? answer : oldAnswer)} : q) as MultiPartQuestion[]];
         })
     }
@@ -111,7 +115,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                         setRegenerate(!regenerate);
                     }}>Regenerate</Button>
                     <Button className="w-full ml-3" colorScheme="blue" 
-                    onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.SUBMITTED)}>Submit</Button>
+                    onClick={() => {console.log("submitted", questionList);setQuestionGeneratorStatus(QuestionGeneratorStatus.SUBMITTED)}}>Submit</Button>
                 </div>
                 
             </>:<div className="flex flex-col items-center m-auto"> 
