@@ -48,7 +48,6 @@ export const QuestionGeneratorChoiceButton = ({value, question, questionIndex, s
     return (
         <Button className="m-2 shadow-xl w-full p-2" style={{backgroundColor: question.answer === value?"gray":"lightgray"}}
         onClick={() => {
-            console.log(value, question.answer)
             if(question.answer !== value) {
                 setQuestionList(prevQuestionList => {
                     return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, answer: value} : q)] as MultiPartQuestion[];
@@ -62,4 +61,12 @@ export const QuestionGeneratorChoiceButton = ({value, question, questionIndex, s
             <p className="m-2">{value}</p>
         </Button>
     );
+}
+
+export const GradedQuestionGeneratorChoiceButton = ({value, color}: GradedQuizChoiceButtonProps) => {
+    return (
+        <Box className="bg-slate-200 m-2 p-2 border-2 rounded-md shadow-xl w-full" borderColor={color}> 
+            <p className="text-center font-semibold">{value}</p>
+        </Box>
+    )
 }

@@ -77,13 +77,15 @@ export class MultiPartQuestion extends Question {
     parts: string[];
     answers: string[];
     results: string[];
+    numCorrect: number;
 
-    constructor(heading: string, question: string, parts: string[]){
+    constructor(heading: string, question: string){
         super(question, "")
         this.heading = heading;
-        this.parts = parts;
-        this.answers = Array(parts.length).fill("");
-        this.results = Array(parts.length).fill("");
+        this.parts = [];
+        this.answers = [];
+        this.results = [];
+        this.numCorrect = 0;
     }
 
     formatPartsForPrompt() {

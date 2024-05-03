@@ -6,7 +6,7 @@ import { IoIosArrowDropright } from "react-icons/io";
 import Link from "next/link";
 import { AccentColor2, AccentColor4 } from "@/app/colors";
 import { QuestionGeneratorStatus } from "./page";
-import { QuestionGeneratorChoiceButton } from "../study/quiz/QuizChoiceButton";
+import { GradedQuestionGeneratorChoiceButton, QuestionGeneratorChoiceButton } from "../study/quiz/QuizChoiceButton";
 
 interface QuestionGraderProps {
     useAP: boolean;
@@ -33,15 +33,17 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
                 if (/Question \d/.test(results[i])) {
                     questionIndex++;
                     partIndex = -1;
-                    numTotal += questionList[questionIndex].parts.length;
+                    numTotal++;
                 } else {
-                    if (results[i].includes("Correct. ") || results[i].includes("Incorrect. ")) partIndex++;
-                    if (results[i].includes("Correct. ")) numRight++;
-                    if (tempQuestionList[questionIndex].results[partIndex] === undefined) {
-                        tempQuestionList[questionIndex].results[partIndex] = results[i];
-                    } else {
-                        tempQuestionList[questionIndex].results[partIndex] += results[i];
+                    if(/^\(\w\)/.test(results[i]) || /Part \w/.test(results[i]) || results[i].includes("Incorrect. ") || results[i].includes("Correct. ")) partIndex++;
+                    console.log(results[i], questionIndex+1, partIndex+1)
+                    if (results[i].includes("Correct. ")) {
+                        numRight += questionList[questionIndex].heading.includes("Multiple Choice") ? 1 : 1 / questionList[questionIndex].parts.length;
+                        tempQuestionList[questionIndex].numCorrect++;
                     }
+
+                    tempQuestionList[questionIndex].results[partIndex] += results[i].replace(/\*/g, '');
+                    
                 }
             }
             setQuestionList(tempQuestionList);
@@ -57,22 +59,23 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
     function displayGradedQuestion(question: MultiPartQuestion, index: number) {
         return (
             <div key={index} className="w-full text-wrap">
-                <p className="font-bold text-2xl">{question.heading}</p>
+                <p className="font-bold text-2xl">{question.heading} - {question.numCorrect}/{question.results.filter((result) => result !== "").length}</p>
                 <pre className="whitespace-pre-wrap text-lg">{question.question}</pre>
                 <br/>
                 {question.heading.includes("Multiple Choice") ? 
-                    question.parts.map((choice, choiceIndex) => (
-                        <div key={choiceIndex} className="flex flex-col w-full">
-                            <QuestionGeneratorChoiceButton value={choice} question={question} questionIndex={index} setQuestionList={setQuestionList}/>
-                            <p className="text-red-600">{question.results[choiceIndex]}</p>
-                        </div>
-                    )):
+                    <>
+                    {question.parts.map((choice, choiceIndex) => {
+                        const correct = !question.results[0].includes("Incorrect. ");
+                        return <GradedQuestionGeneratorChoiceButton key={choiceIndex} value={choice} color={choice===question.answer ? correct?"green":"red" : "lightgray"}/>
+                    })}
+                    <p className={`${question.results[0].includes("Incorrect. ")?"text-red-600":"text-green-600"}`}>{question.results[0]}</p>
+                    </>:
                     question.parts.map((part, partIndex) => (
-                        <div key={partIndex} className="mb-5">
-                            <p>{part}</p>
-                            <Textarea value={question.answer} disabled={true}/>
-                            <p className="text-red-600">{question.results[partIndex].substring(4)}</p>
-                        </div> 
+                    <div key={partIndex} className="mb-5">
+                        <p>{part}</p>
+                        <Textarea defaultValue={question.answers[partIndex]} disabled={true} borderColor={question.results[partIndex].includes("Incorrect. ")?"red":"green"} borderWidth="2px"/>
+                        <p className={`${question.results[partIndex].includes("Incorrect. ")?"text-red-600":"text-green-600"}`}>{question.results[partIndex]}</p>
+                    </div> 
                     ))
                 }
                 <br/>
@@ -80,13 +83,23 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
         )
     }
 
+    function roundToThreeDigits(num: number) {
+        if (num >= 100) {
+            return Math.round(num);
+        } else if (num >= 10) {
+            return Number(num.toFixed(1));
+        } else {
+            return Number(num.toFixed(2));
+        }
+    }
+
     return (
         <div className="flex flex-col h-5/6 w-4/5 shadow-2xl rounded-lg m-auto p-5 items-center overflow-auto"style={{backgroundColor: AccentColor2}} >
             {percentCorrect>=0 ? <div className="h-full w-full">
                 <div className="flex flex-row m-5 items-center">
-                    <p className="text-5xl font-bold text-left mr-auto">Great job!</p>
-                    <CircularProgress className="mr-8" value={percentCorrect*100} color="green" trackColor="red" size={"100px"}>
-                        <CircularProgressLabel>{percentCorrect}%</CircularProgressLabel>
+                    <p className="text-5xl font-bold text-left ml-5 mr-auto">Great job!</p>
+                    <CircularProgress className="mr-8" value={roundToThreeDigits(percentCorrect)} color="green" trackColor="red" size={"100px"}>
+                        <CircularProgressLabel>{roundToThreeDigits(percentCorrect)}%</CircularProgressLabel>
                     </CircularProgress>
                 </div>
                 {questionList.map((question, index) => displayGradedQuestion(question, index))}

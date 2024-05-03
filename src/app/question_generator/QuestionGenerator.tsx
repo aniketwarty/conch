@@ -25,36 +25,22 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
     const [regenerate, setRegenerate] = useState(false);
 
     useEffect(() => {
-        function setQuestionHeading(questionIndex: number, heading: string) {
-            setQuestionList(prevQuestionList => [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, heading: heading} : q) as MultiPartQuestion[]])
-        }
-
-        function addToQuestion(questionIndex: number, question: string) {
-            setQuestionList(prevQuestionList => {
-                return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, question: q.question + question} : q) as MultiPartQuestion[]];
-            })
-        }
-
-        function addQuestionPart(questionIndex: number, part: string) {
-            setQuestionList(prevQuestionList => {
-                return [...prevQuestionList.map((q, index) => index === questionIndex ? {...q, parts: [...q.parts, part], answers: [...q.answers, ""]} : q) as MultiPartQuestion[]];
-            })
-        }
-
         async function generateQuestions() {
             const response = await generateQuestionsFromTopic(topic, numQuestions, useAP, APUnits, useMCQ, useFRQ);
             let responseList = response.split('\n');
             responseList = responseList.filter((x, index) => x !== "" || responseList[index - 1] !== "");
-            const tempQuestionList: MultiPartQuestion[] = [];
+            const tempQuestionList = [];
             let questionPart = 0;
             for (const x of responseList) {
                 if (/Question \d/.test(x)) {
-                    tempQuestionList.push(new MultiPartQuestion(x.replace(/\*/g, ''), "", []));
+                    tempQuestionList.push(new MultiPartQuestion(x.replace(/\*/g, ''), ""));
                     questionPart = 1;
-                } else if(/^\(\w\)/.test(x) || questionPart === 2) {
+                } else if(/\(\w\)/.test(x) || /Part \w/.test(x) || questionPart === 2) {
                     questionPart = 2;
-                    if(/^\(\w\)/.test(x)) {
+                    if(/\(\w\)/.test(x) || /Part \w/.test(x)) {
                         tempQuestionList[tempQuestionList.length-1].parts.push(x.replace(/\*/g, ''));
+                        tempQuestionList[tempQuestionList.length-1].answers.push("");
+                        tempQuestionList[tempQuestionList.length-1].results.push("");
                     } else {
                         tempQuestionList[tempQuestionList.length-1].parts[tempQuestionList[tempQuestionList.length-1].parts.length-1] += "\n" + x.replace(/\*/g, '');
                     }
@@ -69,7 +55,6 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
 
         if(!startedQuestionGeneration.current) {
             startedQuestionGeneration.current = true;
-            setQuestionList(Array(numQuestions).fill(new MultiPartQuestion("", "", [])))
             generateQuestions();
         }
     }, [regenerate])
@@ -107,13 +92,13 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                     </div>
                 ))}
                 <div className="flex flex-row w-full mt-10">
-                    <Button className="w-full mr-3" colorScheme="blue" onClick={() => {
+                    <Button className="w-full mr-2" colorScheme="blue" onClick={() => {
                         startedQuestionGeneration.current = false;
                         finishedQuestionGeneration.current = false;
                         setRegenerate(!regenerate);
                     }}>Regenerate</Button>
-                    <Button className="w-full ml-3" colorScheme="blue" 
-                    onClick={() => {console.log("submitted", questionList);setQuestionGeneratorStatus(QuestionGeneratorStatus.SUBMITTED)}}>Submit</Button>
+                    <Button className="w-full ml-2" colorScheme="blue" 
+                    onClick={() => {setQuestionGeneratorStatus(QuestionGeneratorStatus.SUBMITTED)}}>Submit</Button>
                 </div>
                 
             </>:<div className="flex flex-col items-center m-auto"> 
