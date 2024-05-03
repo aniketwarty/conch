@@ -135,8 +135,8 @@ export const EditPageDisplay = ({uid, initialStudySetString}: EditPageDisplayPro
                                 <AlertDialogFooter>
                                     <Button style={{ backgroundColor: '#E0E7FF' }} 
                                     ref={cancelRef} onClick={() => {
-                                        if(addEmail()) shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail]);
-                                        else shareSet(studySet.uid, studySet.name, sharedEmails);
+                                        if(addEmail()) shareSet(studySet.uid, studySet.name, uid, [...sharedEmails, currentEmail], studySet.terms.length);
+                                        else shareSet(studySet.uid, studySet.name, uid, sharedEmails, studySet.terms.length);
                                         onCloseShare()
                                     }}>
                                         Share

@@ -1,3 +1,6 @@
+import { get } from "http";
+import { getFormattedDate } from "../util";
+
 export class StudySet {
     name: string;
     terms: string[];
@@ -22,17 +25,17 @@ export class StudySet {
         return this;
     }
 
-    changeTerm(index: number, newTerm: string){
+    changeTerm(index: number, newTerm: string) {
         this.terms[index] = newTerm;
         return this;
     }
 
-    changeDefinition(index: number, newDefinition: string){
+    changeDefinition(index: number, newDefinition: string) {
         this.definitions[index] = newDefinition;
         return this;
     }
 
-    remove(index: number){
+    remove(index: number) {
         return new StudySet(this.name, this.terms.filter((_, i) => i !== index), this.definitions.filter((_, i) => i !== index), this.last_studied, this.uid);
     }
 
@@ -47,34 +50,13 @@ export class StudySet {
     }
     
 
-    updateLaststudied(){
+    updateLaststudied() {
         this.last_studied = new Date(Date.now());
         return this;
     }
 
-    getFormattedLastStudied(): string {
-        const now = new Date();
-        const diff = now.getTime() - this.last_studied.getTime();
-        const seconds = Math.floor(diff / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-        const months = Math.floor(days / 30);
-        const years = Math.floor(months / 12);
-
-        if (seconds < 60) {
-            return `${seconds} seconds ago`;
-        } else if (minutes < 60) {
-            return `${minutes} minutes ago`;
-        } else if (hours < 24) {
-            return `${hours} hours ago`;
-        } else if (days < 30) {
-            return `${days} days ago`;
-        } else if (months < 12) {
-            return `${months} months ago`;
-        } else {
-            return `${years} years ago`;
-        }
+    getFormattedLastStudied() {
+        return getFormattedDate(this.last_studied);
     }
 
     shuffle() {

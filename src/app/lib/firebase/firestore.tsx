@@ -122,13 +122,15 @@ export async function fetchRecentSets(uid: string) {
 }
 
 // Sharing sets
-export async function shareSet(setUid: string, setName: string, sharedEmails: string[]) {
+export async function shareSet(setUid: string, setName: string, uid: string, sharedEmails: string[], numTerms: number) {
     await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/study_set/share", {
         method: "POST",
         headers: {
             shared_emails: sharedEmails.join(","),
             setUid: setUid,
             setName: setName,
+            uid: uid,
+            numTerms: numTerms.toString(),
         },
     });
 }
@@ -146,12 +148,31 @@ export async function fetchSharedEmails(setUid: string, setName: string) {
 }
 
 // Fetching shared sets
-export async function fetchSetsSharedWithYou() {
-    
+export async function fetchSetsSharedWithYou(uid: number) {
+    try {
+        const userRef = doc(db, `users/${uid}/`);
+        const userSnapshot = await getDoc(userRef);
+        const data = userSnapshot.data()?.setsSharedWithYou ?? [];
+        console.log(data)
+        const parsedData = data.map((item: string) => JSON.parse(item));
+        return parsedData;
+    } catch (e) {
+        console.log(e);
+    }
+    return []
 }
 
-export async function fetchRecentlySharedSets() {
-
+export async function fetchRecentlySharedSets(uid: number) {
+    try {
+        const userRef = doc(db, `users/${uid}/`);
+        const userSnapshot = await getDoc(userRef);
+        const data = userSnapshot.data()?.recentlySharedSets ?? [];
+        const parsedData = data.map((item: string) => JSON.parse(item));
+        return parsedData;
+    } catch (e) {
+        console.log(e);
+    }
+    return []
 }
 
 // Study mode options

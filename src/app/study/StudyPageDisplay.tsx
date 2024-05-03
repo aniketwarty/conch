@@ -16,9 +16,10 @@ import { AccentColor1, AccentColor2, BackgroundColor } from "../colors";
 
 interface StudyPageDisplayProps {
     studySetString: string;
+    uid: string;
 }
 //TODO: add unsharing
-export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
+export const StudyPageDisplay = ({studySetString, uid}: StudyPageDisplayProps) => {
     const studySet = StudySet.fromString(studySetString);
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -136,8 +137,8 @@ export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
                                 <AlertDialogFooter>
                                     <Button style={{ backgroundColor: '#E0E7FF' }} 
                                     ref={cancelRef} onClick={() => {
-                                        if(addEmail()) shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail]);
-                                        else shareSet(studySet.uid, studySet.name, sharedEmails);
+                                        if(addEmail()) shareSet(studySet.uid, studySet.name, uid, [...sharedEmails, currentEmail], studySet.terms.length);
+                                        else shareSet(studySet.uid, studySet.name, uid, sharedEmails, studySet.terms.length);
                                         onClose()
                                     }}>
                                         Share

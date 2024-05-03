@@ -3,6 +3,7 @@ import { signInWithCustomToken } from "firebase/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SharedSetsPageDisplay } from "./SharedSetsPageDisplay";
+import { fetchRecentlySharedSets, fetchSetsSharedWithYou } from "../lib/firebase/firestore";
 
 
 export default async function SharedSetsPage() {
@@ -21,8 +22,10 @@ export default async function SharedSetsPage() {
     const responseJson = await response.json();
     await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;
+    const setsSharedWithYou = await fetchSetsSharedWithYou(uid);
+    const setsRecentlySharedByYou = await fetchRecentlySharedSets(uid);
 
     return (
-        <SharedSetsPageDisplay setsSharedWithYou={[]} setsRecentlySharedByYou={[]}/>
+        <SharedSetsPageDisplay setsSharedWithYou={setsSharedWithYou} setsRecentlySharedByYou={setsRecentlySharedByYou}/>
     )
 }

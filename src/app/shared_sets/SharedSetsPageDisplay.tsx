@@ -1,20 +1,27 @@
 "use client"
 import { useState } from "react";
 import { IconButton, Spinner } from "@chakra-ui/react";
-import { StudySet } from "../lib/classes/study_set"
 import Link from "next/link";
 import { NavBar } from "../ui/NavBar";
 import { MdEdit } from "react-icons/md";
 import { AccentColor2 } from "../colors";
+import { getFormattedDate } from "../lib/util";
 
+interface Set {
+    setUid: string,
+    setName: string,
+    email: string,
+    numTerms: number,
+    shareDate: string,
+}
 interface SharedSetsPageDisplayProps {
-    setsSharedWithYou: string[],
-    setsRecentlySharedByYou: string[],
+    setsSharedWithYou: Set[],
+    setsRecentlySharedByYou: Set[],
 }
 
 export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYou}: SharedSetsPageDisplayProps) => {
     const [loading, setLoading] = useState(false);
-    
+    //TODO: prevent duplicates
     return (//TODO: cut off after 2 lines
         <div className="min-h-screen h-full w-screen flex flex-col">
             {loading && (
@@ -31,8 +38,8 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                             <Link key={index} href={{
                                 pathname: "/study",
                                 query: {
-                                    setUid: StudySet.fromString(set).uid,
-                                    setName: StudySet.fromString(set).name,
+                                    setUid: set.setUid,
+                                    setName: set.setName,
                                 },
                             }}
                             onClick={() => {
@@ -40,14 +47,14 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                             }}>
                                 <div className="flex flex-col ml-10 px-5 py-2 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                     <div className="flex flex-row">
-                                        <p className="text-2xl font-bold mt-3">{StudySet.fromString(set).name}</p>
+                                        <p className="text-2xl font-bold mt-3">{set.setName}</p>
                                         <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound onClick={(event) => {
                                             event.preventDefault();
-                                            window.location.href = "/edit?setUid=" + StudySet.fromString(set).uid + "&setName=" + StudySet.fromString(set).name;
+                                            window.location.href = "/edit?setUid=" + set.setUid + "&setName=" + set.setName;
                                         }}/>
                                     </div>
-                                    <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
-                                    <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                                    <p className="">{set.numTerms} terms</p>
+                                    <p className="">{"Shared by: " + set.email}</p>
                                 </div>
                             </Link>
                         ))
@@ -62,8 +69,8 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                             <Link key={index} href={{
                                 pathname: "/study",
                                 query: {
-                                    setUid: StudySet.fromString(set).uid,
-                                    setName: StudySet.fromString(set).name,
+                                    setUid: set.setUid,
+                                    setName: set.setName,
                                 },
                             }}
                             onClick={() => {
@@ -71,14 +78,14 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                             }}>
                                 <div className="flex flex-col ml-10 px-5 py-2 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                     <div className="flex flex-row">
-                                        <p className="text-2xl font-bold mt-3">{StudySet.fromString(set).name}</p>
+                                        <p className="text-2xl font-bold mt-3">{set.setName}</p>
                                         <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound onClick={(event) => {
                                             event.preventDefault();
-                                            window.location.href = "/edit?setUid=" + StudySet.fromString(set).uid + "&setName=" + StudySet.fromString(set).name;
+                                            window.location.href = "/edit?setUid=" + set.setUid + "&setName=" + set.setName;
                                         }}/>
                                     </div>
-                                    <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
-                                    <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                                    <p className="">{set.numTerms} terms</p>
+                                    <p className="">{"Shared: " + getFormattedDate(new Date(set.shareDate))}</p>
                                 </div>
                             </Link>
                         ))
