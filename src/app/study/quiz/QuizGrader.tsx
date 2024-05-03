@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
-import { checkFRQ } from "../../lib/gemini/gemini";
+import { checkFRQ } from "../../lib/gemini";
 import { Button, Center, CircularProgress, CircularProgressLabel, Input, Spinner, Textarea } from "@chakra-ui/react";
 import { IoIosArrowDropright } from "react-icons/io";
 import { GradedQuizChoiceButton } from "./QuizChoiceButton";
@@ -71,18 +71,18 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                         <div className="flex flex-row my-2 w-full place-items-stretch">
                             {results[index] === "Correct" ? (
                                 <>
-                                    <GradedQuizChoiceButton value="True" color={"True"===answers[index]?"green":"lightgray"} stretch={true}/>
-                                    <GradedQuizChoiceButton value="False" color={"False"===answers[index]?"green":"lightgray"} stretch={true}/>
+                                    <GradedQuizChoiceButton value="True" color={"True"===answers[index]?"green":"lightgray"} stretch/>
+                                    <GradedQuizChoiceButton value="False" color={"False"===answers[index]?"green":"lightgray"} stretch/>
                                 </>
                             ) : (answers[index] !== "" ? (
                                 <>
-                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"red"} stretch={true}/>
-                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"red"} stretch={true}/>
+                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"red"} stretch/>
+                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"red"} stretch/>
                                 </>
                             ) : (
                                 <>
-                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"lightgray"} stretch={true}/>
-                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"lightgray"} stretch={true}/>
+                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"lightgray"} stretch/>
+                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"lightgray"} stretch/>
                                 </>
                             ))}
                         </div>
@@ -119,7 +119,7 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                             <p className="m-auto text-lg font-bold">{question.question}</p>
                         </div>
                         <div className="flex flex-col my-2 justify-items-stretch">
-                            <Input className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled={true}
+                            <Input className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled
                             value={answers[index]!==""?answers[index]:"No answer provided"}/>
                             {results[index]==="Incorrect"?<p className="text-red-600 mx-px">The correct answer is {question.answer}</p>:<></>}
                         </div> 
@@ -136,7 +136,7 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                             <p className="m-auto text-lg font-bold">{question.question}</p>
                         </div>
                         <div className="flex flex-col my-2 justify-items-stretch">
-                            <Textarea className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled={true}
+                            <Textarea className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled
                             value={answers[index]!==""?answers[index]:"No answer provided"}/>
                             {results[index].charAt(0)==="I" ? <p className="text-red-600 mx-px">{results[index].substring(3)}</p>:<></>}
                         </div>
@@ -152,23 +152,23 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
             {results.length >= questionList.length ? <div className="h-full w-full">
                 <div className="flex flex-row m-5 items-center">
                     <p className="text-5xl font-bold text-left mr-auto">Great job!</p>
-                    <CircularProgress className="mr-8" value={numCorrectQuestions/questionList.length*100} color="green" size={"100px"}>
+                    <CircularProgress className="mr-8" value={numCorrectQuestions/questionList.length*100} color="green" trackColor="red" size={"100px"}>
                         <CircularProgressLabel>{Math.round(numCorrectQuestions/questionList.length*100)}%</CircularProgressLabel>
                     </CircularProgress>
                     <p className="text-3xl">{numCorrectQuestions}/{questionList.length}</p>
                 </div>
                 {questionList.map((question, index) => displayGradedQuestion(question, index))}
                 <div className="flex flex-row">
-                    <Link className="mr-2 w-full" href={{
+                    <Button className="mr-2 mb-5 w-1/2" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => setQuizStatus(QuizStatus.INITIAL)}>Retry</Button>
+                    <Link className="mr-2 mb-5 w-1/2" href={{
                         pathname: "/study",
                         query: {
                             setUid: StudySet.fromString(studySetString).uid,
                             setName: StudySet.fromString(studySetString).name,
                         },
                     }}>
-                        <Button className="w-full mb-5" style={{backgroundColor: AccentColor4, color: "white"}} size="lg">Home</Button>
+                        <Button className="w-full" style={{backgroundColor: AccentColor4, color: "white"}} size="lg">Done</Button>
                     </Link>
-                    <Button className="w-full mb-5" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => setQuizStatus(QuizStatus.INITIAL)}>Retry</Button>
                 </div>
             </div>: 
             <div className="flex flex-col items-center m-auto"> 

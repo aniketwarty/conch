@@ -2,10 +2,10 @@ import { collection, getDocs, doc, getDoc, getFirestore, setDoc, deleteDoc } fro
 import { firebaseApp } from "./firebase";
 import { StudySet } from "../classes/study_set";
 import { defaultFlashcardOptions, defaultQuizOptions } from "../../study/default_options";
-import { auth } from "./auth";
 
 export const db = getFirestore(firebaseApp);
 
+// Creating users
 export async function createUserDB(uid: string) {
     try {
         const userRef = doc(db, `users/${uid}`);
@@ -15,40 +15,7 @@ export async function createUserDB(uid: string) {
     }
 }
 
-export async function addToRecentSets(uid: string, studySet: string) {
-    try {
-        const userRef = doc(db, `users/${uid}/`);
-        const userSnapshot = await getDoc(userRef);
-        let recentSets = userSnapshot.data()?.recentSets;
-        
-        for(let i = 0; i < recentSets.length; i++) {
-            if(StudySet.fromString(recentSets[i]).compare(StudySet.fromString(studySet))) {
-                recentSets.splice(i, 1);
-                i--;
-            }
-        }
-        if(recentSets.length >= 5) {
-            recentSets.pop();
-        }
-        recentSets.unshift(studySet);
-        await setDoc(userRef, {recentSets: recentSets}, {merge: true});
-    } catch (e) {
-        console.log(e);
-    }
-
-}
-
-export async function fetchRecentSets(uid: string) {
-    try {
-        const userRef = doc(db, `users/${uid}/`);
-        const userSnapshot = await getDoc(userRef);
-        return userSnapshot.data()?.recentSets ?? [];
-    } catch (e) {
-        console.log(e);
-    }
-    return []
-}
-
+// Modifying sets
 export async function createStudySet(studySet: StudySet) {
     try {
         const setRef = doc(db, `users/${studySet.uid}/study_sets/${studySet.name}`);
@@ -57,36 +24,6 @@ export async function createStudySet(studySet: StudySet) {
         console.log(e);
     }
 }
-
-export async function fetchStudySets(uid: string) {
-    const setList: string[] = [];
-    const setsRef = collection(db, `users/${uid}/study_sets`);
-    try {
-        const setsSnapshot = await getDocs(setsRef);
-        setsSnapshot.forEach((doc) => {
-            const set = StudySet.fromFirestore(uid, doc.id, doc.data()).toString();
-            setList.push(set);
-        });
-    } catch (e) {
-        console.log(e)
-    }
-
-    return setList;
-};
-
-export async function fetchStudySet(setUid: string, setName: string, uid: string) {
-    let set = "";
-    
-    try {//verifying user access handled in firestore security rules
-        const setRef = doc(db, `users/${setUid}/study_sets/${setName}`);
-        const setSnapshot = await getDoc(setRef);
-        set = (StudySet.fromFirestore(setUid, setSnapshot.id, setSnapshot.data())).toString();
-    } catch (e) {
-        console.log(e)
-    }
-    
-    return set;
-};
 
 export async function updateSet(studySet: StudySet) {
     try {
@@ -118,20 +55,88 @@ export async function updateLastStudied(studySet: StudySet) {
 
 }
 
+// Fetching sets
+export async function fetchStudySets(uid: string) {
+    const setList: string[] = [];
+    const setsRef = collection(db, `users/${uid}/study_sets`);
+    try {
+        const setsSnapshot = await getDocs(setsRef);
+        setsSnapshot.forEach((doc) => {
+            const set = StudySet.fromFirestore(uid, doc.id, doc.data()).toString();
+            setList.push(set);
+        });
+    } catch (e) {
+        console.log(e)
+    }
 
-export async function shareSet(setUid: string, setName: string, sharedEmails: string[]) {
-    await fetch("https://conch.netlify.app/api/study_set/share", {
+    return setList;
+};
+
+export async function fetchStudySet(setUid: string, setName: string, uid: string) {
+    let set = "";
+    
+    try {//verifying user access handled in firestore security rules
+        const setRef = doc(db, `users/${setUid}/study_sets/${setName}`);
+        const setSnapshot = await getDoc(setRef);
+        set = (StudySet.fromFirestore(setUid, setSnapshot.id, setSnapshot.data())).toString();
+    } catch (e) {
+        console.log(e)
+    }
+    
+    return set;
+};
+
+// Recent sets
+export async function addToRecentSets(uid: string, studySet: string) {
+    try {
+        const userRef = doc(db, `users/${uid}/`);
+        const userSnapshot = await getDoc(userRef);
+        let recentSets = userSnapshot.data()?.recentSets;
+        
+        for(let i = 0; i < recentSets.length; i++) {
+            if(StudySet.fromString(recentSets[i]).compare(StudySet.fromString(studySet))) {
+                recentSets.splice(i, 1);
+                i--;
+            }
+        }
+        if(recentSets.length >= 5) {
+            recentSets.pop();
+        }
+        recentSets.unshift(studySet);
+        await setDoc(userRef, {recentSets: recentSets}, {merge: true});
+    } catch (e) {
+        console.log(e);
+    }
+
+}
+//TODO: make recent set storage based on setUid and name
+export async function fetchRecentSets(uid: string) {
+    try {
+        const userRef = doc(db, `users/${uid}/`);
+        const userSnapshot = await getDoc(userRef);
+        return userSnapshot.data()?.recentSets ?? [];
+    } catch (e) {
+        console.log(e);
+    }
+    return []
+}
+
+// Sharing sets
+export async function shareSet(setUid: string, setName: string, uid: string, sharedEmails: string[], numTerms: number) {
+    await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/study_set/share", {
         method: "POST",
         headers: {
             shared_emails: sharedEmails.join(","),
             setUid: setUid,
             setName: setName,
+            uid: uid,
+            numTerms: numTerms.toString(),
         },
     });
 }
 
 export async function fetchSharedEmails(setUid: string, setName: string) {
-    const response = await fetch("https://conch.netlify.app/api/study_set/share", {
+    const response = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/study_set/share", {
         method: "GET",
         headers: {
             setUid: setUid,
@@ -142,6 +147,35 @@ export async function fetchSharedEmails(setUid: string, setName: string) {
 
 }
 
+// Fetching shared sets
+export async function fetchSetsSharedWithYou(uid: number) {
+    try {
+        const userRef = doc(db, `users/${uid}/`);
+        const userSnapshot = await getDoc(userRef);
+        const data = userSnapshot.data()?.setsSharedWithYou ?? [];
+        console.log(data)
+        const parsedData = data.map((item: string) => JSON.parse(item));
+        return parsedData;
+    } catch (e) {
+        console.log(e);
+    }
+    return []
+}
+
+export async function fetchRecentlySharedSets(uid: number) {
+    try {
+        const userRef = doc(db, `users/${uid}/`);
+        const userSnapshot = await getDoc(userRef);
+        const data = userSnapshot.data()?.recentlySharedSets ?? [];
+        const parsedData = data.map((item: string) => JSON.parse(item));
+        return parsedData;
+    } catch (e) {
+        console.log(e);
+    }
+    return []
+}
+
+// Study mode options
 export async function getOptions(uid: string, studyMode: string) {
     let options: any = [];
     try {

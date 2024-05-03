@@ -53,7 +53,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
     }, [studySet]);
 
     return (
-        <div className="bg-gray-100 h-full w-screen flex flex-col" style={{backgroundColor: BackgroundColor}}>
+        <div className="h-full w-screen flex flex-col" style={{backgroundColor: BackgroundColor}}>
             <NavBar/>
             <div className="bg-slate-200 my-10 mx-40 rounded-2xl h-full shadow-lg px-10 flex flex-col" style={{backgroundColor: AccentColor2}}>
                 <div className="flex flex-row items-center">
@@ -132,8 +132,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
                             style={{border: '1px solid black', overflowWrap: 'anywhere'}}
                             contentEditable suppressContentEditableWarning
                             onInput={(e) => {
-                                const text = e.currentTarget.innerText;
-                                setStudySet(prevStudySet => prevStudySet.changeTerm(index, text));
+                                setStudySet(prevStudySet => prevStudySet.changeTerm(index, e.currentTarget.innerText));
                             }}/>
                         </FormControl>
                         <div className="mx-4"/>
@@ -143,10 +142,7 @@ export const CreatePageDisplay = ({uid}: CreatePageDisplayProps) => {
                             style={{border: '1px solid black', overflowWrap: 'anywhere'}}
                             contentEditable suppressContentEditableWarning
                             onInput={(e) => {
-                                const text = e.currentTarget.innerText;
-                                console.log(text)
-                                setStudySet(prevStudySet => prevStudySet.changeDefinition(index, text));
-                                console.log(studySet)
+                                setStudySet(prevStudySet => prevStudySet.changeDefinition(index, e.currentTarget.innerText));
                             }}/>
                         </FormControl>
                         {/* TODO: add removing terms */}

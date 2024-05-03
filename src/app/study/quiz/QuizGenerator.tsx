@@ -4,7 +4,7 @@ import { Button, Center, Input, Spinner, Textarea } from "@chakra-ui/react";
 import { FreeResponseQuestion, MultipleChoiceQuestion, Question, ShortAnswerQuestion, TrueFalseQuestion } from "../../lib/classes/question";
 import { QuizChoiceButton } from "./QuizChoiceButton";
 import { IoIosArrowDropright } from "react-icons/io";
-import { generateFRQ } from "../../lib/gemini/gemini";
+import { generateFRQ } from "../../lib/gemini";
 import { QuizStatus } from "./QuizPageDisplay";
 import { questionTypes } from "./QuizPageDisplay";
 import { set } from "firebase/database";
@@ -48,7 +48,7 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
                     }
                 } else if (questionType === "Multiple Choice Questions") {
                     for (let i = 0; i < (numQuestionsPerType + (enabledQuestionTypes.indexOf("Multiple Choice Questions") < remainder?1:0)); i++) {
-                        const question = new MultipleChoiceQuestion(shuffledSet, setIndex);
+                        const question = MultipleChoiceQuestion.createFromSet(shuffledSet, setIndex);
                         setQuestionList(prevQuestionList => [...prevQuestionList, question]);
                         setIndex = (setIndex + 1) % studySet.terms.length;
                         if(setIndex === 0) shuffledSet = shuffledSet.shuffle();
@@ -85,8 +85,8 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
                             <p className="w-1/2 m-2 text-lg font-bold">{question.definition}</p>
                         </div>
                         <div className="flex flex-row my-2 w-full place-items-stretch">
-                            <QuizChoiceButton value="True" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
-                            <QuizChoiceButton value="False" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
+                            <QuizChoiceButton value="True" answers={answers} setAnswers={setAnswers} index={index} stretch/>
+                            <QuizChoiceButton value="False" answers={answers} setAnswers={setAnswers} index={index} stretch/>
                         </div>
                     </div>
                 </div>

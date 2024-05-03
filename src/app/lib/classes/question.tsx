@@ -37,17 +37,22 @@ export class TrueFalseQuestion extends Question {
 export class MultipleChoiceQuestion extends Question {
     choices: string[];
 
-    constructor(set: StudySet, index: number){
+    constructor(question: string, answer: string, choices: string[]){
+        super(question, answer);
+        this.choices = choices;
+    }
+
+    static createFromSet(set: StudySet, index: number){
         const useTerm = set.terms[index].length <= set.definitions[index].length;
         const question = useTerm ? set.definitions[index] : set.terms[index];
         const answer = useTerm ? set.terms[index] : set.definitions[index];
-        super(question, answer);
-        this.choices = [answer];
-        while(this.choices.length < Math.min(set.terms.length, 4)) {
+        let choices = [answer];
+        while(choices.length < Math.min(set.terms.length, 4)) {
             const choice = useTerm ? set.terms[Math.floor(Math.random() * set.terms.length)] : set.definitions[Math.floor(Math.random() * set.definitions.length)];
-            if(!this.choices.includes(choice)) this.choices.push(choice);
+            if(!choices.includes(choice)) choices.push(choice);
         }
-        this.choices.sort(() => Math.random() - 0.5);
+        choices.sort(() => Math.random() - 0.5);
+        return new MultipleChoiceQuestion(question, answer, choices);
     }
 }
 
@@ -64,5 +69,38 @@ export class ShortAnswerQuestion extends Question {
 export class FreeResponseQuestion extends Question {
     constructor(question: string){
         super(question, "")
+    }
+}
+
+export class MultiPartQuestion extends Question {
+    heading: string;
+    parts: string[];
+    answers: string[];
+    results: string[];
+    numCorrect: number;
+
+    constructor(heading: string, question: string){
+        super(question, "")
+        this.heading = heading;
+        this.parts = [];
+        this.answers = [];
+        this.results = [];
+        this.numCorrect = 0;
+    }
+
+    formatPartsForPrompt() {
+        let formattedQuestion = ""
+        for(let i = 0; i < this.parts.length; i++) {
+            formattedQuestion += this.parts[i] + ", ";
+        }
+        return formattedQuestion;
+    }
+
+    formatAnswersForPrompt() {
+        let formattedAnswers = ""
+        for(let i = 0; i < this.answers.length; i++) {
+            formattedAnswers += "(" + String.fromCharCode(97+i) + ")" + this.answers[i] + ", ";
+        }
+        return formattedAnswers;
     }
 }

@@ -15,7 +15,6 @@ interface StudyModeButtonProps {
 
 export const StudyModeButton = ({ text, icon, modePath, studySetString, setLoading, disabled }: StudyModeButtonProps) => {
     const studySet = StudySet.fromString(studySetString);
-    console.log("disabled", disabled)
     return (
         <Link
             href={{

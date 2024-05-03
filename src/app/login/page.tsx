@@ -28,7 +28,6 @@ export default function LoginPage() {
         setLoading(true);
         const response = await signUp(signUpEmail, signUpPassword);
         if(response.status === 200) {
-            await signInWithCustomToken(auth, (await response.json()).token);
             window.location.href = "/home"
         }
         else {
@@ -41,7 +40,6 @@ export default function LoginPage() {
         setLoading(true); //TODO: make an alert with the login error
         const response = await logIn(logInEmail, logInPassword);
         if(response.status === 200) {
-            await signInWithCustomToken(auth, (await response.json()).token);
             window.location.href = "/home"
         }
         else {

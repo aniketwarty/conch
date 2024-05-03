@@ -13,12 +13,12 @@ import { set, update } from "firebase/database";
 
 interface EditPageDisplayProps {
     uid: string;
-    studySetString: string;
+    initialStudySetString: string;
 }
 
-export const EditPageDisplay = ({uid, studySetString}: EditPageDisplayProps) => {
+export const EditPageDisplay = ({uid, initialStudySetString}: EditPageDisplayProps) => {
     const router = useRouter();
-    const [studySet, setStudySet] = useState(StudySet.fromString(studySetString));
+    const [studySet, setStudySet] = useState(StudySet.fromString(initialStudySetString));
     const [loading, setLoading] = useState(false);
     const { isOpen: isOpenShare, onOpen: onOpenShare, onClose: onCloseShare } = useDisclosure()
     const { isOpen: isOpenDelete, onOpen: onOpenDelete, onClose: onCloseDelete } = useDisclosure()
@@ -135,8 +135,8 @@ export const EditPageDisplay = ({uid, studySetString}: EditPageDisplayProps) => 
                                 <AlertDialogFooter>
                                     <Button style={{ backgroundColor: '#E0E7FF' }} 
                                     ref={cancelRef} onClick={() => {
-                                        if(addEmail()) shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail]);
-                                        else shareSet(studySet.uid, studySet.name, sharedEmails);
+                                        if(addEmail()) shareSet(studySet.uid, studySet.name, uid, [...sharedEmails, currentEmail], studySet.terms.length);
+                                        else shareSet(studySet.uid, studySet.name, uid, sharedEmails, studySet.terms.length);
                                         onCloseShare()
                                     }}>
                                         Share
@@ -164,7 +164,7 @@ export const EditPageDisplay = ({uid, studySetString}: EditPageDisplayProps) => 
                                         deleteSet(studySet.uid, studySet.name);
                                         onCloseDelete()
                                         setLoading(true);
-                                        router.push("/home");
+                                        window.location.href = "/home";
                                     }}>
                                         Delete
                                     </Button>
@@ -175,7 +175,10 @@ export const EditPageDisplay = ({uid, studySetString}: EditPageDisplayProps) => 
                             </AlertDialogContent>
                         </AlertDialogOverlay>
                     </AlertDialog>
-                    <FaRegCheckCircle className="mx-3" size={"25px"} onClick={onOpenEdit}/>
+                    <FaRegCheckCircle className="mx-3" size={"25px"} onClick={() => {
+                        if(studySet !== StudySet.fromString(initialStudySetString)) onOpenEdit();
+                        else router.push("/home");
+                    }}/>
                     <AlertDialog isOpen={isOpenEdit} leastDestructiveRef={cancelRef} onClose={onCloseEdit}>
                         <AlertDialogOverlay>
                             <AlertDialogContent backgroundColor={AccentColor2}>
@@ -229,7 +232,7 @@ export const EditPageDisplay = ({uid, studySetString}: EditPageDisplayProps) => 
                                         studySet.changeDefinition(index, text);
                                     }}>{studySet.definitions[index]}</div>
                                 </FormControl>
-                                <IconButton className="ml-auto -mt-3 -mr-2" aria-label="delete" variant="ghost" icon={<FaTrash/>} isRound={true}
+                                <IconButton className="ml-auto -mt-3 -mr-2" aria-label="delete" variant="ghost" icon={<FaTrash/>} isRound
                                 onClick={() => setStudySet(prevStudySet => prevStudySet.remove(index))}/>
                             </div>
                         )

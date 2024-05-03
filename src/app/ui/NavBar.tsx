@@ -11,16 +11,33 @@ export const NavBar = () => {
     
     return (
         <div>
-            <div className="h-20 items-center w-full top-0 flex z-0 bg-gray-100"/>
-            <div className="h-20 items-center w-full fixed top-0 flex z-40 bg-gray-100 shadow-xl" style={{backgroundColor: AccentColor1}}>
+            <div className="h-20 w-full top-0 flex z-0 bg-gray-100"/>
+            <div className="h-20 w-full fixed top-0 flex z-40 bg-gray-100 shadow-xl" style={{backgroundColor: AccentColor1}}>
                 {/* TODO: add back button if not on home page */}
-                <Link href = {{
-                    pathname: "/home",
-                }}>
-                    <img src="/logo.png" alt="Logo" className="ml-10 mt-4" height={40} width={150}/>
+                <Link href="/home" className="ml-10 mr-5 my-auto">
+                    <img src="/logo.png" alt="Logo" height={40} width={150}/>
                 </Link>
+
+                <Link href="/home" className="mx-5 my-auto">
+                    <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
+                        <p className="text-black font-bold text-2xl mt-px">Home</p>
+                    </Button>
+                </Link>
+
+                <Link href="/shared_sets" className="mx-5 my-auto">
+                    <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
+                        <p className="text-black font-bold text-2xl mt-px">Shared sets</p>
+                    </Button>
+                </Link>
+                
+                <Link href="/question_generator" className="mx-5 my-auto">
+                    <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
+                        <p className="text-black font-bold text-2xl mt-px">Question Generator</p>
+                    </Button>
+                </Link>
+
                 {/* TODO: add home, shared sets, etc */}
-                <div className="ml-auto mr-5">
+                <div className="ml-auto mr-5 my-auto">
                     <Popover placement="bottom">
                         <PopoverTrigger>
                             <IconButton icon={<RiAccountCircleFill className="h-10 w-10"/>} aria-label="Account button"
@@ -51,7 +68,9 @@ export const LoginNavBar = () => {
         <div>
             <div className="h-20 items-center w-full top-0 flex z-0 bg-gray-100"/>
             <div className="h-20 items-center w-full fixed top-0 flex z-40 bg-gray-100 shadow-xl" style={{backgroundColor: AccentColor1}}>
-                <Image src="/logo.png" alt="Logo" className="ml-10 mt-4" height={40} width={150}/>
+                <div className="ml-10 mr-5 my-auto">
+                    <img src="/logo.png" alt="Logo" height={40} width={150}/>
+                </div>
             </div>
             <div className="w-full bg-gray-400 h-px"/>
         </div>

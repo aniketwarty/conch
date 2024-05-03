@@ -16,9 +16,10 @@ import { AccentColor1, AccentColor2, BackgroundColor } from "../colors";
 
 interface StudyPageDisplayProps {
     studySetString: string;
+    uid: string;
 }
 //TODO: add unsharing
-export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
+export const StudyPageDisplay = ({studySetString, uid}: StudyPageDisplayProps) => {
     const studySet = StudySet.fromString(studySetString);
     const [loading, setLoading] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -136,8 +137,8 @@ export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
                                 <AlertDialogFooter>
                                     <Button style={{ backgroundColor: '#E0E7FF' }} 
                                     ref={cancelRef} onClick={() => {
-                                        if(addEmail()) shareSet(studySet.uid, studySet.name, [...sharedEmails, currentEmail]);
-                                        else shareSet(studySet.uid, studySet.name, sharedEmails);
+                                        if(addEmail()) shareSet(studySet.uid, studySet.name, uid, [...sharedEmails, currentEmail], studySet.terms.length);
+                                        else shareSet(studySet.uid, studySet.name, uid, sharedEmails, studySet.terms.length);
                                         onClose()
                                     }}>
                                         Share
@@ -155,9 +156,9 @@ export const StudyPageDisplay = ({studySetString }: StudyPageDisplayProps) => {
                     <div className="flex flex-col m-5 w-1/4 justify-between h-5/6">
                         <StudyModeButton text="Flashcards" icon={BsCardText} modePath="flashcards" studySetString={studySetString} setLoading={setLoading}/>
                         <StudyModeButton text="Quiz" icon={MdOutlineQuiz} modePath="quiz" studySetString={studySetString} setLoading={setLoading}/>
-                        <StudyModeButton text="Coming soon" modePath="game1" studySetString={studySetString} setLoading={setLoading} disabled={true}/>
-                        <StudyModeButton text="Coming soon" modePath="game2" studySetString={studySetString} setLoading={setLoading} disabled={true}/>
-                        <StudyModeButton text="Coming soon" modePath="chat" studySetString={studySetString} setLoading={setLoading} disabled={true}/>
+                        <StudyModeButton text="Coming soon" modePath="game1" studySetString={studySetString} setLoading={setLoading} disabled/>
+                        <StudyModeButton text="Coming soon" modePath="game2" studySetString={studySetString} setLoading={setLoading} disabled/>
+                        <StudyModeButton text="Coming soon" modePath="chat" studySetString={studySetString} setLoading={setLoading} disabled/>
                     </div>
                     <div className="h-4/5 w-px ml-5 mb-5 bg-black grow"/>
                     <div className="flex flex-col h-[80vh] w-3/4 px-8 pb-14 overflow-y-auto">

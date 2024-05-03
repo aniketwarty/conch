@@ -7,7 +7,7 @@ import { auth } from "../lib/firebase/auth";
 import { EditPageDisplay } from "./EditPageDisplay";
 
 export default async function Edit({searchParams}: {searchParams: any}) {
-    const authResponse = await fetch("https://conch.netlify.app/api/auth", {//PROD: change to production URL
+    const authResponse = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/auth", {//PROD: change to production URL
         method: "GET",
         credentials: "include",
         headers: {
@@ -29,6 +29,6 @@ export default async function Edit({searchParams}: {searchParams: any}) {
     await addToRecentSets(uid, setString);
 
     return (
-        <EditPageDisplay studySetString={setString} uid={uid}/>
+        <EditPageDisplay initialStudySetString={setString} uid={uid}/>
     );
 }

@@ -8,7 +8,7 @@ import { auth } from "../lib/firebase/auth";
 import { redirect } from "next/navigation";
 
 export default async function StudyPage({searchParams}: {searchParams: any}) {
-    const authResponse = await fetch("https://conch.netlify.app/api/auth", {//PROD: change to production URL
+    const authResponse = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + "/auth", {//PROD: change to production URL
         method: "GET",
         credentials: "include",
         headers: {
@@ -30,6 +30,6 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
     await addToRecentSets(uid, setString);
 
     return (
-        <StudyPageDisplay studySetString={setString}/>
+        <StudyPageDisplay studySetString={setString} uid={uid}/>
     )
 }
