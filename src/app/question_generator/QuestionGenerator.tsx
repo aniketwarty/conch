@@ -4,7 +4,7 @@ import { Button, IconButton, Spinner, Textarea } from "@chakra-ui/react";
 import { MultiPartQuestion, Question } from "../lib/classes/question";
 import { AccentColor2 } from "../colors";
 import { QuestionGeneratorChoiceButton } from "../study/quiz/QuizChoiceButton";
-import { QuestionGeneratorStatus } from "./page";
+import { QuestionGeneratorStatus } from "./QuestionGeneratorStatus";
 import { IoMdArrowBack } from "react-icons/io";
 
 interface QuestionGeneratorProps {
