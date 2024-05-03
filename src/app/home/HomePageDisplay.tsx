@@ -6,6 +6,7 @@ import { NavBar } from '../ui/NavBar';
 import { IconButton, Spinner, Tooltip } from '@chakra-ui/react';
 import { AccentColor2, BackgroundColor, BackgroundColorGradient } from "../colors";
 import { MdEdit } from "react-icons/md";
+import { getFormattedDate } from "../lib/util";
 
 interface HomePageProps {
     setList: string[] | null;
@@ -48,7 +49,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                                     }}/>
                                 </div>
                                 <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
-                                <p className="">{"Last studied " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                                <p className="">{"Last studied " + getFormattedDate(StudySet.fromString(set).last_studied)}</p>
                             </div>
                         </Link>
                     ))
@@ -86,7 +87,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                                 <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                     <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
                                     <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
-                                    <p className="">{"Last viewed " + StudySet.fromString(set).getFormattedLastStudied()}</p>
+                                    <p className="">{"Last viewed " + getFormattedDate(StudySet.fromString(set).last_studied)}</p>
                                 </div>
                             </Link>
                         ))}

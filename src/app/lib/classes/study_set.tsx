@@ -55,10 +55,6 @@ export class StudySet {
         return this;
     }
 
-    getFormattedLastStudied() {
-        return getFormattedDate(this.last_studied);
-    }
-
     shuffle() {
         const shuffledTerms = [...this.terms];
         const shuffledDefinitions = [...this.definitions];
