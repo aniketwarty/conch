@@ -23,6 +23,6 @@ export default async function SharedSetsPage() {
     const uid = responseJson.uid;
 
     return (
-        <SharedSetsPageDisplay />
+        <SharedSetsPageDisplay setsSharedWithYou={[]} setsRecentlySharedByYou={[]}/>
     )
 }

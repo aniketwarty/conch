@@ -1,6 +1,8 @@
+"use client"
 import { useState } from "react";
-import { IconButton, Link, Spinner } from "@chakra-ui/react";
+import { IconButton, Spinner } from "@chakra-ui/react";
 import { StudySet } from "../lib/classes/study_set"
+import Link from "next/link";
 import { NavBar } from "../ui/NavBar";
 import { MdEdit } from "react-icons/md";
 import { AccentColor2 } from "../colors";
@@ -39,7 +41,7 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                                 <div className="flex flex-col ml-10 px-5 py-2 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                     <div className="flex flex-row">
                                         <p className="text-2xl font-bold mt-3">{StudySet.fromString(set).name}</p>
-                                        <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound={true} onClick={(event) => {
+                                        <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound onClick={(event) => {
                                             event.preventDefault();
                                             window.location.href = "/edit?setUid=" + StudySet.fromString(set).uid + "&setName=" + StudySet.fromString(set).name;
                                         }}/>
@@ -70,7 +72,7 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                                 <div className="flex flex-col ml-10 px-5 py-2 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                     <div className="flex flex-row">
                                         <p className="text-2xl font-bold mt-3">{StudySet.fromString(set).name}</p>
-                                        <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound={true} onClick={(event) => {
+                                        <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound onClick={(event) => {
                                             event.preventDefault();
                                             window.location.href = "/edit?setUid=" + StudySet.fromString(set).uid + "&setName=" + StudySet.fromString(set).name;
                                         }}/>

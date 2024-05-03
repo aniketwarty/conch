@@ -164,7 +164,7 @@ export const EditPageDisplay = ({uid, initialStudySetString}: EditPageDisplayPro
                                         deleteSet(studySet.uid, studySet.name);
                                         onCloseDelete()
                                         setLoading(true);
-                                        router.push("/home");
+                                        window.location.href = "/home";
                                     }}>
                                         Delete
                                     </Button>
@@ -232,7 +232,7 @@ export const EditPageDisplay = ({uid, initialStudySetString}: EditPageDisplayPro
                                         studySet.changeDefinition(index, text);
                                     }}>{studySet.definitions[index]}</div>
                                 </FormControl>
-                                <IconButton className="ml-auto -mt-3 -mr-2" aria-label="delete" variant="ghost" icon={<FaTrash/>} isRound={true}
+                                <IconButton className="ml-auto -mt-3 -mr-2" aria-label="delete" variant="ghost" icon={<FaTrash/>} isRound
                                 onClick={() => setStudySet(prevStudySet => prevStudySet.remove(index))}/>
                             </div>
                         )

@@ -85,8 +85,8 @@ export const QuizGenerator = ({studySetString, questionList, setQuestionList, an
                             <p className="w-1/2 m-2 text-lg font-bold">{question.definition}</p>
                         </div>
                         <div className="flex flex-row my-2 w-full place-items-stretch">
-                            <QuizChoiceButton value="True" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
-                            <QuizChoiceButton value="False" answers={answers} setAnswers={setAnswers} index={index} stretch={true}/>
+                            <QuizChoiceButton value="True" answers={answers} setAnswers={setAnswers} index={index} stretch/>
+                            <QuizChoiceButton value="False" answers={answers} setAnswers={setAnswers} index={index} stretch/>
                         </div>
                     </div>
                 </div>

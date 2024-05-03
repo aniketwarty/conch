@@ -73,7 +73,7 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
                     question.parts.map((part, partIndex) => (
                     <div key={partIndex} className="mb-5">
                         <p>{part}</p>
-                        <Textarea defaultValue={question.answers[partIndex]} disabled={true} borderColor={question.results[partIndex].includes("Incorrect. ")?"red":"green"} borderWidth="2px"/>
+                        <Textarea defaultValue={question.answers[partIndex]} disabled borderColor={question.results[partIndex].includes("Incorrect. ")?"red":"green"} borderWidth="2px"/>
                         <p className={`${question.results[partIndex].includes("Incorrect. ")?"text-red-600":"text-green-600"}`}>{question.results[partIndex]}</p>
                     </div> 
                     ))

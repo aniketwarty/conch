@@ -71,18 +71,18 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                         <div className="flex flex-row my-2 w-full place-items-stretch">
                             {results[index] === "Correct" ? (
                                 <>
-                                    <GradedQuizChoiceButton value="True" color={"True"===answers[index]?"green":"lightgray"} stretch={true}/>
-                                    <GradedQuizChoiceButton value="False" color={"False"===answers[index]?"green":"lightgray"} stretch={true}/>
+                                    <GradedQuizChoiceButton value="True" color={"True"===answers[index]?"green":"lightgray"} stretch/>
+                                    <GradedQuizChoiceButton value="False" color={"False"===answers[index]?"green":"lightgray"} stretch/>
                                 </>
                             ) : (answers[index] !== "" ? (
                                 <>
-                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"red"} stretch={true}/>
-                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"red"} stretch={true}/>
+                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"red"} stretch/>
+                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"red"} stretch/>
                                 </>
                             ) : (
                                 <>
-                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"lightgray"} stretch={true}/>
-                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"lightgray"} stretch={true}/>
+                                    <GradedQuizChoiceButton value="True" color={"True"===question.answer?"green":"lightgray"} stretch/>
+                                    <GradedQuizChoiceButton value="False" color={"False"===question.answer?"green":"lightgray"} stretch/>
                                 </>
                             ))}
                         </div>
@@ -119,7 +119,7 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                             <p className="m-auto text-lg font-bold">{question.question}</p>
                         </div>
                         <div className="flex flex-col my-2 justify-items-stretch">
-                            <Input className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled={true}
+                            <Input className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled
                             value={answers[index]!==""?answers[index]:"No answer provided"}/>
                             {results[index]==="Incorrect"?<p className="text-red-600 mx-px">The correct answer is {question.answer}</p>:<></>}
                         </div> 
@@ -136,7 +136,7 @@ export const QuizGrader = ({studySetString, questionList, answers, setQuizStatus
                             <p className="m-auto text-lg font-bold">{question.question}</p>
                         </div>
                         <div className="flex flex-col my-2 justify-items-stretch">
-                            <Textarea className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled={true}
+                            <Textarea className="shadow-lg" bg="white" borderRadius="md" borderWidth={1.5} variant={"outline"} isDisabled
                             value={answers[index]!==""?answers[index]:"No answer provided"}/>
                             {results[index].charAt(0)==="I" ? <p className="text-red-600 mx-px">{results[index].substring(3)}</p>:<></>}
                         </div>
