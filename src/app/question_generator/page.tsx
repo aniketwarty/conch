@@ -6,12 +6,8 @@ import { NavBar } from "../ui/NavBar";
 import { QuestionGenerator } from "./QuestionGenerator";
 import { MultiPartQuestion } from "../lib/classes/question";
 import { QuestionGrader } from "./QuestionGrader";
+import { QuestionGeneratorStatus } from "./QuestionGeneratorStatus";
 
-export enum QuestionGeneratorStatus {
-    INITIAL,
-    STARTED,
-    SUBMITTED
-}
 //TODO: figure out how to do auth
 export default function QuestionGeneratorPage() {
     const [questionGeneratorStatus, setQuestionGeneratorStatus] = useState<QuestionGeneratorStatus>(QuestionGeneratorStatus.INITIAL);

@@ -5,7 +5,7 @@ import { Button, Center, CircularProgress, CircularProgressLabel, Input, Spinner
 import { IoIosArrowDropright } from "react-icons/io";
 import Link from "next/link";
 import { AccentColor2, AccentColor4 } from "@/app/colors";
-import { QuestionGeneratorStatus } from "./page";
+import { QuestionGeneratorStatus } from "./QuestionGeneratorStatus";
 import { GradedQuestionGeneratorChoiceButton, QuestionGeneratorChoiceButton } from "../study/quiz/QuizChoiceButton";
 
 interface QuestionGraderProps {
