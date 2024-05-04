@@ -6,6 +6,7 @@ import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import { StudyModeNavBar } from "../../ui/study_page/StudyModeNavBar";
 import { StudySet } from "../../lib/classes/study_set";
 import { AccentColor2, BackgroundColorGradient } from "@/app/colors";
+import { motion } from "framer-motion";
 
 interface FlashcardPageDisplayProps {
     uid: string;
@@ -23,9 +24,14 @@ export const FlashcardPageDisplay = ({uid, studySetString, initialOptions}: Flas
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden" style={{background: BackgroundColorGradient}}>
             <StudyModeNavBar uid={uid} studyMode="flashcards" studySetString={studySetString} options={options} setOptions={setOptions}/>
             <div className="flex flex-col items-center h-full w-full">
-                <Button className="shadow-xl rounded-xl m-5 w-1/2" height="50%" onClick={() => {setFlipped(!flipped)}} style={{backgroundColor: AccentColor2}}>
+                <motion.div
+                    className="shadow-xl rounded-xl m-5 h-1/2 w-1/2"
+                    style={{backgroundColor: AccentColor2}}
+                    onClick={() => {setFlipped(!flipped)}}
+                    animate={{ rotateY: flipped ? 180 : 0 }}
+                >
                     <p>{flipped ? studySet.definitions[index]:studySet.terms[index]}</p>
-                </Button>
+                </motion.div>
                 <div className="flex flex-row shadow-xl rounded-lg p-4 w-1/2 items-center" style={{backgroundColor: AccentColor2}}>
                     <IconButton aria-label="back" variant="outline" icon={<BiArrowToLeft/>}
                     className="mr-3"
