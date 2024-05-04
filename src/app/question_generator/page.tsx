@@ -1,7 +1,7 @@
 "use client"
 import { SetStateAction, useState } from "react";
 import { Button, Checkbox, FormControl, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper } from "@chakra-ui/react";
-import { AccentColor1, AccentColor2, BackgroundColor } from "../colors";
+import { AccentColor1, AccentColor2, AccentColor3, AccentColor4, BackgroundColor } from "../colors";
 import { NavBar } from "../ui/NavBar";
 import { QuestionGenerator } from "./QuestionGenerator";
 import { MultiPartQuestion } from "../lib/classes/question";
@@ -30,7 +30,7 @@ export default function QuestionGeneratorPage() {
                         <Input variant={"outline"} onChange={(e) => setTopic(e.target.value)}/>
                     </FormControl>
                     <div className="flex flex-row items-center my-10 w-full">
-                        <Checkbox className="mt-5 mr-4 flex-none" size={"lg"}
+                        <Checkbox className="mt-5 mr-4 flex-none" size={"lg"} colorScheme="teal"
                         isChecked={useAP} onChange={(e) => setUseAP(e.target.checked)}>
                             AP Questions
                         </Checkbox>
@@ -54,18 +54,19 @@ export default function QuestionGeneratorPage() {
                                 </NumberInputStepper>
                             </NumberInput>                    
                         </FormControl>
-                        <Checkbox className="mt-5 mr-10 flex-none" size={"lg"}
+                        <Checkbox className="mt-5 mr-10 flex-none" size={"lg"} colorScheme="teal"
                         isChecked={useMCQ} onChange={(e) => setUseMCQ(e.target.checked)}
                         disabled={useMCQ && !useFRQ}>
                             Multiple Choice
                         </Checkbox>
-                        <Checkbox className="mt-5 mr-6 flex-none" size={"lg"}
+                        <Checkbox className="mt-5 mr-6 flex-none" size={"lg"} colorScheme="teal"
                         isChecked={useFRQ} onChange={(e) => setUseFRQ(e.target.checked)}
                         disabled={!useMCQ && useFRQ}>
                             Free Response
                         </Checkbox>
                     </div>
-                    <Button className="mt-auto mb-5 w-full" colorScheme="blue" onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.STARTED)}>
+                    <Button className="mt-auto mb-5 w-full" style={{backgroundColor: AccentColor3, color: "white"}}
+                    onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.STARTED)}>
                         Generate Questions
                     </Button>
                 </div>

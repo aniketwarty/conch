@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { generateQuestionsFromTopic } from "../lib/gemini";
 import { Button, IconButton, Spinner, Textarea } from "@chakra-ui/react";
 import { MultiPartQuestion, Question } from "../lib/classes/question";
-import { AccentColor2 } from "../colors";
+import { AccentColor2, AccentColor3, AccentColor4 } from "../colors";
 import { QuestionGeneratorChoiceButton } from "../study/quiz/QuizChoiceButton";
 import { QuestionGeneratorStatus } from "./QuestionGeneratorStatus";
 import { IoMdArrowBack } from "react-icons/io";
@@ -69,7 +69,9 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
         <div className="flex flex-col h-full w-4/5 shadow-2xl rounded-lg mx-auto my-10 px-5 pb-5 items-center overflow-y-auto" style={{backgroundColor: AccentColor2}}>
             {finishedQuestionGeneration.current ? <>
                 <div className="flex flex-row items-center w-full">
-                    <IconButton mt={-10} aria-label="Back" icon={<IoMdArrowBack/>} colorScheme="blue" onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.INITIAL)}/>
+                    <div onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.INITIAL)}>
+                        <IoMdArrowBack className="-mt-5 h-10 w-10" />
+                    </div>
                     <p className=" ml-auto text-4xl font-bold mx-auto my-10 text-center">Questions</p>
                 </div>
                 {questionList.map((question, questionIndex) => (
@@ -92,12 +94,12 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                     </div>
                 ))}
                 <div className="flex flex-row w-full mt-10">
-                    <Button className="w-full mr-2" colorScheme="blue" onClick={() => {
+                    <Button className="w-full mr-2" style={{backgroundColor: AccentColor3, color: "white"}} onClick={() => {
                         startedQuestionGeneration.current = false;
                         finishedQuestionGeneration.current = false;
                         setRegenerate(!regenerate);
                     }}>Regenerate</Button>
-                    <Button className="w-full ml-2" colorScheme="blue" 
+                    <Button className="w-full ml-2" style={{backgroundColor: AccentColor3, color: "white"}}
                     onClick={() => {setQuestionGeneratorStatus(QuestionGeneratorStatus.SUBMITTED)}}>Submit</Button>
                 </div>
                 

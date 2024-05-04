@@ -4,7 +4,7 @@ import { checkMultiPartQuestions } from "../lib/gemini";
 import { Button, Center, CircularProgress, CircularProgressLabel, Input, Spinner, Textarea } from "@chakra-ui/react";
 import { IoIosArrowDropright } from "react-icons/io";
 import Link from "next/link";
-import { AccentColor2, AccentColor4 } from "@/app/colors";
+import { AccentColor2, AccentColor3, AccentColor4 } from "@/app/colors";
 import { QuestionGeneratorStatus } from "./QuestionGeneratorStatus";
 import { GradedQuestionGeneratorChoiceButton, QuestionGeneratorChoiceButton } from "../study/quiz/QuizChoiceButton";
 
@@ -104,9 +104,9 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
                 </div>
                 {questionList.map((question, index) => displayGradedQuestion(question, index))}
                 <div className="flex flex-row">
-                    <Button className="mr-2 mb-5 w-1/2" style={{backgroundColor: AccentColor4, color: "white"}} size="lg" onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.INITIAL)}>Retry</Button>
+                    <Button className="mr-2 mb-5 w-1/2" style={{backgroundColor: AccentColor3, color: "white"}} size="lg" onClick={() => setQuestionGeneratorStatus(QuestionGeneratorStatus.INITIAL)}>Retry</Button>
                     <Link className="mr-2 mb-5 w-1/2" href="/home">
-                        <Button className="w-full" style={{backgroundColor: AccentColor4, color: "white"}} size="lg">Home</Button>
+                        <Button className="w-full" style={{backgroundColor: AccentColor3, color: "white"}} size="lg">Home</Button>
                     </Link>
                 </div>
             </div>: 

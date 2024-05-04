@@ -82,8 +82,8 @@ export const StudyPageDisplay = ({studySetString, uid}: StudyPageDisplayProps) =
                         setErrorMessage("")
                         onOpen()
                     }}>
-                        <p className="text-black">Share</p>
-                        <RiShareForwardLine className="ml-2" color="black"/>
+                        <p className="text-white">Share</p>
+                        <RiShareForwardLine className="ml-2" color="white"/>
                     </button>
                     <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                         <AlertDialogOverlay>
