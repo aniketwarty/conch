@@ -6,6 +6,7 @@ import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
 import { StudyModeNavBar } from "../../ui/study_page/StudyModeNavBar";
 import { StudySet } from "../../lib/classes/study_set";
 import { AccentColor2, BackgroundColorGradient } from "@/app/colors";
+import { motion } from "framer-motion";
 
 interface FlashcardPageDisplayProps {
     uid: string;
@@ -17,15 +18,41 @@ export const FlashcardPageDisplay = ({uid, studySetString, initialOptions}: Flas
     const studySet = StudySet.fromString(studySetString);
     const [index, setIndex] = useState(0);
     const [flipped, setFlipped] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
     const [options, setOptions] = useState(initialOptions);
+
+    function handleFlip() {
+        if(!isAnimating) {
+            setFlipped(!flipped);
+            setIsAnimating(true);
+        }
+    }
     
     return (
         <div className="flex flex-col bg-slate-100 h-screen w-screen overflow-hidden" style={{background: BackgroundColorGradient}}>
             <StudyModeNavBar uid={uid} studyMode="flashcards" studySetString={studySetString} options={options} setOptions={setOptions}/>
             <div className="flex flex-col items-center h-full w-full">
-                <Button className="shadow-xl rounded-xl m-5 w-1/2" height="50%" onClick={() => {setFlipped(!flipped)}} style={{backgroundColor: AccentColor2}}>
-                    <p>{flipped ? studySet.definitions[index]:studySet.terms[index]}</p>
-                </Button>
+                <div className="flex mt-20 mb-5 h-1/2 w-1/2" style={{perspective: "1000px"}} onClick={handleFlip}>
+                    <motion.div
+                        className="h-full w-full rounded-xl shadow-xl flex"
+                        style={{backgroundColor: AccentColor2, transformStyle: "preserve-3d"}}
+                        animate={{ rotateY: flipped ? 180 : 0 }}
+                        transition={{ duration: 0.6, ease: "easeInOut"}}
+                        onAnimationComplete={() => setIsAnimating(false)}
+                    >
+                        <div className="m-auto absolute w-full h-full flex items-center justify-center" style={{ backfaceVisibility: 'hidden' }}>
+                            <p className="text-lg text-center" >
+                                {studySet.terms[index]}
+                            </p>
+                        </div>
+                        <div className="m-auto absolute w-full h-full flex items-center justify-center" style={{ backfaceVisibility: 'hidden', transform: "rotateY(180deg)" }}>
+                            <p className="text-lg text-center">
+                                {studySet.definitions[index]}
+                            </p>
+                        </div>
+                    </motion.div>
+                </div>
+                
                 <div className="flex flex-row shadow-xl rounded-lg p-4 w-1/2 items-center" style={{backgroundColor: AccentColor2}}>
                     <IconButton aria-label="back" variant="outline" icon={<BiArrowToLeft/>}
                     className="mr-3"

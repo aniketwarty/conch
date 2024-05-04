@@ -36,7 +36,6 @@ export const NavBar = () => {
                     </Button>
                 </Link>
 
-                {/* TODO: add home, shared sets, etc */}
                 <div className="ml-auto mr-5 my-auto">
                     <Popover placement="bottom">
                         <PopoverTrigger>
