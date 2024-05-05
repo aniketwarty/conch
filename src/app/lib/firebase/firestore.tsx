@@ -2,6 +2,7 @@ import { collection, getDocs, doc, getDoc, getFirestore, setDoc, deleteDoc } fro
 import { firebaseApp } from "./firebase";
 import { StudySet } from "../classes/study_set";
 import { defaultFlashcardOptions, defaultQuizOptions } from "../../study/default_options";
+import { SharedSet } from "@/app/shared_sets/SharedSetsPageDisplay";
 
 export const db = getFirestore(firebaseApp);
 
@@ -148,27 +149,38 @@ export async function fetchSharedEmails(setUid: string, setName: string) {
 }
 
 // Fetching shared sets
-export async function fetchSetsSharedWithYou(uid: number) {
+export async function fetchSetsSharedWithYou(uid: string) {
     try {
         const userRef = doc(db, `users/${uid}/`);
         const userSnapshot = await getDoc(userRef);
-        const data = userSnapshot.data()?.setsSharedWithYou ?? [];
-        console.log(data)
-        const parsedData = data.map((item: string) => JSON.parse(item));
-        return parsedData;
+        const seen = new Set();
+        const setsSharedWithYou = (userSnapshot.data()?.setsSharedWithYou ?? []).filter((item: SharedSet) => {
+            const key = `${item.setUid}-${item.setName}`;
+            const isDupe = seen.has(key);
+            seen.add(key);
+            return !isDupe;
+        });
+        await setDoc(userRef, {setsSharedWithYou: setsSharedWithYou}, {merge: true});
+        return setsSharedWithYou;
     } catch (e) {
         console.log(e);
     }
     return []
 }
 
-export async function fetchRecentlySharedSets(uid: number) {
+export async function fetchRecentlySharedSets(uid: string) {
     try {
         const userRef = doc(db, `users/${uid}/`);
         const userSnapshot = await getDoc(userRef);
-        const data = userSnapshot.data()?.recentlySharedSets ?? [];
-        const parsedData = data.map((item: string) => JSON.parse(item));
-        return parsedData;
+        const seen = new Set();
+        const recentlySharedSets = (userSnapshot.data()?.recentlySharedSets ?? []).filter((item: SharedSet) => {
+            const key = `${item.setUid}-${item.setName}`;
+            const isDupe = seen.has(key);
+            seen.add(key);
+            return !isDupe;
+        });
+        await setDoc(userRef, {recentlySharedSets: recentlySharedSets}, {merge: true});
+        return recentlySharedSets;
     } catch (e) {
         console.log(e);
     }

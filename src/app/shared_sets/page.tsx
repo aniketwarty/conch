@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SharedSetsPageDisplay } from "./SharedSetsPageDisplay";
 import { fetchRecentlySharedSets, fetchSetsSharedWithYou } from "../lib/firebase/firestore";
+import { remove } from "firebase/database";
 
 
 export default async function SharedSetsPage() {

@@ -14,7 +14,6 @@ interface HomePageProps {
 }
 //TODO: handle overflow for your sets and recent sets
 //TODO: add alert for trying to open nonexistent/deleted sets
-//TODO: add text with arrow to create a set if the user has none
 export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
     const [loading, setLoading] = useState(false);
 
@@ -25,7 +24,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                     <Spinner className="p-5 m-auto" />
                 </div>
             )}
-            <NavBar />
+            <NavBar/>
             <p className="text-3xl font-bold m-10">Your sets</p>
             <div className="flex flex-row mb-5 w-full">
                 {(setList??[]).length > 0 ? (
