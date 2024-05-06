@@ -27,7 +27,7 @@ export default async function QuizPage({searchParams}: {searchParams: any}) {
     const setString = await fetchStudySet(searchParams.setUid, searchParams.setName, uid);
     if(setString==="") return redirect("/home");
     await updateLastStudied(StudySet.fromString(setString));
-    await addToRecentSets(uid, setString);
+    await addToRecentSets(uid, StudySet.fromString(setString));
     
     return (
         <QuizPageDisplay uid={uid} studySetString={setString} initialOptions={initialOptions}/>

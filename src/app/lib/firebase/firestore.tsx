@@ -88,22 +88,24 @@ export async function fetchStudySet(setUid: string, setName: string, uid: string
 };
 
 // Recent sets
-export async function addToRecentSets(uid: string, studySet: string) {
-    try {
+export async function addToRecentSets(uid: string, studySet: StudySet) {
+    try {//TODO: fic dupes
         const userRef = doc(db, `users/${uid}/`);
         const userSnapshot = await getDoc(userRef);
-        let recentSets = userSnapshot.data()?.recentSets;
+        const seen = new Set();
+        let recentSets = (userSnapshot.data()?.recentSets??[]).unshift({setUid: studySet.uid, setName: studySet.name, numTerms: (studySet.terms??[]).length, lastViewed: new Date().toISOString()});
+        recentSets = recentSets.filter((item: SharedSet) => {
+            const key = `${item.setUid}-${item.setName}`;
+            console.log(key)
+            const isDupe = seen.has(key);
+            seen.add(key);
+            return !isDupe;
+        });
         
-        for(let i = 0; i < recentSets.length; i++) {
-            if(StudySet.fromString(recentSets[i]).compare(StudySet.fromString(studySet))) {
-                recentSets.splice(i, 1);
-                i--;
-            }
-        }
         if(recentSets.length >= 5) {
             recentSets.pop();
         }
-        recentSets.unshift(studySet);
+        console.log(recentSets)
         await setDoc(userRef, {recentSets: recentSets}, {merge: true});
     } catch (e) {
         console.log(e);

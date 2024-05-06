@@ -23,8 +23,8 @@ export default async function SharedSetsPage() {
     const responseJson = await response.json();
     await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;
-    const setsSharedWithYou = await fetchSetsSharedWithYou(uid);
-    const setsRecentlySharedByYou = await fetchRecentlySharedSets(uid);
+    const setsSharedWithYou = (await fetchSetsSharedWithYou(uid)).reverse();
+    const setsRecentlySharedByYou = (await fetchRecentlySharedSets(uid)).reverse();
 
     return (
         <SharedSetsPageDisplay setsSharedWithYou={setsSharedWithYou} setsRecentlySharedByYou={setsRecentlySharedByYou}/>
