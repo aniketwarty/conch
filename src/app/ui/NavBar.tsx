@@ -14,27 +14,23 @@ export const NavBar = () => {
             <div className="h-20 w-full top-0 flex z-0 bg-gray-100"/>
             <div className="h-20 w-full fixed top-0 flex z-40 bg-gray-100 shadow-xl" style={{backgroundColor: AccentColor1}}>
                 {/* TODO: add back button if not on home page */}
-                <Link href="/home" className="ml-10 mr-5 my-auto">
-                    <img src="/logo.png" alt="Logo" height={40} width={150}/>
-                </Link>
+                <img src="/logo.png" alt="Logo" className="ml-10 mr-5 my-auto" height={40} width={150} onClick={() => window.location.href = "/home"}/>
 
-                <Link href="/home" className="mx-5 my-auto">
-                    <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
-                        <p className="text-black font-bold text-2xl mt-px">Home</p>
-                    </Button>
-                </Link>
 
-                <Link href="/shared_sets" className="mx-5 my-auto">
-                    <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
-                        <p className="text-black font-bold text-2xl mt-px">Shared sets</p>
-                    </Button>
-                </Link>
-                
-                <Link href="/question_generator" className="mx-5 my-auto">
-                    <Button variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}>
-                        <p className="text-black font-bold text-2xl mt-px">Question Generator</p>
-                    </Button>
-                </Link>
+                <Button className="mx-5 my-auto" variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}
+                onClick={() => window.location.href = "/home"}>
+                    <p className="text-black font-bold text-2xl mt-px">Home</p>
+                </Button>
+
+                <Button className="mx-5 my-auto" variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}
+                onClick={() => window.location.href = "/shared_sets"}>
+                    <p className="text-black font-bold text-2xl mt-px">Shared sets</p>
+                </Button>
+
+                <Button className="mx-5 my-auto" variant={"link"} _hover={{ textDecoration: "underline", textDecorationColor: "black" }}
+                onClick={() => window.location.href = "/question_generator"}>
+                    <p className="text-black font-bold text-2xl mt-px">Question Generator</p>
+                </Button>
 
                 <div className="ml-auto mr-5 my-auto">
                     <Popover placement="bottom">
@@ -46,7 +42,7 @@ export const NavBar = () => {
                             <PopoverBody p={0}>
                                 <Button className="w-full" onClick={()=>{
                                     logOut().then(() => {
-                                        router.push('/login');
+                                        window.location.href = "/login"
                                     })
                                 }} borderRadius="0">
                                     Log out

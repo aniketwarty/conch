@@ -8,13 +8,18 @@ import { AccentColor2, BackgroundColor, BackgroundColorGradient } from "../color
 import { MdEdit } from "react-icons/md";
 import { getFormattedDate } from "../lib/util";
 
+interface RecentSet {
+    setUid: string;
+    setName: string;
+    numTerms: number;
+    lastViewed: string;
+}
 interface HomePageProps {
-    setList: string[] | null;
-    recentSetList: string[] | null;
+    setList: string[];
+    recentSetList: RecentSet[];
 }
 //TODO: handle overflow for your sets and recent sets
 //TODO: add alert for trying to open nonexistent/deleted sets
-//TODO: add text with arrow to create a set if the user has none
 export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
     const [loading, setLoading] = useState(false);
 
@@ -25,10 +30,10 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                     <Spinner className="p-5 m-auto" />
                 </div>
             )}
-            <NavBar />
+            <NavBar/>
             <p className="text-3xl font-bold m-10">Your sets</p>
             <div className="flex flex-row mb-5 w-full">
-                {(setList??[]).length > 0 ? (
+                {setList.length > 0 ? (
                     setList!.map((set, index) => (
                         <Link key={index} href={{
                             pathname: "/study",
@@ -66,7 +71,7 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                     </Link>
                 </Tooltip>
             </div>
-            {recentSetList??[].length > 0 ? (
+            {recentSetList.length > 0 ? (
                 <>
                     <p className="text-3xl font-bold m-10">Recently viewed sets</p>
                     <div className="flex flex-row mb-5">
@@ -76,8 +81,8 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                                 href={{
                                     pathname: "/study",
                                     query: {
-                                        setUid: StudySet.fromString(set).uid,
-                                        setName: StudySet.fromString(set).name,
+                                        setUid: set.setUid,
+                                        setName: set.setName,
                                     },
                                 }}
                                 onClick={() => {
@@ -85,9 +90,9 @@ export const HomePageDisplay = ({ setList, recentSetList }: HomePageProps) => {
                                 }}
                             >
                                 <div className="flex flex-col ml-10 p-5 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
-                                    <p className="text-2xl font-bold">{StudySet.fromString(set).name}</p>
-                                    <p className="">{(StudySet.fromString(set).terms?.length ?? 0) + " terms"}</p>
-                                    <p className="">{"Last viewed " + getFormattedDate(StudySet.fromString(set).last_studied)}</p>
+                                    <p className="text-2xl font-bold">{set.setName}</p>
+                                    <p className="">{set.numTerms + " terms"}</p>
+                                    <p className="">{"Last viewed " + getFormattedDate(new Date(set.lastViewed))}</p>
                                 </div>
                             </Link>
                         ))}

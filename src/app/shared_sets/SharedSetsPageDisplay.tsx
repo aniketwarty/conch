@@ -4,10 +4,10 @@ import { IconButton, Spinner } from "@chakra-ui/react";
 import Link from "next/link";
 import { NavBar } from "../ui/NavBar";
 import { MdEdit } from "react-icons/md";
-import { AccentColor2 } from "../colors";
+import { AccentColor2, BackgroundColorGradient } from "../colors";
 import { getFormattedDate } from "../lib/util";
 
-interface Set {
+export interface SharedSet {
     setUid: string,
     setName: string,
     email: string,
@@ -15,15 +15,15 @@ interface Set {
     shareDate: string,
 }
 interface SharedSetsPageDisplayProps {
-    setsSharedWithYou: Set[],
-    setsRecentlySharedByYou: Set[],
+    setsSharedWithYou: SharedSet[],
+    setsRecentlySharedByYou: SharedSet[],
 }
 
 export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYou}: SharedSetsPageDisplayProps) => {
     const [loading, setLoading] = useState(false);
     //TODO: prevent duplicates
     return (//TODO: cut off after 2 lines
-        <div className="min-h-screen h-full w-screen flex flex-col">
+        <div className="min-h-screen h-full w-screen flex flex-col" style={{background: BackgroundColorGradient}}>
             {loading && (
                 <div className="fixed h-screen w-screen z-50 bg-gray-500 opacity-50 flex place-content-center">
                     <Spinner className="p-5 m-auto" />
@@ -45,7 +45,7 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                             onClick={() => {
                                 setLoading(true);
                             }}>
-                                <div className="flex flex-col ml-10 px-5 py-2 h-32 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
+                                <div className="flex flex-col ml-10 px-5 py-2 h-36 shadow-2xl rounded-md" style={{backgroundColor: AccentColor2}}>
                                     <div className="flex flex-row">
                                         <p className="text-2xl font-bold mt-3">{set.setName}</p>
                                         <IconButton className="ml-auto -mr-3" aria-label="edit" variant="ghost" icon={<MdEdit/>} isRound onClick={(event) => {
@@ -54,6 +54,7 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                                         }}/>
                                     </div>
                                     <p className="">{set.numTerms} terms</p>
+                                    <p className="">{"Shared " + getFormattedDate(new Date(set.shareDate))}</p>
                                     <p className="">{"Shared by: " + set.email}</p>
                                 </div>
                             </Link>
@@ -85,7 +86,7 @@ export const SharedSetsPageDisplay = ({setsSharedWithYou, setsRecentlySharedByYo
                                         }}/>
                                     </div>
                                     <p className="">{set.numTerms} terms</p>
-                                    <p className="">{"Shared: " + getFormattedDate(new Date(set.shareDate))}</p>
+                                    <p className="">{"Shared " + getFormattedDate(new Date(set.shareDate))}</p>
                                 </div>
                             </Link>
                         ))

@@ -25,7 +25,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         await setDoc(setRef, {shared_uids: sharedUids}, {merge: true});
 
         const email = (await admin.getUser(uid)).email;
-        const set = JSON.stringify({setUid: setUid, setName: setName, email: email, numTerms: numTerms, shareDate: new Date().toISOString()});
+        const set = {setUid: setUid, setName: setName, email: email, numTerms: numTerms, shareDate: new Date().toISOString()}
         for (const sharedUid of sharedUids) {
             const sharedUserRef = doc(db, `users/${sharedUid}/`);
             if(sharedUid !== uid) await setDoc(sharedUserRef, {setsSharedWithYou: arrayUnion(set)}, {merge: true});

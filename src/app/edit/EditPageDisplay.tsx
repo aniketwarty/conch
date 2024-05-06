@@ -81,7 +81,6 @@ export const EditPageDisplay = ({uid, initialStudySetString}: EditPageDisplayPro
                         <span className="mx-2 text-2xl">•</span>
                         <span className="text-2xl">{studySet.terms.length} terms</span>
                     </p> 
-                    {/* TODO: add terms and some other info separated by dots */}
                     <FaUserPlus className="ml-auto mr-3" size={"25px"} onClick={onOpenShare}/>
                     <AlertDialog isOpen={isOpenShare} leastDestructiveRef={cancelRef} onClose={onCloseShare}>
                         <AlertDialogOverlay>

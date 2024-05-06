@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SharedSetsPageDisplay } from "./SharedSetsPageDisplay";
 import { fetchRecentlySharedSets, fetchSetsSharedWithYou } from "../lib/firebase/firestore";
+import { remove } from "firebase/database";
 
 
 export default async function SharedSetsPage() {
@@ -22,8 +23,8 @@ export default async function SharedSetsPage() {
     const responseJson = await response.json();
     await signInWithCustomToken(auth, responseJson.token);
     const uid = responseJson.uid;
-    const setsSharedWithYou = await fetchSetsSharedWithYou(uid);
-    const setsRecentlySharedByYou = await fetchRecentlySharedSets(uid);
+    const setsSharedWithYou = (await fetchSetsSharedWithYou(uid)).reverse();
+    const setsRecentlySharedByYou = (await fetchRecentlySharedSets(uid)).reverse();
 
     return (
         <SharedSetsPageDisplay setsSharedWithYou={setsSharedWithYou} setsRecentlySharedByYou={setsRecentlySharedByYou}/>

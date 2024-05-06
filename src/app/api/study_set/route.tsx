@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
         });
 
         await updateLastStudied(StudySet.fromString(setString));
-        await addToRecentSets(uid, setString);
+        await addToRecentSets(uid, StudySet.fromString(setString));
         return NextResponse.json({setString: setString}, {status: 200});
     }
 
