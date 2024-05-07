@@ -30,7 +30,7 @@ export async function generateQuestionsFromTopic(topic: string, numQuestions: nu
     "Generate " + numQuestions + " questions on the topic " + topic + "."
     if(useMCQ && useFRQ) prompt += `Include both multiple choice and multi-paragraph multi-part free response word problems about half and half that both ask about applications of concepts in a specific scenario, mirroring past AP exams.
     Make sure every question and part isn't general and is answerable using only the information provided.
-    Do not include any images or graphs. Format the question exactly like with no other non-question text: 
+    Do not include any questions needing images or graphs. Format the question exactly like with no other non-question text: 
     Question 1 (Free Response)
     Question text 
     (a) Part 1 
@@ -39,7 +39,7 @@ export async function generateQuestionsFromTopic(topic: string, numQuestions: nu
     (d) Part 4`
     else if(useMCQ) prompt += ` Include only multiple choice questions about applications of concepts in a specific scenario, mirroring past AP exams. 
     Make sure each part isn't a general question and is answerable using only the information provided. 
-    Do not include any images or graphs. Format the question exactly like this with no other non-question text: 
+    Do not include any questions needing images or graphs. Format the question exactly like this with no other non-question text: 
     Question 1 (Multiple Choice)
     Question text 
     (a) Choice 1 
@@ -48,7 +48,7 @@ export async function generateQuestionsFromTopic(topic: string, numQuestions: nu
     (d) Choice 4`
     else if(useFRQ) prompt += ` Include only multi-paragraph multi-part free response word problems about applications of concepts in a specific scenario, mirroring past AP exams. 
     Make sure each part isn't a general question and is answerable using only the information provided. 
-    Do not include any images or graphs. Format the questions exactly like this with no other non-question text: 
+    Do not include any questions needing images or graphs. Format the questions exactly like this with no other non-question text: 
     Question 1 (Free Response)
     Question text 
     (a) Part 1 
