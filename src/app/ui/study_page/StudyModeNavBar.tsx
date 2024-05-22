@@ -29,11 +29,11 @@ export const StudyModeNavBar = ({ uid, studyMode, studySetString, options, setOp
                 }}>
                     <IconButton icon={<IoMdArrowRoundBack/>} className="mr-3 outline-4 shadow-md" style={{backgroundColor: AccentColor4, color: "white"}} aria-label="back"/>
                 </Link>
-                <p className="text-white ml-6 text-2xl">{studyMode.charAt(0).toUpperCase() + studyMode.slice(1)}</p>
+                <p className="text-black ml-6 text-2xl">{studyMode.charAt(0).toUpperCase() + studyMode.slice(1)}</p>
                 <OptionsButton uid={uid} options={options} setOptions={setOptions} studyMode={studyMode}/>
                 <Link href="/home">
                     <IconButton className="ml-3 outline-4 shadow-md" aria-label="home" icon={<AiFillHome/>}
-                    style={{backgroundColor: AccentColor3, color: "white"}}/>
+                    style={{backgroundColor: AccentColor4, color: "white"}}/>
                 </Link>
             </div>
             <div className="w-full bg-gray-700 h-px"/>
