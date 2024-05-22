@@ -18,6 +18,7 @@ export default async function Edit({searchParams}: {searchParams: any}) {
         }
     })
 
+    if(!authResponse.ok) redirect("/login")
     const authResponseJson = await authResponse.json();
     await signInWithCustomToken(auth, authResponseJson.token);
     const uid = authResponseJson.uid;
