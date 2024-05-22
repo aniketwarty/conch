@@ -19,6 +19,7 @@ export default async function QuizPage({searchParams}: {searchParams: any}) {
         }
     })
 
+    if(!authResponse.ok) redirect("/login")
     const authResponseJson = await authResponse.json();
     if(auth.currentUser===null) await signInWithCustomToken(auth, authResponseJson.token);
     const uid = authResponseJson.uid;

@@ -27,7 +27,7 @@ export default function QuestionGeneratorPage() {
                     <p className="text-4xl font-bold mx-auto my-10 text-center">Question Generator</p>
                     <FormControl>
                         <FormLabel fontSize="sm">Topic (eg. Biology, US History, etc.)</FormLabel>
-                        <Input variant={"outline"} onChange={(e) => setTopic(e.target.value)}/>
+                        <Input variant={"outline"} defaultValue={topic} onChange={(e) => setTopic(e.target.value)}/>
                     </FormControl>
                     <div className="flex flex-row items-center my-10 w-full">
                         <Checkbox className="mt-5 mr-4 flex-none" size={"lg"} colorScheme="teal"
@@ -36,7 +36,7 @@ export default function QuestionGeneratorPage() {
                         </Checkbox>
                         <FormControl className="w-full">
                         <FormLabel fontSize="sm" style={{ color: useAP ? 'black' : 'gray' }}>AP Units (eg. 1-4)</FormLabel>
-                            <Input variant={"outline"} placeholder="Leave empty for all units" onChange={(e) => setAPUnits(e.target.value)} disabled={!useAP}/>
+                            <Input variant={"outline"} defaultValue={APUnits} placeholder="Leave empty for all units" onChange={(e) => setAPUnits(e.target.value)} disabled={!useAP}/>
                         </FormControl>
                     </div>
                     <div className="flex flex-row items-center my-5 w-full">

@@ -19,6 +19,7 @@ export default async function StudyPage({searchParams}: {searchParams: any}) {
         }
     })
 
+    if(!authResponse.ok) redirect("/login")
     const authResponseJson = await authResponse.json();
     await signInWithCustomToken(auth, authResponseJson.token);
     const uid = authResponseJson.uid;

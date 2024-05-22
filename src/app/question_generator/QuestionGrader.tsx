@@ -35,9 +35,9 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
                     partIndex = -1;
                     numTotal++;
                 } else {
-                    if(/^\(\w\)/.test(results[i]) || /Part \w/.test(results[i]) || results[i].includes("Incorrect. ") || results[i].includes("Correct. ")) partIndex++;
+                    if(/^\(\w\)/.test(results[i]) || /Part \w/.test(results[i]) || results[i].includes("Incorrect.") || results[i].includes("Correct.")) partIndex++;
                     console.log(results[i], questionIndex+1, partIndex+1)
-                    if (results[i].includes("Correct. ")) {
+                    if (results[i].includes("Correct.")) {
                         numRight += questionList[questionIndex].heading.includes("Multiple Choice") ? 1 : 1 / questionList[questionIndex].parts.length;
                         tempQuestionList[questionIndex].numCorrect++;
                     }
@@ -65,16 +65,16 @@ export const QuestionGrader = ({initialQuestionList, setQuestionGeneratorStatus}
                 {question.heading.includes("Multiple Choice") ? 
                     <>
                     {question.parts.map((choice, choiceIndex) => {
-                        const correct = !question.results[0].includes("Incorrect. ");
+                        const correct = !question.results[0].includes("Incorrect.");
                         return <GradedQuestionGeneratorChoiceButton key={choiceIndex} value={choice} color={choice===question.answer ? correct?"green":"red" : "lightgray"}/>
                     })}
-                    <p className={`${question.results[0].includes("Incorrect. ")?"text-red-600":"text-green-600"}`}>{question.results[0]}</p>
+                    <p className={`${question.results[0].includes("Incorrect.")?"text-red-600":"text-green-600"}`}>{question.results[0]}</p>
                     </>:
                     question.parts.map((part, partIndex) => (
                     <div key={partIndex} className="mb-5">
                         <p>{part}</p>
-                        <Textarea defaultValue={question.answers[partIndex]} disabled borderColor={question.results[partIndex].includes("Incorrect. ")?"red":"green"} borderWidth="2px"/>
-                        <p className={`${question.results[partIndex].includes("Incorrect. ")?"text-red-600":"text-green-600"}`}>{question.results[partIndex]}</p>
+                        <Textarea defaultValue={question.answers[partIndex]} disabled borderColor={question.results[partIndex].includes("Incorrect.")?"red":"green"} borderWidth="2px"/>
+                        <p className={`${question.results[partIndex].includes("Incorrect.")?"text-red-600":"text-green-600"}`}>{question.results[partIndex]}</p>
                     </div> 
                     ))
                 }

@@ -50,6 +50,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                 }
             }
             setQuestionList(tempQuestionList);
+            console.log(tempQuestionList);
             finishedQuestionGeneration.current = true;
         }
 
@@ -81,7 +82,10 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                         <br/>
                         {question.heading.includes("Multiple Choice") ? 
                             question.parts.map((choice, choiceIndex) => (
-                                <QuestionGeneratorChoiceButton key={choiceIndex} value={choice} question={question} questionIndex={questionIndex} setQuestionList={setQuestionList}/>
+                                <>
+                                    <QuestionGeneratorChoiceButton key={choiceIndex} value={choice} question={question} questionIndex={questionIndex} setQuestionList={setQuestionList}/>
+                                    <div className={`${choiceIndex===question.parts.length-1 ? "w-full mb-3":""}`}/>
+                                </>
                             )):
                             question.parts.map((part, partIndex) => (
                                 <div key={partIndex} className="mb-5">
@@ -105,7 +109,7 @@ export const QuestionGenerator = ({topic, useAP, APUnits, numQuestions, useMCQ, 
                 
             </>:<div className="flex flex-col items-center m-auto"> 
                 <Spinner className="p-10"/>
-                <p className="text-2xl mt-8 font-bold">Generating Quiz...</p>
+                <p className="text-2xl mt-8 font-bold">Generating Questions...</p>
             </div>
             }
         </div>

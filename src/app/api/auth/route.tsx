@@ -1,7 +1,7 @@
 import { admin } from "../../lib/firebase/admin";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-
+//TODO: if redirected to login from another link, redirect back to that link after login
 export async function POST(request: NextRequest, response: NextResponse) {
     const authorization = headers().get("Authorization");
     if (authorization?.startsWith("Bearer ")) {

@@ -61,15 +61,16 @@ export async function generateQuestionsFromTopic(topic: string, numQuestions: nu
     (b) Choice 2 
     (c) Choice 3 
     (d) Choice 4` 
-    console.log(prompt)
     const result = await model.generateContent(prompt);
     return result.response.text();
 }
 
+
+//TODO: fix mcqs always being right
 export async function checkMultiPartQuestions(questionList: MultiPartQuestion[]) {
     let prompt = `I will give you a series of multiple choice and multi-part free response questions with answers that a student submitted.
-For each multi-part free response question, determine if the answers are correct for each part of the question and give 1-2 sentences of feedback, even if they are correct. 
-For each multiple choice question, determine if the answer is the best answer and give 1-2 sentences of feedback if not.
+For each multi-part free response question, take your time and determine if the answers are correct for each part of the question and give 1-2 sentences of feedback, even if they are correct. 
+For each multiple choice question, take your time and determine if the answer is the correct answer and give 1-2 sentences of feedback if not.
 If the student's answer is empty, give a short 1-2 sentence explanation for the answer to the question.
 Format multi-part free response questions exactly like this example for a 4-part question, with every part marked as Correct or Incorrect:
     Question 1 (Free Response)
