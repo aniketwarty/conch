@@ -19,7 +19,7 @@ export const StudyModeNavBar = ({ uid, studyMode, studySetString, options, setOp
 
     return (
         <div>
-            <div className="h-20 p-5 items-center w-full top-0 flex flex-row shadow-2xl" style={{backgroundColor: AccentColor4}}>
+            <div className="h-20 p-5 items-center w-full top-0 flex flex-row shadow-2xl" style={{backgroundColor: AccentColor3}}>
                 <Link href={{
                     pathname: "/study",
                     query: { 
@@ -27,7 +27,7 @@ export const StudyModeNavBar = ({ uid, studyMode, studySetString, options, setOp
                         setName: studySet.name,
                     }
                 }}>
-                    <IconButton icon={<IoMdArrowRoundBack/>} className="mr-3 outline-4 shadow-md" style={{backgroundColor: AccentColor3, color: "white"}} aria-label="back"/>
+                    <IconButton icon={<IoMdArrowRoundBack/>} className="mr-3 outline-4 shadow-md" style={{backgroundColor: AccentColor4, color: "white"}} aria-label="back"/>
                 </Link>
                 <p className="text-white ml-6 text-2xl">{studyMode.charAt(0).toUpperCase() + studyMode.slice(1)}</p>
                 <OptionsButton uid={uid} options={options} setOptions={setOptions} studyMode={studyMode}/>

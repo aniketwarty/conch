@@ -93,7 +93,8 @@ export async function addToRecentSets(uid: string, studySet: StudySet) {
         const userRef = doc(db, `users/${uid}/`);
         const userSnapshot = await getDoc(userRef);
         const seen = new Set();
-        let recentSets = (userSnapshot.data()?.recentSets??[]).unshift({setUid: studySet.uid, setName: studySet.name, numTerms: (studySet.terms??[]).length, lastViewed: new Date().toISOString()});
+        let recentSets = userSnapshot.data()?.recentSets??[]
+        recentSets.unshift({setUid: studySet.uid, setName: studySet.name, numTerms: (studySet.terms??[]).length, lastViewed: new Date().toISOString()});
         recentSets = recentSets.filter((item: SharedSet) => {
             const key = `${item.setUid}-${item.setName}`;
             console.log(key)
